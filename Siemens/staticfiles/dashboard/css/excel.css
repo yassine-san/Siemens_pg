@@ -1,0 +1,136 @@
+body{
+    font-family: Verdana, serif;
+    font-weight: 200;
+    letter-spacing: 2px;
+    font-size: 17px;
+    background-color: #F8C39B;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+}
+
+.container{
+    position: absolute;
+    top: 30%;
+    left: 35%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 500px;
+    text-align: center;
+    display: flex;
+    background-color: #f6f1e9;
+    border-radius: .7em;
+}
+
+.grp{
+    width: 500px;
+    display: flex;
+    row-gap: 80px;
+    flex-direction: column;
+    color: white;
+    height: 300px;
+    padding: 12px;
+    border-radius: .5em
+}
+
+.container-title{
+    background-color: #ff7308;
+    padding: 5px;
+    color: white ;
+    border-radius: .6em;
+    align-self: center;
+    width: 70%;
+    text-align: center;
+}
+
+
+
+.submitter{
+    width: 20%;
+    align-self: center;
+    border-radius: .6em;
+    background-color: #F8C39B;
+    padding: 5px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+}
+
+.importer{
+    align-self: center;
+    background-color: #9de59d;
+    color: black;
+    border-radius: .5em;
+    width: 40%;
+    cursor: pointer;
+    text-align: center;
+    padding: 5%;
+    height: 70px;
+}
+
+.after{
+    cursor: auto;
+    font-size: 13px;
+    background-color: #9de59d;
+}
+
+#message_dialog ,#load_dialog {
+    background-color: transparent;
+    border: none;
+    outline: none;
+}
+
+#message_dialog::backdrop, #load_dialog::backdrop{
+    background-color: rgba(0, 0, 0, .7);
+}
+
+
+.lds-hourglass {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid #dfc;
+  border-color: #dfc transparent #dfc transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+
+
+.message{
+    background-color: green;
+    color: white;
+    width: 300px;
+    height: 30px;
+    border-radius: .5em;
+    text-align: center;
+    padding: 20px 5px 5px;
+}
+
+
+
+

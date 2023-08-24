@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page de Connexion</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static "users/css/login.css" %}">
+</head>
+<body>
+    <div class="login-container">
+        <div style="text-align: center">
+            <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="scale: 1;width:200px" alt="Siemenes_logo">
+        </div>
+        <div class="credentials_container">
+            <div class="email-label cn">
+                <label for="email">Email </label>
+            </div>
+            <div class="email-inp cn">
+                <input id="email" class="email-input" type="text" placeholder="Email">
+            </div>
+            <div class="password-label cn">
+                <label for="password">Mot de passe </label>
+            </div>
+            <div class="password-input-container cn">
+                <input id="password" type="password" class="password-input" placeholder="Password">
+                <div class="password-toggle" onclick="togglePasswordVisibility()">
+                    <i class="fas fa-eye-slash"></i>
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="submit-container">
+            <button id="loginBtn" class="login-button" onclick="login()">Se connecter</button>
+        </div>
+    </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+{% csrf_token %}
+<script>
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById("password");
+        const passwordToggle = document.querySelector(".password-toggle");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordToggle.classList.add("open");
+        } else {
+            passwordInput.type = "password";
+            passwordToggle.classList.remove("open");
+        }
+    }
+
+    function login() {
+        let email = document.getElementById("email").value
+        let pwd = document.getElementById("password").value
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+        if (email === "" || pwd === ""){
+            alert("fill out all inputs")
+        }else {
+            if (!validateEmail(email)){
+                alert("not valid email")
+            }else {
+                $.ajax({
+                    type: "POST",
+                    url: "/logUser/",
+                    data: {
+                        email: email,
+                        password: pwd,
+                        csrfmiddlewaretoken: csrfToken
+                    },
+                    success: function(response) {
+                        window.location.href = "/home/";
+                    },
+                    error: function() {
+                        alert("Login failed.");
+                    }
+                });
+            }
+        }
+    }
+
+    function validateEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        return emailPattern.test(email);
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+</html>

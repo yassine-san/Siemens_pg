@@ -1,0 +1,35 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Importer</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/excel.css' %}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="grp">
+            <label class="container-title" > importer votre fichier Excel</label>
+            <input  type="file" id="files" style="display: none" accept=".xlsx, .xls"/>
+            <label id="importer" class="importer before" for="files">Click ici</label>
+            <label class="importer after" style="display: none">le fichier <i class="importedFilename">placeholder</i> est importe</label>
+            <a class="submitter">Envoyer</a>
+        </div>
+    </div>
+
+    <dialog id="load_dialog">
+      <div class="lds-hourglass"></div>
+    </dialog>
+
+    <dialog id="message_dialog">
+            <p class="message">Message</p>
+    </dialog>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+{% csrf_token %}
+<script src="{% static 'dashboard/js/excel.js' %}"></script>
+
+</html>

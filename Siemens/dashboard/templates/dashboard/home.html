@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static "dashboard/css/home.css" %}">
+  <title>Home</title>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="padding:4px;border-radius:.6em;background-color:white;scale: 1;width: 150px" alt="Logo">
+    </div>
+    <ul class="nav-list">
+      <li style="display: flex;cursor: pointer">
+          <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
+          <a href="{% url 'dashboard:excel_import' %}" style="padding:6px;color : black">Import excel </a>
+      </li>
+      <li class="dropdown">
+        <button class="dropbtn">{{ username }}</button>
+        <div class="dropdown-content">
+        <a href="#option1">
+            <img src="{% static "dashboard/img/profile_icon.png" %}" alt="Icon 1" width="30px">
+        </a>
+        <a href="#option2">
+            <img src="{% static "dashboard/img/add_user_icon.png" %}" alt="Icon 2" width="30px">
+        </a>
+        <a onclick="logout()">
+            <img src="{% static "dashboard/img/logout icon.png" %}" alt="Logout" width="30px">
+        </a>
+    </div>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="content">
+        <div class="card card1"> <p>Africa_IB</p></div>
+        <div class="card card2"> <p>Data Quality</p></div>
+        <div class="card card3"> <p>SRS Connectivity</p></div>
+        <div class="card card4"> <p>MR CAN24</p></div>
+  </div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+{% csrf_token %}
+<script>
+
+    function logout() {
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'dashboard:logout_user' %}",
+            data: {
+                csrfmiddlewaretoken: csrfToken
+            },
+            success: function(response) {
+                window.location.href = "{% url 'login' %}";
+            },
+            error: function() {
+                alert("Logout failed.");
+            }
+        });
+    }
+</script>
+</html>
