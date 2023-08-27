@@ -3,15 +3,21 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db import connection
 from openpyxl import load_workbook
+from .models import Quality
 
 
 def home(request):
-    user = request.user
     if not request.user.is_authenticated:
         return redirect('login')
 
-    username = user.email
+    username = Quality.objects.values('division').first()
     return render(request,"dashboard/home.html", {"username": username})
+
+
+def quality_interface(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, "dashboard/data_quality.html")
 
 
 def logout_user(request):

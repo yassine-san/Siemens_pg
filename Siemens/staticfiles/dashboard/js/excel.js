@@ -42,7 +42,6 @@ submitter.addEventListener("click", function() {
             message_dialog.showModal()
             let color  = data.status === 1 ? "green" : "red"
             errorMessage.style.backgroundColor = color
-
         })
         .catch(error => {
             console.error("Error:", error);
