@@ -27,7 +27,7 @@ submitter.addEventListener("click", function() {
         formData.append("excel_file", selectedFile);
         formData.append("csrfmiddlewaretoken",csrfToken)
 
-        fetch("/home/upload-excel/", {
+        fetch("/upload-excel/", {
             method: "POST",
             body: formData,
         })
@@ -42,6 +42,7 @@ submitter.addEventListener("click", function() {
             message_dialog.showModal()
             let color  = data.status === 1 ? "green" : "red"
             errorMessage.style.backgroundColor = color
+
         })
         .catch(error => {
             console.error("Error:", error);

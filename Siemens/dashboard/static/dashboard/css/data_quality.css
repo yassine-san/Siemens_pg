@@ -80,6 +80,7 @@
     border: 1px solid black;
     border-radius: .5em;
     box-shadow: 0px 8px 6px rgba(0, 0, 0, 0.2);
+    position: relative;
 }
 
 .titlep{
@@ -91,6 +92,33 @@
     top: -20px;
     font-family: Georgia sans-serif;
 }
+
+.filters {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: #303075;
+    padding: 5px 12px;
+    border-radius: .7em;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .title {
+        text-align: left; /* Adjust alignment for smaller screens */
+    }
+
+    .titlep {
+        margin-left: 10px;
+    }
+}
+
+
+
+
 
 .card {
     width: 90%;
@@ -137,33 +165,33 @@
     height: 100%;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 3fr 3fr;
+    grid-template-rows: 3fr 3fr;
     grid-column-gap: 1px;
     grid-row-gap: 12px;
 }
 
-.filters-container {
-    grid-area: 1 / 1 / 2 / 2;
-    border: 1px solid cadetblue;
-}
+/*.filters-container {*/
+/*    grid-area: 1 / 1 / 2 / 2;*/
+/*    border: 1px solid cadetblue;*/
+/*}*/
 
 
 .missing-countries {
     overflow: scroll;
-    grid-area: 2 / 1 / 4 / 2;
+    grid-area: 1 / 1 / 4 / 2;
     border: 1px solid cadetblue;
 
 }
 
 .missing-countries-table-container{
     width: 100%;
-    height: 180px;
+    height: 240px;
     overflow: scroll;
 }
 
 .missing-names {
     overflow: scroll;
-    grid-area: 3 / 1 / 4 / 2;
+    grid-area: 2 / 1 / 4 / 2;
     border: 1px solid cadetblue;
 }
 
@@ -210,3 +238,163 @@
     border: 1px solid #ccc; /* Add borders for cells */
     box-sizing: border-box; /* Include border in cell dimensions */
 }
+
+
+.ms-names-table {
+    border-collapse: collapse;
+    width: inherit; /* Use 100% width */
+}
+
+.ms-names-table-body {
+    height: 120px; /* Limit the body's max height */
+    width: 200px; /* Use 100% width */
+    overflow-y: scroll; /* Enable vertical scroll */
+}
+
+.ms-names-table-header {
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    text-wrap: normal;
+    top: 0;
+    font-weight: normal;
+    color: #494949;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis;
+
+    z-index: 1; /* Ensure header is above the body */
+}
+
+.ms-names-tr:nth-child(even) {
+    background-color: white;
+}
+
+.ms-names-tr:nth-child(odd) {
+    background-color: lightgray;
+}
+
+.ms-names-td {
+    font-size: 12px;
+    padding: 3px;
+    text-align: center; /* Center-align the content */
+    border: 1px solid #ccc; /* Add borders for cells */
+    box-sizing: border-box; /* Include border in cell dimensions */
+}
+
+.missing-countries-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fl-country-pagination {
+    width: 150px;
+    max-width: 400px; /* Adjust the width */
+     /* Add a max-width if needed */
+    height: 40px; /* Adjust the height */
+    border: 2px solid cadetblue;
+    border-radius: 20px; /* Adjust the border radius */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjust alignment of buttons and info */
+    padding: 0 10px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in width/height calculation */
+}
+
+.pagination-btn-country {
+    border: none;
+    background-color: #ff7308;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px; /* Adjust border radius */
+}
+
+.pagination-btn-country:hover {
+    background-color: #ffab72;
+}
+
+.pagination-info-country {
+    margin: 0;
+}
+
+
+.missing-cst-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fl-cst-pagination {
+    width: 150px;
+    max-width: 400px; /* Adjust the width */
+     /* Add a max-width if needed */
+    height: 40px; /* Adjust the height */
+    border: 2px solid cadetblue;
+    border-radius: 20px; /* Adjust the border radius */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjust alignment of buttons and info */
+    padding: 0 10px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in width/height calculation */
+}
+
+.pagination-btn-cst {
+    border: none;
+    background-color: #ff7308;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px; /* Adjust border radius */
+}
+
+.pagination-btn-cst:hover {
+    background-color: #ffab72;
+}
+
+.pagination-info-cst {
+    margin: 0;
+}
+
+
+#filters_dialog{
+    width: 60%;
+    height: 40%;
+    border: 1px solid black;
+    border-radius: .6em;
+    position: relative;
+    padding: 20px;
+    text-align: center; /* Center align content */
+}
+
+#filters_dialog::backdrop{
+    background-color: rgba(255, 185, 130, .7); /* Semi-transparent red */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}
+
+.coming-soon {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+

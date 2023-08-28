@@ -8,41 +8,48 @@
 </head>
 <body>
 
+<dialog id="filters_dialog">
+    <button class="close-button" onclick="filters_dialog.close()">×</button>
+    <span class="coming-soon">Coming Soon</span>
+</dialog>
+
 <div class="container">
     <div class="cn-left">
         <div class="cards-container">
             <div class="title">
                 <p class="titlep">Quality</p>
+                <span class="filters" >Filters</span>
             </div>
             <div class="card card2">
                 <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
+                <p class="card-value">{{ active_active_flcountry_percentage|floatformat:2 }}%</p>
                 <p class="card-title">FL-Country Quality</p>
             </div>
             <div class="card card3">
                 <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
-                <p class="card-title">FL-Country Quality</p>
+                <p class="card-value">{{ active_active_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-title">Cst-Name Quality</p>
             </div>
             <div class="card card4">
-                <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
+                <p class="card-status">Active/Shipped</p>
+                <p class="card-value">{{ active_shipped_flcountry_percentage|floatformat:2 }}%</p>
                 <p class="card-title">FL-Country Quality</p>
+                
             </div>
             <div class="card card5">
-                <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
-                <p class="card-title">FL-Country Quality</p>
+                <p class="card-status">Active/Shipped</p>
+                <p class="card-value">{{ active_shipped_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-title">Cst-Name Quality</p>
             </div>
             <div class="card card6">
-                <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
+                <p class="card-status">Inactive/On Stock</p>
+                <p class="card-value">{{ inactive_on_stock_flcountry_percentage|floatformat:2 }}%</p>
                 <p class="card-title">FL-Country Quality</p>
             </div>
             <div class="card card7">
-                <p class="card-status">Active/Active</p>
-                <p class="card-value">99,47%</p>
-                <p class="card-title">FL-Country Quality</p>
+                <p class="card-status">Inactive/On Stock</p>
+                <p class="card-value">{{ inactive_on_stock_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-title">Cst-Name Quality</p>
             </div>
         </div>
     </div>
@@ -50,11 +57,18 @@
 
     <div class="cn-right">
         <div class="right-container">
-            <div class="filters-container">
-
-            </div>
+{#            <div class="filters-container">#}
+{##}
+{#            </div>#}
             <div class="missing-countries">
-                <p style="color: black;font-weight: bold;margin-left: 10px">Missing FL country</p>
+                <div class="missing-countries-header">
+                    <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing FL country</p>
+                    <div class="fl-country-pagination">
+                        <button class="pagination-btn-country left">&lt;</button>
+                        <span class="pagination-info-country">1/<span class="missing-countries-total-pages">?</span></span>
+                        <button class="pagination-btn-country right">&gt;</button>
+                    </div>
+                </div>
                 <div class="missing-countries-table-container">
                     <table class="ms-countries-table" style="display:block">
                         <thead>
@@ -69,30 +83,38 @@
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">FL - Country</th>
                         </tr>
                         </thead>
-                        <tbody class="ms-countries-table-body">
+                        <tbody id="gg"  class="ms-countries-table-body">
                         <!-- Populated dynamically using JavaScript -->
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="missing-names">
-                <p style="color: black;font-weight: bold;margin-left: 10px">Missing Customer name</p>
-                <div class="missing-countries-table-container">
-                    <table class="ms-countries-table" style="display:block">
+                <div class="missing-cst-header">
+                    <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing Customer name</p>
+                    <div class="fl-cst-pagination">
+                        <button class="pagination-btn-cst left">&lt;</button>
+                        <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
+                        <button class="pagination-btn-cst right">&gt;</button>
+                    </div>
+                </div>
+                <div class="missing-names-table-container">
+                    <table class="ms-names-table" style="display:block">
                         <thead>
                         <tr>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">Service Partner</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">Material Number</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">Serials Number</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">Modality</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">IVK Name</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">Status</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">SubStatus</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">FL - Country</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Service Partner</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Material Number</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Serials Number</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Modality</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">IVK Name</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Status</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">SubStatus</th>
+                            <th class="ms-names-table-header" onclick="sortSerialTable()">Customer Name</th>
                         </tr>
                         </thead>
-                        <tbody class="ms-countries-table-body">
+                        <tbody class="ms-names-table-body">
                         <!-- Populated dynamically using JavaScript -->
+                        
                         </tbody>
                     </table>
                 </div>
@@ -102,53 +124,27 @@
 </div>
 
 </body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
+    let missing_flCountry_URL = "{% url 'dashboard:missing_fl_countries' %}"
+    let missing_customerName_URL = "{% url 'dashboard:missing_customer_name' %}"
 
-    const ms_countriesData = [
-        ['080069HH1FR1', '4923231212', 'TN TUNISIA', '910161', 'TN', 'inactive', 'scrapped', ''],
-        ['080069HH1FCD1', '49264832764', 'SN SENEGAL', '910168', 'SN', 'active', 'active', ''],
-        ['080021219HH1FR1', '493123121', 'FR FRENCH', '910166', 'FR', 'inactive', 'active', ''],
-        ['0802112HH1FR1', '495456421', 'AO ANGOLA', '910162', 'AO', 'active', 'active', ''],
-        ['0800342HH1US1', '4900987654', 'US UNITED STATES', '910123', 'US', 'active', 'active', ''],
-        ['080089HH1JP1', '497654321', 'JP JAPAN', '910133', 'JP', 'inactive', 'scrapped', ''],
-        ['080054HH1MX1', '4998765432', 'MX MEXICO', '910154', 'MX', 'active', 'active', ''],
-        ['080043HH1DE1', '4967890123', 'DE GERMANY', '910143', 'DE', 'inactive', 'inactive', ''],
-        ['0800123HH1CN1', '4912345678', 'CN CHINA', '910111', 'CN', 'active', 'active', ''],
-        ['080098HH1BR1', '4987654321', 'BR BRAZIL', '910188', 'BR', 'inactive', 'scrapped', ''],
-        // Additional elements
-        ['080032HH1RU1', '4990011223', 'RU RUSSIA', '910149', 'RU', 'inactive', 'inactive', ''],
-        ['080077HH1AU1', '4955332112', 'AU AUSTRALIA', '910126', 'AU', 'active', 'active', ''],
-        ['080066HH1ZA1', '4977123456', 'ZA SOUTH AFRICA', '910177', 'ZA', 'inactive', 'inactive', ''],
-        ['080021HH1IN1', '4988776655', 'IN INDIA', '910110', 'IN', 'active', 'active', ''],
-        ['080099HH1KR1', '4944443333', 'KR SOUTH KOREA', '910195', 'KR', 'active', 'active', ''],
-        ['080045HH1IT1', '4933221122', 'IT ITALY', '910157', 'IT', 'inactive', 'scrapped', ''],
-        ['080088HH1ES1', '4966555444', 'ES SPAIN', '910182', 'ES', 'active', 'active', ''],
-        ['080078HH1CA1', '4922112233', 'CA CANADA', '910127', 'CA', 'inactive', 'inactive', ''],
-        ['080087HH1SG1', '4911999888', 'SG SINGAPORE', '910181', 'SG', 'active', 'active', ''],
-        ['080055HH1FR2', '4945666777', 'FR FRENCH', '910155', 'FR', 'inactive', 'active', ''],
-        // Add more elements here
-    ];
 
-    const serialTable = document.querySelectorAll('.ms-countries-table-body');
-
-    function populateSerialTable(index) {
-        let serialTableBody = serialTable[index]
-        serialTableBody.innerHTML = '';
-        for (const rowData of ms_countriesData) {
-            const row = document.createElement('tr');
-            row.classList.add("ms-countries-tr")
-            for (const value of rowData) {
-                const cell = document.createElement('td');
-                cell.classList.add("ms-countries-td")
-                cell.textContent = value;
-                row.appendChild(cell);
-            }
-            serialTableBody.appendChild(row);
-        }
-    }
-
-    populateSerialTable(0);
-    populateSerialTable(1);
-
+    
 </script>
+<script src="{% static 'dashboard/js/data_quality.js' %}"></script>
+<script>
+    const activeActiveFlCountryPercentage = "{{ active_active_flcountry_percentage|floatformat:2 }}";
+    const activeActiveCstNamePercentage = "{{ active_active_cstname_percentage|floatformat:2 }}";
+    const activeShippedFlCountryPercentage = "{{ active_shipped_flcountry_percentage|floatformat:2 }}";
+    const activeShippedCstNamePercentage = "{{ active_shipped_cstname_percentage|floatformat:2 }}";
+    const inactiveOnStockFlCountryPercentage = "{{ inactive_on_stock_flcountry_percentage|floatformat:2 }}";
+    const inactiveOnStockCstNamePercentage = "{{ inactive_on_stock_cstname_percentage|floatformat:2 }}";
+    console.log("Active/Active FL-Country Percentage:", activeActiveFlCountryPercentage);
+
+    // Rest of your JavaScript code
+</script>
+
+
 </html>

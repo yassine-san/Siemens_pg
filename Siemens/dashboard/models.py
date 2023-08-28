@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class Can24(models.Model):
     date = models.DateField(primary_key=True)
     equipment_material_number = models.CharField(max_length=255, blank=True, null=True)

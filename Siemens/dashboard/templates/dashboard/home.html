@@ -15,7 +15,11 @@
     <ul class="nav-list">
       <li style="display: flex;cursor: pointer">
           <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
-          <a href="{% url 'dashboard:excel_import' %}" style="padding:6px;color : black">Import excel </a>
+          <a href="{% url 'dashboard:excel_import' file_index=1 %}" style="padding:6px;color : black">Import Excel 1</a>
+      </li>
+        <li style="display: flex;cursor: pointer">
+          <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
+          <a href="{% url 'dashboard:excel_import' file_index=2 %}" style="padding:6px;color : black">Import Excel 2</a>
       </li>
       <li class="dropdown">
         <button class="dropbtn">{{ username }}</button>
@@ -23,11 +27,11 @@
         <a href="#option1">
             <img src="{% static "dashboard/img/profile_icon.png" %}" alt="Icon 1" width="30px">
         </a>
-        <a href="#option2">
+        <a href="register_pt/">
             <img src="{% static "dashboard/img/add_user_icon.png" %}" alt="Icon 2" width="30px">
         </a>
         <a onclick="logout()">
-            <img src="{% static "dashboard/img/logout icon.png" %}" alt="Logout" width="30px">
+            <img src="{% static "dashboard/img/logout icon.png" %}" alt="Icon 3" width="30px">
         </a>
     </div>
       </li>
@@ -35,10 +39,10 @@
   </nav>
 
   <div class="content">
-        <div class="card card1"> <p>Africa_IB</p></div>
-        <div class="card card2"> <p>Data Quality</p></div>
-        <div class="card card3"> <p>SRS Connectivity</p></div>
-        <div class="card card4"> <p>MR CAN24</p></div>
+        <a class="redirection-links" href="#"><div class="card card1"> <p>Africa_IB</p></div></a>
+        <a class="redirection-links" href="{% url "dashboard:quality_interface" %}"><div class="card card2"> <p>Data Quality</p></div></a>
+        <a class="redirection-links" href="#"><div class="card card3"> <p>SRS Connectivity</p></div></a>
+        <a class="redirection-links" href="#"><div class="card card4"> <p>MR CAN24</p></div></a>
   </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
