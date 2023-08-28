@@ -6,6 +6,7 @@ from openpyxl import load_workbook
 from django.http import JsonResponse
 from .models import Quality
 from .models import Srs
+from .models import Can24
 from django.db.models import Count
 from datetime import datetime
 from datetime import date
@@ -368,6 +369,78 @@ def get_Connection_score_chart_data(request):
         data['Connection_not_active_counts'].append(Connection_not_active_count)
     
     return JsonResponse(data)
+def CAN24(request):
+       # chart_data = get_srs_chart_data()
+
+        
+        return render(request, 'dashboard/MR_CAN24.html')
+def get_srs_connectivity_chart_data2(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1), date(2023, 8, 15)]
+    
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'connected_counts': [],
+        'x_connectable_counts': [],
+    }
+
+    for d in dates:
+        connected_count = Can24.objects.filter(date=d, srs_connectivity='Connected').count()
+        x_connectable_count = Can24.objects.filter(date=d, srs_connectivity='X_Connectable').count()
+        data['connected_counts'].append(connected_count)
+        data['x_connectable_counts'].append(x_connectable_count)
+    
+    return JsonResponse(data)
+def get_ruh_readiness_chart_data2(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1), date(2023, 8, 15)]
+    
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'RUH_Ready_counts': [],
+        'X_not_RUH_ready_counts': [],
+    }
+
+    for d in dates:
+        RUH_Ready_count = Can24.objects.filter(date=d, ruh_readiness='RUH Ready').count()
+        X_not_RUH_ready_count = Can24.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
+        data['RUH_Ready_counts'].append(RUH_Ready_count)
+        data['X_not_RUH_ready_counts'].append(X_not_RUH_ready_count)
+    
+    return JsonResponse(data)
+
+def get_Data_Sent_chart_data2(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1), date(2023, 8, 15)]
+    
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'Data_Sent_counts': [],
+        'X_Data_not_sent_counts': [],
+    }
+
+    for d in dates:
+        Data_Sent_count = Can24.objects.filter(date=d, data_sent='Data Sent').count()
+        X_Data_not_sent_count = Can24.objects.filter(date=d, data_sent='X_Data not sent').count()
+        data['Data_Sent_counts'].append(Data_Sent_count)
+        data['X_Data_not_sent_counts'].append(X_Data_not_sent_count)
+    
+    return JsonResponse(data)
+
+def get_Connection_score_chart_data2(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1), date(2023, 8, 15)]
+    
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'Connection_active_counts': [],
+        'Connection_not_active_counts': [],
+    }
+
+    for d in dates:
+        Connection_active_count = Can24.objects.filter(date=d, connection_score='Connection active').count()
+        Connection_not_active_count = Can24.objects.filter(date=d, connection_score='Connection not active').count()
+        data['Connection_active_counts'].append(Connection_active_count)
+        data['Connection_not_active_counts'].append(Connection_not_active_count)
+    
+    return JsonResponse(data)
+
 
 
 

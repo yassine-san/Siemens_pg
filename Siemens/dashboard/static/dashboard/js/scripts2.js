@@ -73,9 +73,7 @@ fetch(script_url)
             .catch(error => {
                 console.error('Error fetching SRS Connectivity data:', error);
             });
-
-/////////////
-fetch(script_url1)
+            fetch(script_url1)
             .then(response => response.json())
             .then(data => {
                 const ruhReadinessData = {
@@ -302,4 +300,3 @@ fetch(script_url3)
             .catch(error => {
                 console.error('Error fetching Connection score data:', error);
             });
-
