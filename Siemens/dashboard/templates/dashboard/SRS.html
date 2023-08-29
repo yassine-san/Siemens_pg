@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SRS</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="{% static "dashboard/css/SRS.css" %}">
+        </head>
+    <body>
+        <h1 >Africa Connectivity Dashboard</h1>
+        <div class="grid-container">
+            
+            <div class="item">
+                <div class="card">
+                    <h2>72</h2>
+                    <h2>Systems with Active Connectivity</h2>
+                  </div>
+            </div>
+            <div class="item">
+                <div class="histogram">
+                    <h5>SRS Connectivity</h5>
+                    <canvas id="histogram1"></canvas>
+                  </div>
+            </div>
+            <div class="item">
+                <div class="histogram">
+                    <h5>RUH Readiness</h5>
+                    <canvas id="histogram2"></canvas>
+                  </div>
+            </div>
+            <div class="item">
+                <div class="histogram">
+                    <h5>SRS Data sent</h5>
+                    <canvas id="histogram3"></canvas>
+                  </div>
+            </div>
+            <div class="item">
+                <div class="histogram">
+                    <h5>Active System Connectivity</h5>
+                    <canvas id="histogram4"></canvas>
+                  </div>
+            </div>
+            <div class="item">
+                <div class="table-card">
+                    <div class="table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Equipment service partner ID</th>
+                          <th>Equipment service partner text</th>
+                          <th>Country Region</th>
+                          <th>Func Location Name</th>
+                          <th>Equipment material number</th>
+                          <th>Equipment serial number</th>
+                          <th>Material division text</th>
+                          <th>Material IVK name</th>
+                          <th>SRS Connectivity</th>
+                          <th>RUH Readiness</th>
+                          <th>Data Sent</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>12345</td>
+                          <td>Service Partner ABC</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                          <td>test</td>
+                         
+                        </tr>
+                       
+                      </tbody>
+                    </table>
+                    </div>
+                    </div>
+            </div>
+          </div>
+          
+          <script src="{% static "dashboard/js/SRS.js" %}"></script>
+    </body>
+    
+
+</html>

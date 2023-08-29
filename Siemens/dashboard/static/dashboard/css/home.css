@@ -183,3 +183,7 @@ body, h1, h2, h3 {
 }
 
 
+.redirection-links{
+    text-decoration: none;
+    color: black;
+}

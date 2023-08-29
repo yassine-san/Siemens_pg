@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+import secrets, string
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password, partenariat, user_type):
@@ -13,6 +13,7 @@ class AccountManager(BaseUserManager):
             partenariat=partenariat,
             user_type=user_type
         )
+        user.username = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(16))
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -24,6 +25,7 @@ class AccountManager(BaseUserManager):
             partenariat=partenariat,
             user_type=user_type
         )
+        user.username = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(16))
         user.is_admin = True
         user.is_active = True
         user.is_staff = True
@@ -34,7 +36,7 @@ class AccountManager(BaseUserManager):
 
 class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name="email", max_length=60, unique=True)
-    username = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=30, unique=False)
     date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)

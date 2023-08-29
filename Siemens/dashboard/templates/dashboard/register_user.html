@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter utilisateur</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static "dashboard/css/register.css" %}">
+</head>
+<body>
+    <div class="login-container">
+        <div style="text-align: center">
+            <img src="{% static "dashboard/img/Siemens_Healthineers_logo.png" %}" style="scale: 1;width:200px" alt="Siemenes_logo">
+        </div>
+
+        <div class="credentials_container">
+            <div class="email-label cn">
+                <label for="email-inp">Email </label>
+            </div>
+            <div class="email-inp cn">
+                <input id="email-inp" class="email-input" type="text" placeholder="Email">
+            </div>
+
+
+            <div class="email-labe cn">
+                <label for="conf_email">Confirmer email</label>
+            </div>
+            <div class="email-in cn">
+                <input id="conf_email" class="email-input" type="text" placeholder="Email">
+            </div>
+
+
+
+            <div class="password-label cn">
+                <label>Partenariat</label>
+            </div>
+            <details class="custom-select">
+                <summary class="radios">
+                    {% for partner in partenariats %}
+                        <input type="radio" name="item" id="{{ partner.servicepartnername }}" title="{{ partner.servicepartnername }}" {% if forloop.first %}checked{% endif %}>
+                    {% endfor %}
+                </summary>
+                <ul class="list">
+                    {% for partner in partenariats %}
+                        <li>
+                            <label for="{{ partner.servicepartnername }}">{{ partner.servicepartnername }}</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </details>
+
+        </div>
+
+        <div class="submit-container">
+            <button id="submit-btn" class="login-button" onclick="createUser()" disabled>Créer</button>
+        </div>
+    </div>
+</body>
+
+{% csrf_token %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioInputs = document.querySelectorAll('input[name="item"]');
+        radioInputs.forEach(function(input) {
+            input.addEventListener('change', function() {
+                radioInputs.forEach(function(radio) {
+                    radio.classList.remove('selected');
+                });
+                if (this.checked) {
+                    this.classList.add('selected');
+                }
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const radioInputs = document.querySelectorAll('input[name="item"]');
+        radioInputs[0].classList.add('selected');
+    });
+
+    function getSelectedValue() {
+        const selectedInput = document.getElementsByClassName('selected')[0];
+        if (selectedInput) {
+            return selectedInput.title;
+        } else {
+            return null;
+        }
+    }
+
+
+    function createUser() {
+
+        let email = document.getElementById("email-inp").value
+        let rEmail = document.getElementById("conf_email").value
+        let partenariat = getSelectedValue()
+        if (validateEmail(email)){
+            if(email === rEmail){
+                registerUser(email,partenariat)
+            }else{
+                alert("les email ne sont pas identiques")
+            }
+        }else{
+            alert("ce n'est pas un email valide")
+        }
+    }
+
+    function validateEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+        return emailPattern.test(email);
+    }
+
+    function registerUser(email, partner){
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            type: "POST",
+            url: "{% url "dashboard:registerNewUser" %}",
+            data: {
+                email: email,
+                partner: partner,
+                csrfmiddlewaretoken: csrfToken
+            },
+            success: function(response) {
+                window.location.href = "/home/";
+            },
+            error: function() {
+                alert("Login failed.");
+            }
+        });
+    }
+
+
+    const emailInput = document.getElementById("email-inp");
+    const confirmEmailInput = document.getElementById("conf_email");
+    const submitButton = document.getElementById("submit-btn");
+
+
+    // Function to check if both email fields are empty
+    function areEmailFieldsEmpty() {
+        return emailInput.value.trim() === "" || confirmEmailInput.value.trim() === "";
+    }
+
+    // Function to enable/disable the button based on email field values
+    function updateButtonState() {
+        submitButton.disabled = areEmailFieldsEmpty()  ;
+    }
+
+    // Attach event listeners to input fields
+    emailInput.addEventListener("input", updateButtonState);
+    confirmEmailInput.addEventListener("input", updateButtonState);
+
+
+
+</script>
+</html>

@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static "dashboard/css/can24.css" %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Africa Connectivity Dashboard</title>
+</head>
+<body>
+  <h1 >Africa Connectivity Dashboard</h1>
+  <div class="grid-container">
+  <div class="grid-container">
+    <div class="item">
+      <div class="card">
+        <p>16</p>
+        <h2>Systems with Active Connectivity</h2>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>Active System Connectivity</h5>
+        <canvas id="histogram4"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>SRS Connectivity</h5>
+        <canvas id="histogram1"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>RUH Readiness</h5>
+        <canvas id="histogram2"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>SRS Data sent</h5>
+        <canvas id="histogram3"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>CAN 24 Connectable Systems</h5>
+        <canvas id="histogram5"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>CAN 24 Data Sent</h5>
+        <canvas id="histogram6"></canvas>
+      </div>
+    </div>
+    <div class="item">
+      <div class="histogram grid-item">
+        <h5>Connected CAN 24 Modul</h5>
+        <canvas id="histogram7"></canvas>
+      </div>
+    </div>
+    <div class="item item-special">
+      <div class="table-card">
+        <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Equipment service partner ID</th>
+              <th>Equipment service partner text</th>
+              <th>Country Region</th>
+              <th>Func Location Name</th>
+              <th>Equipment material number</th>
+              <th>Equipment serial number</th>
+              <th>Material division text</th>
+              <th>Material IVK name</th>
+              <th>SRS Connectivity</th>
+              <th>RUH Readiness</th>
+              <th>Data Sent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>12345</td>
+              <td>Service Partner ABC</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+              <td>test</td>
+             
+            </tr>
+           
+          </tbody>
+        </table>
+        </div>
+        </div>
+    </div>
+  </div>
+  </div>
+  <script src="{% static "dashboard/js/can24.js" %}"></script>
+</body>
+</html>
