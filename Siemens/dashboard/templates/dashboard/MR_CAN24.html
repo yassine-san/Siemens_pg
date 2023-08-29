@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static "dashboard/css/can24.css" %}">
+  <link rel="stylesheet" href="{% static 'dashboard/css/styles.css' %}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title>Africa Connectivity Dashboard</title>
 </head>
@@ -19,25 +19,25 @@
       </div>
     </div>
     <div class="item">
-      <div class="histogram grid-item">
+      <div class="histogram grid-item" style="height: 300px;">
         <h5>Active System Connectivity</h5>
         <canvas id="histogram4"></canvas>
       </div>
     </div>
     <div class="item">
-      <div class="histogram grid-item">
+      <div class="histogram grid-item" style="height: 300px;">
         <h5>SRS Connectivity</h5>
         <canvas id="histogram1"></canvas>
       </div>
     </div>
     <div class="item">
-      <div class="histogram grid-item">
+      <div class="histogram grid-item" style="height: 300px;">
         <h5>RUH Readiness</h5>
         <canvas id="histogram2"></canvas>
       </div>
     </div>
     <div class="item">
-      <div class="histogram grid-item">
+      <div class="histogram grid-item" style="height: 300px;">
         <h5>SRS Data sent</h5>
         <canvas id="histogram3"></canvas>
       </div>
@@ -101,7 +101,13 @@
         </div>
     </div>
   </div>
-  </div>
-  <script src="{% static "dashboard/js/can24.js" %}"></script>
+  
+  <script >
+    let script_url = "{% url 'dashboard:get_srs_connectivity_chart_data2' %}"
+    let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data2' %}"
+    let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data2' %}"
+    let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data2' %}"
+</script>
+    <script src="{% static 'dashboard/js/scripts2.js' %}"></script>
 </body>
 </html>

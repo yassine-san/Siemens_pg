@@ -2,33 +2,30 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Four columns with equal width */
   grid-gap: 10px; /* Gap between grid items */
-  grid-template-columns: 300px 300px 300px 300px auto;
   
 }
 
 .item {
   background-color: white;
-  padding: 10px;
+  padding: 20px;
   text-align: center;
   border: 1px solid #FF8C00;
-  padding-top: -40px;
 }
 
-/* Positioning the 5th item under the 2nd item of the first row */
-.item:nth-child(5) {
-  grid-row: 2; /* Second row */
-  grid-column: 2; /* Second column */
+/* Positioning the 9th item under the 2nd item of the 2nd row */
+
+.item.item-special {
+  grid-row: 3; /* Third row */
+  grid-column: 2 / span 2; /* Spans two columns starting from the second column */
+  width: 650px; /* Custom width for the 9th item */
+  height: 160px; /* Custom height for the 9th item */
+}
+.item:nth-child(-n + 8) {
+  width: 300px;
 }
 
-/* Positioning the 6th item under the 3rd item of the first row */
-.item:nth-child(6) {
-  grid-row: 2; /* Second row */
-  grid-column: 3; /* Third column */
-  width: 570px; /* Custom width for the 6th item */
-  height: 220px; /* Custom height for the 6th item */
-}
 .table-card {
-  width: 590px; /* Set your desired fixed width */
+  width: 650px; /* Set your desired fixed width */
   overflow: hidden; /* Hide horizontal overflow */
 }
 
@@ -50,10 +47,9 @@
   text-align: left;
 }
 
+
 h1 {
   border: 1px solid #008B8B;
   text-align: center;
   color: #FF8C00 ;
 }
-
-
