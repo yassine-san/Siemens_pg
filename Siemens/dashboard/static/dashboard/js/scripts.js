@@ -34,9 +34,11 @@ fetch(script_url)
                 display: true,
                 text: 'Nombre de Equipments',
             },
-            stacked: true,
+            ticks: {
+              stepSize: 100
+            },
+            stacked: false,
             beginAtZero: true,
-            max: Math.max(...data.connected_counts, ...data.x_connectable_counts),
         },
     },
     plugins: {
@@ -111,9 +113,12 @@ fetch(script_url1)
                 display: true,
                 text: 'Nombre de Equipments',
             },
-            stacked: true,
+            ticks: {
+              stepSize: 100
+            },
+            stacked: false,
             beginAtZero: true,
-            max: Math.max(...data.RUH_Ready_counts, ...data.X_not_RUH_ready_counts),
+            //max: Math.max(...data.RUH_Ready_counts, ...data.X_not_RUH_ready_counts),
         },
     },
     plugins: {
@@ -139,7 +144,8 @@ fetch(script_url1)
     responsive: true,
     maintainAspectRatio: false,
 };
-    
+
+
                 // Create the chart
                 new Chart(document.getElementById('histogram2'), {
                     type: 'bar',
@@ -187,9 +193,12 @@ fetch(script_url2)
                 display: true,
                 text: 'Nombre de Equipments',
             },
-            stacked: true,
+            ticks: {
+              stepSize: 100
+            },
+            stacked: false,
             beginAtZero: true,
-            max: Math.max(...data.Data_Sent_counts, ...data.X_Data_not_sent_counts),
+            //max: Math.max(...data.Data_Sent_counts, ...data.X_Data_not_sent_counts),
         },
     },
     plugins: {
@@ -263,9 +272,12 @@ fetch(script_url3)
                 display: true,
                 text: 'Nombre de Equipments',
             },
-            stacked: true,
+            ticks: {
+              stepSize: 10
+            },
+            stacked: false,
             beginAtZero: true,
-            max: Math.max(...data.Connection_active_counts, ...data.Connection_not_active_counts),
+            //max: Math.max(...data.Connection_active_counts, ...data.Connection_not_active_counts),
         },
     },
     plugins: {

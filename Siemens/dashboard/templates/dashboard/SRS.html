@@ -4,65 +4,79 @@
 <html>
 <head>
     <title>SRS</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
     <link rel="stylesheet" href="{% static 'dashboard/css/SRS.css' %}">
 </head>
 <body>
-    <h1>Africa Connectivity Dashboard</h1>
-    <div class="grid-container">
-        <div class="item" >
-            <div class="card">
-                <h2>72</h2>
-                <h2>Systems with Active Connectivity</h2>
+    <h1 style="margin-top: 0">Africa Connectivity Dashboard</h1>
+
+    <div class="container">
+        <div class="upper-container">
+            <div class="upper">
+                <div class="item-container active-system-count-container">
+                    <h2 class="active-system-count">72</h2>
+                    <h2 class="active-system-title">Systems with Active Connectivity</h2>
+                </div>
+                <div class="item-container srs-connectivity-container">
+                    <div class="histogram">
+                        <h5 class="item-title">SRS Connectivity</h5>
+                        <canvas id="histogram1"></canvas>
+                    </div>
+                </div>
+                <div class="item-container RUH-readline-container">
+                    <div class="histogram">
+                        <h5 class="item-title">RUH Readiness</h5>
+                        <canvas id="histogram2"></canvas>
+                    </div>
+                </div>
+                <div class="item-container srs-data-sent-container">
+                    <div class="histogram">
+                        <h5 class="item-title">SRS Data sent</h5>
+                        <canvas id="histogram3"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px">
-                <h5>SRS Connectivity</h5>
-                <canvas id="histogram1"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>RUH Readiness</h5>
-                <canvas id="histogram2"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>SRS Data sent</h5>
-                <canvas id="histogram3"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>Active System Connectivity</h5>
-                <canvas id="histogram4"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="table-card">
+        <div class="lower-container">
+            <div class="lower">
+                <div class="item-container country-region-container">
+
+                </div>
+
+                <div class="item-container active-system-connectivity-container">
+                    <div class="histogram histogram-s" >
+                        <h5 class="item-title">Active System Connectivity</h5>
+                        <canvas id="histogram4"></canvas>
+                    </div>
+                </div>
+                <div class="item-container equipments-table-container">
                 <div class="table-wrapper">
-                    <table>
+                    <div class="missing-cst-header">
+                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                        <div class="fl-cst-pagination">
+                            <button class="pagination-btn-cst left">&lt;</button>
+                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
+                            <button class="pagination-btn-cst right">&gt;</button>
+                        </div>
+                    </div>
+                    <div class="missing-names-table-container">
+                        <table class="ms-names-table" style="display:block">
                         <thead>
                             <tr>
-                                <th>Equipment service partner ID</th>
-                                <th>Equipment service partner text</th>
-                                <th>Country Region</th>
-                                <th>Func Location Name</th>
-                                <th>Equipment material number</th>
-                                <th>Equipment serial number</th>
-                                <th>Material division text</th>
-                                <th>Material IVK name</th>
-                                <th>SRS Connectivity</th>
-                                <th>RUH Readiness</th>
-                                <th>Data Sent</th>
+                                <th class="ms-names-table-header">Equipment service partner ID</th>
+                                <th class="ms-names-table-header">Equipment service partner text</th>
+                                <th class="ms-names-table-header">Country Region</th>
+                                <th class="ms-names-table-header">Func Location Name</th>
+                                <th class="ms-names-table-header">Equipment material number</th>
+                                <th class="ms-names-table-header">Equipment serial number</th>
+                                <th class="ms-names-table-header">Material division text</th>
+                                <th class="ms-names-table-header">Material IVK name</th>
+                                <th class="ms-names-table-header">SRS Connectivity</th>
+                                <th class="ms-names-table-header">RUH Readiness</th>
+                                <th class="ms-names-table-header">Data Sent</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody class="ms-names-table-body">
+                            <tr class="ms-names-tr">
                                 <td>1234</td>
                                 <td>Service Partner ABC</td>
                                 <td>test</td>
@@ -75,22 +89,342 @@
                                 <td>test</td>
                                 <td>test</td>
                             </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
+                            <tr class="ms-names-tr">
+                                    <td>1234</td>
+                                    <td>Service Partner ABC</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tr>
                         </tbody>
                     </table>
+                    </div>
+
+                </div>
+            </div>
                 </div>
             </div>
         </div>
-    </div>
+
+{#    <div class="grid-container">#}
+{#        <div class="item" >#}
+{#            <div class="card">#}
+{#                <h2>72</h2>#}
+{#                <h2>Systems with Active Connectivity</h2>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px">#}
+{#                <h5>SRS Connectivity</h5>#}
+{#                <canvas id="histogram1"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>RUH Readiness</h5>#}
+{#                <canvas id="histogram2"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>SRS Data sent</h5>#}
+{#                <canvas id="histogram3"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>Active System Connectivity</h5>#}
+{#                <canvas id="histogram4"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="table-card">#}
+{#                <div class="table-wrapper">#}
+{#                    <div class="missing-cst-header">#}
+{#                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>#}
+{#                        <div class="fl-cst-pagination">#}
+{#                            <button class="pagination-btn-cst left">&lt;</button>#}
+{#                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>#}
+{#                            <button class="pagination-btn-cst right">&gt;</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="missing-names-table-container"></div>#}
+{#                    <table class="ms-names-table" style="display:block">#}
+{#                        <thead>#}
+{#                            <tr>#}
+{#                                <th class="ms-names-table-header">Equipment service partner ID</th>#}
+{#                                <th class="ms-names-table-header">Equipment service partner text</th>#}
+{#                                <th class="ms-names-table-header">Country Region</th>#}
+{#                                <th class="ms-names-table-header">Func Location Name</th>#}
+{#                                <th class="ms-names-table-header">Equipment material number</th>#}
+{#                                <th class="ms-names-table-header">Equipment serial number</th>#}
+{#                                <th class="ms-names-table-header">Material division text</th>#}
+{#                                <th class="ms-names-table-header">Material IVK name</th>#}
+{#                                <th class="ms-names-table-header">SRS Connectivity</th>#}
+{#                                <th class="ms-names-table-header">RUH Readiness</th>#}
+{#                                <th class="ms-names-table-header">Data Sent</th>#}
+{#                            </tr>#}
+{#                        </thead>#}
+{#                        <tbody class="ms-names-table-body">#}
+{#                            <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        </tbody>#}
+{#                    </table>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <script >
-        let script_url = "{% url 'dashboard:get_srs_connectivity_chart_data' %}"
+        let script_url =  "{% url 'dashboard:get_srs_connectivity_chart_data' %}"
         let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data' %}"
         let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data' %}"
         let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data' %}"
 
     </script>
     
-        <script src="{% static 'dashboard/js/scripts.js' %}"></script>
+    <script src="{% static 'dashboard/js/scripts.js' %}"></script>
 
    
 </body>
