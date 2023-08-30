@@ -582,3 +582,14 @@ def get_equipment_data(request):
     equipment_page = paginator.get_page(page)
         
     return JsonResponse(list(equipment_page), safe=False)
+
+
+def get_equipment_dataAjax(request):
+    equipment_data = Srs.objects.all().values(
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+        'material_division_text', 'material_ivk_name', 'srs_connectivity',
+        'ruh_readiness', 'data_sent'
+    )
+
+    return JsonResponse(list(equipment_data), safe=False)

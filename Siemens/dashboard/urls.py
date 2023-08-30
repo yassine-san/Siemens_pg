@@ -29,6 +29,9 @@ urlpatterns = [
     path('get_equipment_data/', views.get_equipment_data, name='get_equipment_data'),
 
 
+    path('get_equipements_dataAjax/', views.get_equipment_dataAjax, name='get_equipment_dataAjax'),
+
+
 
 
 
