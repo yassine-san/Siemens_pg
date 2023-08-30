@@ -39,10 +39,10 @@
   </nav>
 
   <div class="content">
-        <a class="redirection-links" href="#"><div class="card card1"> <p>Africa_IB</p></div></a>
+        <a class="redirection-links" href="{% url "dashboard:get_africaIB" %}"><div class="card card1"> <p>Africa_IB</p></div></a>
         <a class="redirection-links" href="{% url "dashboard:quality_interface" %}"><div class="card card2"> <p>Data Quality</p></div></a>
-        <a class="redirection-links" href="#"><div class="card card3"> <p>SRS Connectivity</p></div></a>
-        <a class="redirection-links" href="#"><div class="card card4"> <p>MR CAN24</p></div></a>
+        <a class="redirection-links" href="{% url "dashboard:SRS_Connectivity" %}"><div class="card card3"> <p>SRS Connectivity</p></div></a>
+        <a class="redirection-links" href="{% url "dashboard:CAN24" %}"><div class="card card4"> <p>MR CAN24</p></div></a>
   </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

@@ -2,6 +2,7 @@ load_dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
 });
 
+
 let submitter = document.getElementsByClassName("submitter")[0]
 let importer = document.getElementById("files")
 
@@ -27,7 +28,7 @@ submitter.addEventListener("click", function() {
         formData.append("excel_file", selectedFile);
         formData.append("csrfmiddlewaretoken",csrfToken)
 
-        fetch("/upload-excel/", {
+        fetch(url, {
             method: "POST",
             body: formData,
         })
@@ -42,7 +43,6 @@ submitter.addEventListener("click", function() {
             message_dialog.showModal()
             let color  = data.status === 1 ? "green" : "red"
             errorMessage.style.backgroundColor = color
-
         })
         .catch(error => {
             console.error("Error:", error);

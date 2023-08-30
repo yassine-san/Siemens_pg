@@ -8,9 +8,54 @@
 </head>
 <body>
 
+<dialog id="loading">
+
+    <div class="multi-spinner-container">
+        <div class="multi-spinner">
+            <div class="multi-spinner">
+                <div class="multi-spinner">
+                   <div class="multi-spinner">
+                        <div class="multi-spinner">
+                            <div class="multi-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</dialog>
+
 <dialog id="filters_dialog">
-    <button class="close-button" onclick="filters_dialog.close()">×</button>
-    <span class="coming-soon">Coming Soon</span>
+    <div class="filter-section" style="margin-top: 18px">
+        <label class="filter-section-title">Status</label>
+        <div class="checkbox-group status_filter_cn">
+{#            <label><input type="checkbox" name="status_filter" value="all" checked>All</label>#}
+            <label><input type="checkbox" name="status_filter" value="active">Active</label>
+            <label><input type="checkbox" name="status_filter" value="inactive">Inactive</label>
+        </div>
+    </div>
+    <div class="filter-section">
+        <label class="filter-section-title">Substatus</label>
+        <div class="checkbox-group substatus_filter_cn">
+{#            <label><input type="checkbox" name="substatus_filter" value="all" checked>All</label>#}
+            <label><input type="checkbox" name="substatus_filter" value="active">Active</label>
+            <label><input type="checkbox" name="substatus_filter" value="location_unknown">Location Unknown</label>
+            <label><input type="checkbox" name="substatus_filter" value="on_stock">On Stock</label>
+            <label><input type="checkbox" name="substatus_filter" value="scrapped">Scrapped</label>
+            <label><input type="checkbox" name="substatus_filter" value="shipped">Shipped</label>
+        </div>
+    </div>
+    <div class="filter-section">
+        <label class="filter-section-title">Week</label>
+        <div class="checkbox-group week_filter_cn">
+            {% for week in weeks_filter %}
+                <label><input type="checkbox" name="week_filter" value="{{ week.week }}">{{ week.week }}</label>
+            {% endfor %}
+        </div>
+    </div>
+    <button class="apply-filter" onclick="checkFilters()"> Appliquer </button>
+
 </dialog>
 
 <div class="container">
@@ -22,33 +67,32 @@
             </div>
             <div class="card card2">
                 <p class="card-status">Active/Active</p>
-                <p class="card-value">{{ active_active_flcountry_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="active-active-flcountry"></p>
                 <p class="card-title">FL-Country Quality</p>
             </div>
             <div class="card card3">
                 <p class="card-status">Active/Active</p>
-                <p class="card-value">{{ active_active_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="active-active-cstname"></p>
                 <p class="card-title">Cst-Name Quality</p>
             </div>
             <div class="card card4">
                 <p class="card-status">Active/Shipped</p>
-                <p class="card-value">{{ active_shipped_flcountry_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="active-shipped-flcountry"></p>
                 <p class="card-title">FL-Country Quality</p>
-                
             </div>
             <div class="card card5">
                 <p class="card-status">Active/Shipped</p>
-                <p class="card-value">{{ active_shipped_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="active-shipped-cstname"></p>
                 <p class="card-title">Cst-Name Quality</p>
             </div>
             <div class="card card6">
                 <p class="card-status">Inactive/On Stock</p>
-                <p class="card-value">{{ inactive_on_stock_flcountry_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="inactive-on-stock-flcountry"></p>
                 <p class="card-title">FL-Country Quality</p>
             </div>
             <div class="card card7">
                 <p class="card-status">Inactive/On Stock</p>
-                <p class="card-value">{{ inactive_on_stock_cstname_percentage|floatformat:2 }}%</p>
+                <p class="card-value" id="inactive-on-stock-cstname"></p>
                 <p class="card-title">Cst-Name Quality</p>
             </div>
         </div>
@@ -125,14 +169,19 @@
 
 </body>
 
+<script>
+    loading.showModal()
+</script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
     let missing_flCountry_URL = "{% url 'dashboard:missing_fl_countries' %}"
     let missing_customerName_URL = "{% url 'dashboard:missing_customer_name' %}"
-
-
-    
+    let getPercents = "{% url 'dashboard:get_percents' %}"
 </script>
+
+
+{% csrf_token %}
 <script src="{% static 'dashboard/js/data_quality.js' %}"></script>
 <script>
     const activeActiveFlCountryPercentage = "{{ active_active_flcountry_percentage|floatformat:2 }}";
@@ -141,9 +190,8 @@
     const activeShippedCstNamePercentage = "{{ active_shipped_cstname_percentage|floatformat:2 }}";
     const inactiveOnStockFlCountryPercentage = "{{ inactive_on_stock_flcountry_percentage|floatformat:2 }}";
     const inactiveOnStockCstNamePercentage = "{{ inactive_on_stock_cstname_percentage|floatformat:2 }}";
-    console.log("Active/Active FL-Country Percentage:", activeActiveFlCountryPercentage);
 
-    // Rest of your JavaScript code
+
 </script>
 
 

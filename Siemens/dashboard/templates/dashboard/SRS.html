@@ -4,93 +4,370 @@
 <html>
 <head>
     <title>SRS</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <link rel="stylesheet" href="{% static 'dashboard/css/SRS.css' %}">
 </head>
 <body>
-    <h1>Africa Connectivity Dashboard</h1>
-    <div class="grid-container">
-        <div class="item" >
-            <div class="card">
-                <h2>72</h2>
-                <h2>Systems with Active Connectivity</h2>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px">
-                <h5>SRS Connectivity</h5>
-                <canvas id="histogram1"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>RUH Readiness</h5>
-                <canvas id="histogram2"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>SRS Data sent</h5>
-                <canvas id="histogram3"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="histogram" style="height: 300px;">
-                <h5>Active System Connectivity</h5>
-                <canvas id="histogram4"></canvas>
-            </div>
-        </div>
-        <div class="item">
-            <div class="table-card">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Equipment service partner ID</th>
-                                <th>Equipment service partner text</th>
-                                <th>Country Region</th>
-                                <th>Func Location Name</th>
-                                <th>Equipment material number</th>
-                                <th>Equipment serial number</th>
-                                <th>Material division text</th>
-                                <th>Material IVK name</th>
-                                <th>SRS Connectivity</th>
-                                <th>RUH Readiness</th>
-                                <th>Data Sent</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1234</td>
-                                <td>Service Partner ABC</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <h1 style="margin-top: 0">Africa Connectivity Dashboard</h1>
+
+    <div class="container">
+        <div class="upper-container">
+            <div class="upper">
+                <div class="item-container active-system-count-container">
+                    <h2 class="active-system-count">72</h2>
+                    <h2 class="active-system-title">Systems with Active Connectivity</h2>
+                </div>
+                <div class="item-container srs-connectivity-container">
+                    <div class="histogram">
+                        <h5 class="item-title">SRS Connectivity</h5>
+                        <canvas id="histogram1"></canvas>
+                    </div>
+                </div>
+                <div class="item-container RUH-readline-container">
+                    <div class="histogram">
+                        <h5 class="item-title">RUH Readiness</h5>
+                        <canvas id="histogram2"></canvas>
+                    </div>
+                </div>
+                <div class="item-container srs-data-sent-container">
+                    <div class="histogram">
+                        <h5 class="item-title">SRS Data sent</h5>
+                        <canvas id="histogram3"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="lower-container">
+            <div class="lower">
+                <div class="item-container country-region-container">
+
+                </div>
+
+                <div class="item-container active-system-connectivity-container">
+                    <div class="histogram histogram-s" >
+                        <h5 class="item-title">Active System Connectivity</h5>
+                        <canvas id="histogram4"></canvas>
+                    </div>
+                </div>
+                <div class="item-container equipments-table-container">
+                <div class="table-wrapper">
+                    <div class="missing-cst-header">
+                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                        <div class="fl-cst-pagination">
+                            <button class="pagination-btn-cst left">&lt;</button>
+                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
+                            <button class="pagination-btn-cst right">&gt;</button>
+                        </div>
+                    </div>
+                    <div class="missing-names-table-container">
+                        <table class="ms-names-table" style="display:block">
+                        <thead>
+                            <tr>
+                                <th class="ms-names-table-header">Equipment service partner ID</th>
+                                <th class="ms-names-table-header">Equipment service partner text</th>
+                                <th class="ms-names-table-header">Country Region</th>
+                                <th class="ms-names-table-header">Func Location Name</th>
+                                <th class="ms-names-table-header">Equipment material number</th>
+                                <th class="ms-names-table-header">Equipment serial number</th>
+                                <th class="ms-names-table-header">Material division text</th>
+                                <th class="ms-names-table-header">Material IVK name</th>
+                                <th class="ms-names-table-header">SRS Connectivity</th>
+                                <th class="ms-names-table-header">RUH Readiness</th>
+                                <th class="ms-names-table-header">Data Sent</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ms-names-table-body">
+                            
+                        </tbody>
+                    </table>
+                    </div>
+
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+
+{#    <div class="grid-container">#}
+{#        <div class="item" >#}
+{#            <div class="card">#}
+{#                <h2>72</h2>#}
+{#                <h2>Systems with Active Connectivity</h2>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px">#}
+{#                <h5>SRS Connectivity</h5>#}
+{#                <canvas id="histogram1"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>RUH Readiness</h5>#}
+{#                <canvas id="histogram2"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>SRS Data sent</h5>#}
+{#                <canvas id="histogram3"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="histogram" style="height: 300px;">#}
+{#                <h5>Active System Connectivity</h5>#}
+{#                <canvas id="histogram4"></canvas>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="item">#}
+{#            <div class="table-card">#}
+{#                <div class="table-wrapper">#}
+{#                    <div class="missing-cst-header">#}
+{#                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>#}
+{#                        <div class="fl-cst-pagination">#}
+{#                            <button class="pagination-btn-cst left">&lt;</button>#}
+{#                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>#}
+{#                            <button class="pagination-btn-cst right">&gt;</button>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="missing-names-table-container"></div>#}
+{#                    <table class="ms-names-table" style="display:block">#}
+{#                        <thead>#}
+{#                            <tr>#}
+{#                                <th class="ms-names-table-header">Equipment service partner ID</th>#}
+{#                                <th class="ms-names-table-header">Equipment service partner text</th>#}
+{#                                <th class="ms-names-table-header">Country Region</th>#}
+{#                                <th class="ms-names-table-header">Func Location Name</th>#}
+{#                                <th class="ms-names-table-header">Equipment material number</th>#}
+{#                                <th class="ms-names-table-header">Equipment serial number</th>#}
+{#                                <th class="ms-names-table-header">Material division text</th>#}
+{#                                <th class="ms-names-table-header">Material IVK name</th>#}
+{#                                <th class="ms-names-table-header">SRS Connectivity</th>#}
+{#                                <th class="ms-names-table-header">RUH Readiness</th>#}
+{#                                <th class="ms-names-table-header">Data Sent</th>#}
+{#                            </tr>#}
+{#                        </thead>#}
+{#                        <tbody class="ms-names-table-body">#}
+{#                            <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        <tr class="ms-names-tr">#}
+{#                                <td>1234</td>#}
+{#                                <td>Service Partner ABC</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                                <td>test</td>#}
+{#                            </tr>#}
+{#                        </tbody>#}
+{#                    </table>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <script >
-        let script_url = "{% url 'dashboard:get_srs_connectivity_chart_data' %}"
+        let script_url =  "{% url 'dashboard:get_srs_connectivity_chart_data' %}"
         let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data' %}"
         let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data' %}"
         let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data' %}"
 
     </script>
     
-        <script src="{% static 'dashboard/js/scripts.js' %}"></script>
+    <script src="{% static 'dashboard/js/scripts.js' %}"></script>
+    <!-- Add this script tag after jQuery -->
+    <script>
+        $(document).ready(function() {
+         const tableBody = document.querySelector('.ms-names-table-body');
+         const paginationInfo = document.querySelector('.pagination-info-cst');
+         const paginationButtons = document.querySelectorAll('.pagination-btn-cst');
+         
+         const itemsPerPage = 500;  // Adjust this as needed
+         
+         async function fetchEquipmentData(page) {
+             const response = await fetch(`/home/get_equipment_data/?page=${page}`);
+             return await response.json();
+         }
+         async function fetchTotalPages() {
+             const response = await fetch(`/home/get_equipment_data/`);
+             const data = await response.json();
+             return Math.ceil(data.length / itemsPerPage);
+         }
+         
+         async function populateTable(page) {
+             const data = await fetchEquipmentData(page);
+             
+             // Clear previous table content
+             tableBody.innerHTML = '';
+             
+             // Populate the table rows with fetched data
+             
+             data.forEach(item => {
+                 const row = document.createElement('tr');
+                 // Assuming the order matches the table headers
+                 row.innerHTML = `
+                     <td>${item.equipment_service_partner_id}</td>
+                     <td>${item.equipment_service_partner_text}</td>
+                     <td>${item.country_region}</td>
+                     <td>${item.func_location_name}</td>
+                     <td>${item.equipment_material_number}</td>
+                     <td>${item.equipment_serial_number}</td>
+                     <td>${item.material_division_text}</td>
+                     <td>${item.material_ivk_name}</td>
+                     <td>${item.srs_connectivity}</td>
+                     <td>${item.ruh_readiness}</td>
+                     <td>${item.data_sent}</td>
+                 `;
+                 tableBody.appendChild(row);
+             });
+     
+             const totalPages = await fetchTotalPages();
+     
+             // Update pagination info and buttons
+             paginationInfo.textContent = `${page}/${totalPages}`;
+             paginationButtons[0].disabled = page === 1;
+             paginationButtons[1].disabled = page === totalPages;
+         }
+         
+         paginationButtons.forEach(button => {
+             button.addEventListener('click', async () => {
+                 const currentPage = parseInt(paginationInfo.textContent.split('/')[0]);
+                 const nextPage = button.classList.contains('right') ? currentPage + 1 : currentPage - 1;
+                 if (nextPage >= 1) {
+                     await populateTable(nextPage);
+                 }
+             });
+         });
+         
+         // Load initial table data
+         populateTable(1);
+     });
+     </script>
+     
+
 
    
 </body>

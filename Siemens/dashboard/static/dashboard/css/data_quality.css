@@ -167,7 +167,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: 3fr 3fr;
     grid-column-gap: 1px;
-    grid-row-gap: 12px;
+    grid-row-gap: 1px;
 }
 
 /*.filters-container {*/
@@ -180,17 +180,23 @@
     overflow: scroll;
     grid-area: 1 / 1 / 4 / 2;
     border: 1px solid cadetblue;
-
 }
+
 
 .missing-countries-table-container{
     width: 100%;
-    height: 240px;
-    overflow: scroll;
+    overflow: auto;
+    max-height: 40%;
+}
+
+.missing-names-table-container{
+    width: 100%;
+    max-height: 240px;
+    overflow: auto;
 }
 
 .missing-names {
-    overflow: scroll;
+    overflow: hidden;
     grid-area: 2 / 1 / 4 / 2;
     border: 1px solid cadetblue;
 }
@@ -207,7 +213,7 @@
     overflow-y: scroll; /* Enable vertical scroll */
 }
 
-.ms-countries-table-header {
+.ms-countries-table-header{
     background-color: white;
     padding: 10px;
     text-align: center;
@@ -365,16 +371,17 @@
 
 #filters_dialog{
     width: 60%;
-    height: 40%;
-    border: 1px solid black;
+    height: 45%;
+    border: 1px solid #ffffff;
     border-radius: .6em;
     position: relative;
     padding: 20px;
     text-align: center; /* Center align content */
+    background-color: #ffffff;
 }
 
 #filters_dialog::backdrop{
-    background-color: rgba(255, 185, 130, .7); /* Semi-transparent red */
+    background-color: rgba(134, 134, 134, 0.7); /* Semi-transparent red */
 }
 
 .close-button {
@@ -389,12 +396,142 @@
 }
 
 .close-button:hover {
-  color: red;
+  color: #ff7308;
 }
 
-.coming-soon {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.filter-section {
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    background-color: #f5e4da;
+    padding: 10px;
+    height: 15%;
+    border-radius: .4em;
+}
+
+.filter-section-title{
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    width: 120px;
+    height: 30px;
+    padding: 4px;
+    position: relative;
+    top : 10px;
+}
+
+/* Style for checkbox group */
+.checkbox-group {
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center; /* Vertically center the checkboxes and labels */
+    justify-content: center;
+}
+
+/* Style for checkboxes */
+.checkbox-group label {
+    display: flex;
+    align-items: center; /* Center vertically within label container */
+    margin-right: 15px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: .3em;
+}
+
+/* Style for the checkboxes */
+.checkbox-group input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.week_filter_cn{
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    max-height: 50px;
+    width: 600px;
+}
+
+.status_filter_cn{
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    max-height: 50px;
+    width: 190px;
+    overflow-x: auto;
+}
+
+.substatus_filter_cn{
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    max-height: 50px;
+    width: 590px;
+    overflow-x: auto;
+}
+
+.apply-filter{
+    background-color: #9de59d;
+    border: 1px solid #9de59d;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 18px;
+    border-radius: .3em;
+    width: 100px;
+    text-decoration: none;
+}
+
+
+#loading{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center; /* Center align content */
+    background-color: rgba(222, 220, 220, 0.9);
+    border: none;
+}
+
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin: 13% auto 30px;
+}
+
+.multi-spinner {
+  position: absolute;
+  width: calc(100% - 9.9px);
+  height: calc(100% - 9.9px);
+  border: 5px solid transparent;
+  border-top-color: #ff5722;
+  border-radius: 50%;
+  -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+  animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+}
+
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+         transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
