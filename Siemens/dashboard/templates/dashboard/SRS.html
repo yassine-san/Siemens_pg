@@ -5,6 +5,13 @@
 <head>
     <title>SRS</title>
     <link rel="stylesheet" href="{% static 'dashboard/css/SRS.css' %}">
+    
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    
+
 </head>
 <body>
     <h1 style="margin-top: 0">Africa Connectivity Dashboard</h1>
@@ -13,8 +20,8 @@
         <div class="upper-container">
             <div class="upper">
                 <div class="item-container active-system-count-container">
-                    <h2 class="active-system-count">72</h2>
-                    <h2 class="active-system-title">Systems with Active Connectivity</h2>
+                    <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>
+                    <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>
                 </div>
                 <div class="item-container srs-connectivity-container">
                     <div class="histogram">
@@ -39,6 +46,11 @@
         <div class="lower-container">
             <div class="lower">
                 <div class="item-container country-region-container">
+                    <!-- <div id="map" style="height: 300px;"></div> -->
+                    <div id="geoChartContainer"></div>
+
+                    
+
 
                 </div>
 
@@ -195,75 +207,116 @@
             getMissingFlCstAjax();
 
 
-         {#const tableBody = document.querySelector('.ms-names-table-body');#}
-         {#const paginationInfo = document.querySelector('.pagination-info-cst');#}
-         {#const paginationButtons = document.querySelectorAll('.pagination-btn-cst');#}
-         {##}
-         {#const itemsPerPage = 500;  // Adjust this as needed#}
-         {##}
-         {#async function fetchEquipmentData(page) {#}
-         {#    const response = await fetch(`/home/get_equipment_data/?page=${page}`);#}
-         {#    return await response.json();#}
-         {# }#}
-         {#async function fetchTotalPages() {#}
-         {#    const response = await fetch(`/home/get_equipment_data/`);#}
-         {#    const data = await response.json();#}
-         {#    return Math.ceil(data.length / itemsPerPage);#}
-         {# }#}
-         {##}
-         {#async function populateTable(page) {#}
-         {#    const data = await fetchEquipmentData(page);#}
-         {##}
-         {#    // Clear previous table content#}
-         {#    tableBody.innerHTML = '';#}
-         {##}
-         {#    // Populate the table rows with fetched data#}
-         {##}
-         {#    data.forEach(item => {#}
-         {#        const row = document.createElement('tr');#}
-         {#        // Assuming the order matches the table headers#}
-         {#        row.innerHTML = `#}
-         {#            <td>${item.equipment_service_partner_id}</td>#}
-         {#            <td>${item.equipment_service_partner_text}</td>#}
-         {#            <td>${item.country_region}</td>#}
-         {#            <td>${item.func_location_name}</td>#}
-         {#            <td>${item.equipment_material_number}</td>#}
-         {#            <td>${item.equipment_serial_number}</td>#}
-         {#            <td>${item.material_division_text}</td>#}
-         {#            <td>${item.material_ivk_name}</td>#}
-         {#            <td>${item.srs_connectivity}</td>#}
-         {#            <td>${item.ruh_readiness}</td>#}
-         {#            <td>${item.data_sent}</td>#}
-         {#        `;#}
-         {#        tableBody.appendChild(row);#}
-         {#    });#}
-         {##}
-         {#    const totalPages = await fetchTotalPages();#}
-         {##}
-         {#    // Update pagination info and buttons#}
-         {#    paginationInfo.textContent = `${page}/${totalPages}`;#}
-         {#    paginationButtons[0].disabled = page === 1;#}
-         {#    paginationButtons[1].disabled = page === totalPages;#}
-         {# }#}
-         {##}
-         {#paginationButtons.forEach(button => {#}
-         {#    button.addEventListener('click', async () => {#}
-         {#        const currentPage = parseInt(paginationInfo.textContent.split('/')[0]);#}
-         {#        const nextPage = button.classList.contains('right') ? currentPage + 1 : currentPage - 1;#}
-         {#        if (nextPage >= 1) {#}
-         {#            await populateTable(nextPage);#}
-         {#        }#}
-         {#    });#}
-         {# }); #}
-         {##}
-         {#// Load initial table data#}
-         {#populateTable(1);#}
+        
 
 
 
 
      });
      </script>
+     
+     <script>
+        google.charts.load('current', {
+            'packages': ['geochart'],
+            'callback': drawGeoChart
+        });
+    
+        function drawGeoChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Country', 'Popularity'],
+                ['Liberia', 1],
+                ['Angola', 1],
+                ['Benin', 1],
+                ['Equatorial Guinea', 1],
+                ['Niger', 1],
+                ['Togo', 1],
+                ['Guinea', 1],
+                ['Congo, Republic', 1],
+                ['Mauritania', 1],
+                ['Burkina Faso', 1],
+                ['Rwanda', 1],
+                ['Tunisia', 1],
+                ['Mali', 1],
+                ['Cameroon', 1],
+                ['Chad', 1],
+                ['Gambia', 1],
+                ['Burundi', 1],
+                ['Gabon', 1],
+                ['Congo, the Democratic Republic of the', 1],
+                ['Senegal', 1],
+                ['Côte dIvoire', 1]
+            ]);
+    
+            var options = {
+                backgroundColor: { fill: 'transparent' }, // Show the ocean
+                colorAxis: { colors: ['#008B8B', '#FF8C00'], legend: 'none' }, // Hide the color axis key
+                defaultColor: '#008B8B', // Default color for countries not in the data
+                region: 'world',
+                displayMode: 'regions',
+                resolution: 'countries',
+                magnifyingGlass: { enable: true } // Enable zooming
+            };
+    
+            var chart = new google.visualization.GeoChart(document.getElementById('geoChartContainer'));
+    
+            chart.draw(data, options);
+        }
+    </script>
+    
+     <!-- <script>
+        // Create a Leaflet map instance
+        var map = L.map('map').setView([0, 0], 2); // Set the initial center and zoom level
+
+        // Add OpenStreetMap as the base map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Define custom colors for countries
+        var customColors = {
+            'Liberia': '#FF8C00',
+            'Angola': '#FF8C00',
+            'Benin': '#FF8C00',
+            'Equatorial Guinea': '#FF8C00',
+            'Niger': '#FF8C00',
+            'Togo': '#FF8C00',
+            'Guinea': '#FF8C00',
+            'Congo, Republic': '#FF8C00',
+            'Mauritania': '#FF8C00',
+            'Burkina Faso': '#FF8C00',
+            'Rwanda': '#FF8C00',
+            'Tunisia': '#FF8C00',
+            'Mali': '#FF8C00',
+            'Cameroon': '#FF8C00',
+            'Chad': '#FF8C00',
+            'Gambia': '#FF8C00',
+            'Burundi': '#FF8C00',
+            'Gabon': '#FF8C00',
+            'Congo, the Democratic Republic of the': '#FF8C00',
+            'Senegal': '#FF8C00',
+            'Côte dIvoire': '#FF8C00'
+        };
+
+        // Load a GeoJSON file of world countries
+        fetch('https://unpkg.com/leaflet@1.7.1/dist/images/geojson/world-countries.geojson')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (geojson) {
+                // Create a custom GeoJSON layer with the specified colors
+                L.geoJSON(geojson, {
+                    style: function (feature) {
+                        var countryName = feature.properties.name;
+                        console.log(countryName); // Add this line for debugging
+                        var color = customColors[countryName] || '#008B8B'; // Default color
+                        return { fillColor: color, fillOpacity: 0.7, color: 'white', weight: 1 };
+                    }
+                }).addTo(map);
+            });
+    </script> -->
+
+   
+
 
 
 

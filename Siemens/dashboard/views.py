@@ -593,3 +593,18 @@ def get_equipment_dataAjax(request):
     )
 
     return JsonResponse(list(equipment_data), safe=False)
+
+
+def active_system_count(request):
+    # Execute the SQL query
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM srs_connectivity 
+            WHERE connection_score = 'Connection active'
+            AND date = (SELECT MAX(date) FROM srs_connectivity);
+        """)
+        active_system_count = cursor.fetchone()[0]  # Get the count value
+
+    # Pass the count value to the template
+    return render(request, 'dashboard/SRS.html', {'active_system_count': active_system_count})
