@@ -12,6 +12,8 @@ from users.models import Account, Account
 from django.db.models import Count
 from datetime import datetime
 from datetime import date
+from django.core.paginator import Paginator
+
 
 
 def home(request):
@@ -565,3 +567,44 @@ def get_Connection_score_chart_data2(request):
         data['Connection_not_active_counts'].append(Connection_not_active_count)
 
     return JsonResponse(data)
+def get_equipment_data(request):
+    equipment_data = Srs.objects.all().values(
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region', 
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number', 
+        'material_division_text', 'material_ivk_name', 'srs_connectivity', 
+        'ruh_readiness', 'data_sent'
+    )
+    
+    itemsPerPage = 500  # Adjust this according to your needs
+    paginator = Paginator(equipment_data, itemsPerPage)
+        
+    page = request.GET.get('page')
+    equipment_page = paginator.get_page(page)
+        
+    return JsonResponse(list(equipment_page), safe=False)
+
+
+def get_equipment_dataAjax(request):
+    equipment_data = Srs.objects.all().values(
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+        'material_division_text', 'material_ivk_name', 'srs_connectivity',
+        'ruh_readiness', 'data_sent'
+    )
+
+    return JsonResponse(list(equipment_data), safe=False)
+
+
+def active_system_count(request):
+    # Execute the SQL query
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT COUNT(*) 
+            FROM srs_connectivity 
+            WHERE connection_score = 'Connection active'
+            AND date = (SELECT MAX(date) FROM srs_connectivity);
+        """)
+        active_system_count = cursor.fetchone()[0]  # Get the count value
+
+    # Pass the count value to the template
+    return render(request, 'dashboard/SRS.html', {'active_system_count': active_system_count})

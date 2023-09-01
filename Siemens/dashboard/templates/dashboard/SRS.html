@@ -5,6 +5,13 @@
 <head>
     <title>SRS</title>
     <link rel="stylesheet" href="{% static 'dashboard/css/SRS.css' %}">
+    
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    
+
 </head>
 <body>
     <h1 style="margin-top: 0">Africa Connectivity Dashboard</h1>
@@ -13,8 +20,8 @@
         <div class="upper-container">
             <div class="upper">
                 <div class="item-container active-system-count-container">
-                    <h2 class="active-system-count">72</h2>
-                    <h2 class="active-system-title">Systems with Active Connectivity</h2>
+                    <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>
+                    <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>
                 </div>
                 <div class="item-container srs-connectivity-container">
                     <div class="histogram">
@@ -39,6 +46,11 @@
         <div class="lower-container">
             <div class="lower">
                 <div class="item-container country-region-container">
+                    <!-- <div id="map" style="height: 300px;"></div> -->
+                    <div id="geoChartContainer"></div>
+
+                    
+
 
                 </div>
 
@@ -76,136 +88,7 @@
                             </tr>
                         </thead>
                         <tbody class="ms-names-table-body">
-                            <tr class="ms-names-tr">
-                                <td>1234</td>
-                                <td>Service Partner ABC</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                            </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
-                            <tr class="ms-names-tr">
-                                    <td>1234</td>
-                                    <td>Service Partner ABC</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                </tr>
+                            
                         </tbody>
                     </table>
                     </div>
@@ -216,203 +99,7 @@
             </div>
         </div>
 
-{#    <div class="grid-container">#}
-{#        <div class="item" >#}
-{#            <div class="card">#}
-{#                <h2>72</h2>#}
-{#                <h2>Systems with Active Connectivity</h2>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="item">#}
-{#            <div class="histogram" style="height: 300px">#}
-{#                <h5>SRS Connectivity</h5>#}
-{#                <canvas id="histogram1"></canvas>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="item">#}
-{#            <div class="histogram" style="height: 300px;">#}
-{#                <h5>RUH Readiness</h5>#}
-{#                <canvas id="histogram2"></canvas>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="item">#}
-{#            <div class="histogram" style="height: 300px;">#}
-{#                <h5>SRS Data sent</h5>#}
-{#                <canvas id="histogram3"></canvas>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="item">#}
-{#            <div class="histogram" style="height: 300px;">#}
-{#                <h5>Active System Connectivity</h5>#}
-{#                <canvas id="histogram4"></canvas>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="item">#}
-{#            <div class="table-card">#}
-{#                <div class="table-wrapper">#}
-{#                    <div class="missing-cst-header">#}
-{#                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>#}
-{#                        <div class="fl-cst-pagination">#}
-{#                            <button class="pagination-btn-cst left">&lt;</button>#}
-{#                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>#}
-{#                            <button class="pagination-btn-cst right">&gt;</button>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                    <div class="missing-names-table-container"></div>#}
-{#                    <table class="ms-names-table" style="display:block">#}
-{#                        <thead>#}
-{#                            <tr>#}
-{#                                <th class="ms-names-table-header">Equipment service partner ID</th>#}
-{#                                <th class="ms-names-table-header">Equipment service partner text</th>#}
-{#                                <th class="ms-names-table-header">Country Region</th>#}
-{#                                <th class="ms-names-table-header">Func Location Name</th>#}
-{#                                <th class="ms-names-table-header">Equipment material number</th>#}
-{#                                <th class="ms-names-table-header">Equipment serial number</th>#}
-{#                                <th class="ms-names-table-header">Material division text</th>#}
-{#                                <th class="ms-names-table-header">Material IVK name</th>#}
-{#                                <th class="ms-names-table-header">SRS Connectivity</th>#}
-{#                                <th class="ms-names-table-header">RUH Readiness</th>#}
-{#                                <th class="ms-names-table-header">Data Sent</th>#}
-{#                            </tr>#}
-{#                        </thead>#}
-{#                        <tbody class="ms-names-table-body">#}
-{#                            <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        <tr class="ms-names-tr">#}
-{#                                <td>1234</td>#}
-{#                                <td>Service Partner ABC</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                                <td>test</td>#}
-{#                            </tr>#}
-{#                        </tbody>#}
-{#                    </table>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
@@ -422,9 +109,216 @@
         let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data' %}"
         let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data' %}"
 
+
+        let missing_customerName_URL = "{% url 'dashboard:get_equipment_dataAjax' %}"
+
     </script>
     
     <script src="{% static 'dashboard/js/scripts.js' %}"></script>
+    <!-- Add this script tag after jQuery -->
+    <script>
+        $(document).ready(function() {
+
+            let flCstData = [];
+            const $tableBodyCst = $('.ms-names-table-body');
+            let rowsPerPageCst = 500;
+            let pageCst = 1;
+
+            function populateFlCst(start, end) {
+                let rowsHTML = '';
+
+                for (let i = start; i < end && i < flCstData.length; i++) {
+                    let rowClass = i === end - 1 ? 'middle-row' : '';
+                    rowsHTML += `
+                        <tr class="ms-names-tr ${rowClass}">
+                            <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>
+                            <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>
+                            <td class="ms-names-td">${flCstData[i].country_region}</td>
+                            <td class="ms-names-td">${flCstData[i].func_location_name}</td>
+                            <td class="ms-names-td">${flCstData[i].equipment_material_number}</td>
+                            <td class="ms-names-td">${flCstData[i].equipment_serial_number}</td>
+                            <td class="ms-names-td">${flCstData[i].material_division_text}</td>
+                            <td class="ms-names-td">${flCstData[i].material_ivk_name}</td>
+                            <td class="ms-names-td">${flCstData[i].srs_connectivity}</td>
+                            <td class="ms-names-td">${flCstData[i].ruh_readiness}</td>
+                            <td class="ms-names-td">${flCstData[i].data_sent}</td>
+                        </tr>`;
+                }
+
+                $tableBodyCst.html(rowsHTML);
+            }
+
+            function updatePaginationInfoCst() {
+                let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
+                $('.pagination-info-cst').text(`${pageCst}/${totalPages}`);
+            }
+
+            function updatePageContentCst() {
+                let start = (pageCst - 1) * rowsPerPageCst;
+                let end = start + rowsPerPageCst;
+
+                if (end > flCstData.length) {
+                    end = flCstData.length;
+                }
+
+                populateFlCst(start, end);
+            }
+
+            $('.pagination-btn-cst.left').on('click', function() {
+                if (pageCst > 1) {
+                    pageCst--;
+                    updatePaginationInfoCst();
+                    updatePageContentCst();
+                }
+            });
+
+            $('.pagination-btn-cst.right').on('click', function() {
+                let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
+                if (pageCst < totalPages) {
+                    pageCst++;
+                    updatePaginationInfoCst();
+                    updatePageContentCst();
+                }
+            });
+
+            function getMissingFlCstAjax() {
+                // loading.showModal()
+                const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+                $.ajax({
+                    type: "GET",
+                    url: missing_customerName_URL,
+                    dataType: 'json',
+                    data: {
+                        //filters: JSON.stringify(currentFilters),
+                        //csrfmiddlewaretoken: csrfToken
+                    },
+                    success: function(fetchedData) {
+                        flCstData = fetchedData;
+                        updatePaginationInfoCst();
+                        updatePageContentCst();
+                        // loading.close()
+                    },
+                    error: function(error) {
+                        console.error('Error fetching data:', error);
+                    }
+                });
+            }
+
+            getMissingFlCstAjax();
+
+
+        
+
+
+
+
+     });
+     </script>
+     
+     <script>
+        google.charts.load('current', {
+            'packages': ['geochart'],
+            'callback': drawGeoChart
+        });
+    
+        function drawGeoChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Country', 'Popularity'],
+                ['Liberia', 1],
+                ['Angola', 1],
+                ['Benin', 1],
+                ['Equatorial Guinea', 1],
+                ['Niger', 1],
+                ['Togo', 1],
+                ['Guinea', 1],
+                ['Congo, Republic', 1],
+                ['Mauritania', 1],
+                ['Burkina Faso', 1],
+                ['Rwanda', 1],
+                ['Tunisia', 1],
+                ['Mali', 1],
+                ['Cameroon', 1],
+                ['Chad', 1],
+                ['Gambia', 1],
+                ['Burundi', 1],
+                ['Gabon', 1],
+                ['Congo, the Democratic Republic of the', 1],
+                ['Senegal', 1],
+                ['Côte dIvoire', 1]
+            ]);
+    
+            var options = {
+                backgroundColor: { fill: 'transparent' }, // Show the ocean
+                colorAxis: { colors: ['#008B8B', '#FF8C00'], legend: 'none' }, // Hide the color axis key
+                defaultColor: '#008B8B', // Default color for countries not in the data
+                region: 'world',
+                displayMode: 'regions',
+                resolution: 'countries',
+                magnifyingGlass: { enable: true } // Enable zooming
+            };
+    
+            var chart = new google.visualization.GeoChart(document.getElementById('geoChartContainer'));
+    
+            chart.draw(data, options);
+        }
+    </script>
+    
+     <!-- <script>
+        // Create a Leaflet map instance
+        var map = L.map('map').setView([0, 0], 2); // Set the initial center and zoom level
+
+        // Add OpenStreetMap as the base map
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Define custom colors for countries
+        var customColors = {
+            'Liberia': '#FF8C00',
+            'Angola': '#FF8C00',
+            'Benin': '#FF8C00',
+            'Equatorial Guinea': '#FF8C00',
+            'Niger': '#FF8C00',
+            'Togo': '#FF8C00',
+            'Guinea': '#FF8C00',
+            'Congo, Republic': '#FF8C00',
+            'Mauritania': '#FF8C00',
+            'Burkina Faso': '#FF8C00',
+            'Rwanda': '#FF8C00',
+            'Tunisia': '#FF8C00',
+            'Mali': '#FF8C00',
+            'Cameroon': '#FF8C00',
+            'Chad': '#FF8C00',
+            'Gambia': '#FF8C00',
+            'Burundi': '#FF8C00',
+            'Gabon': '#FF8C00',
+            'Congo, the Democratic Republic of the': '#FF8C00',
+            'Senegal': '#FF8C00',
+            'Côte dIvoire': '#FF8C00'
+        };
+
+        // Load a GeoJSON file of world countries
+        fetch('https://unpkg.com/leaflet@1.7.1/dist/images/geojson/world-countries.geojson')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (geojson) {
+                // Create a custom GeoJSON layer with the specified colors
+                L.geoJSON(geojson, {
+                    style: function (feature) {
+                        var countryName = feature.properties.name;
+                        console.log(countryName); // Add this line for debugging
+                        var color = customColors[countryName] || '#008B8B'; // Default color
+                        return { fillColor: color, fillOpacity: 0.7, color: 'white', weight: 1 };
+                    }
+                }).addTo(map);
+            });
+    </script> -->
+
+   
+
+
+
 
    
 </body>

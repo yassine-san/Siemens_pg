@@ -16,7 +16,7 @@ urlpatterns = [
 
     path('upload-another-excel/', views.upload_another_excel, name='upload_another_excel'),
 
-    path('SRS_Connectivity/', views.SRS_Connectivity, name='SRS_Connectivity'),
+    path('SRS_Connectivity/', views.active_system_count, name='SRS_Connectivity'),
     path('get_srs_connectivity_chart_data/', views.get_srs_connectivity_chart_data, name='get_srs_connectivity_chart_data'),
     path('get_ruh_readiness_chart_data/', views.get_ruh_readiness_chart_data, name='get_ruh_readiness_chart_data'),
     path('get_Data_Sent_chart_data/', views.get_Data_Sent_chart_data, name='get_Data_Sent_chart_data'),
@@ -26,6 +26,11 @@ urlpatterns = [
     path('get_ruh_readiness_chart_data2/', views.get_ruh_readiness_chart_data2, name='get_ruh_readiness_chart_data2'),
     path('get_Data_Sent_chart_data2/', views.get_Data_Sent_chart_data2, name='get_Data_Sent_chart_data2'),
     path('get_Connection_score_chart_data2/', views.get_Connection_score_chart_data2, name='get_Connection_score_chart_data2'),
+    path('get_equipment_data/', views.get_equipment_data, name='get_equipment_data'),
+
+
+    path('get_equipements_dataAjax/', views.get_equipment_dataAjax, name='get_equipment_dataAjax'),
+
 
 
 
@@ -47,4 +52,6 @@ urlpatterns = [
     # ajax requests
     path('missing_fl_countries/', views.get_missing_fl_countries, name='missing_fl_countries'),
     path('missing_customer_name/', views.get_missing_customer_name, name='missing_customer_name'),
+    path('active_system_count/', views.active_system_count, name='active_system_count'),
+
 ]
