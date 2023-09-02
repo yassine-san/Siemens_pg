@@ -8,12 +8,28 @@
     
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-    
 
 </head>
 <body>
+    <dialog id="loading">
+
+        <div class="multi-spinner-container">
+            <div class="multi-spinner">
+                <div class="multi-spinner">
+                    <div class="multi-spinner">
+                       <div class="multi-spinner">
+                            <div class="multi-spinner">
+                                <div class="multi-spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </dialog>
+
+
     <h1 style="margin-top: 0">Africa Connectivity Dashboard</h1>
 
     <div class="container">
@@ -63,7 +79,10 @@
                 <div class="item-container equipments-table-container">
                 <div class="table-wrapper">
                     <div class="missing-cst-header">
-                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                        <div class="title-and-import">
+                            <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                            <button class="pagination-btn-cst excel" onclick="to_excel()" style="margin-left: 10px"><img src="{% static 'dashboard/img/excel_ico.png' %}" alt="Excel Logo" style="width: 30px"></button>
+                        </div>
                         <div class="fl-cst-pagination">
                             <button class="pagination-btn-cst left">&lt;</button>
                             <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
@@ -99,9 +118,14 @@
             </div>
         </div>
 
+    <script>
+        loading.showModal()
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
 
     <script >
         let script_url =  "{% url 'dashboard:get_srs_connectivity_chart_data' %}"
@@ -113,7 +137,8 @@
         let missing_customerName_URL = "{% url 'dashboard:get_equipment_dataAjax' %}"
 
     </script>
-    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     <script src="{% static 'dashboard/js/scripts.js' %}"></script>
     <!-- Add this script tag after jQuery -->
     <script>
@@ -182,7 +207,7 @@
             });
 
             function getMissingFlCstAjax() {
-                // loading.showModal()
+                loading.showModal()
                 const csrfToken = $('[name=csrfmiddlewaretoken]').val();
                 $.ajax({
                     type: "GET",
@@ -196,7 +221,7 @@
                         flCstData = fetchedData;
                         updatePaginationInfoCst();
                         updatePageContentCst();
-                        // loading.close()
+                        loading.close()
                     },
                     error: function(error) {
                         console.error('Error fetching data:', error);
@@ -204,11 +229,51 @@
                 });
             }
 
+            window.to_excel = async function (){
+                data = flCstData
+                const headers = [
+                  'equipment_service_partner_id',
+                  'equipment_service_partner_text',
+                  'country_region',
+                  'func_location_name',
+                  'equipment_material_number',
+                  'equipment_serial_number',
+                  'material_division_text',
+                  'material_ivk_name',
+                  'srs_connectivity',
+                  'ruh_readiness',
+                  'data_sent',
+                ];
+                try {
+                    const fileHandle = await window.showSaveFilePicker({
+                      suggestedName: 'exported_data.csv',
+                      types: [
+                        {
+                          description: 'CSV Files',
+                          accept: {
+                            'text/csv': ['.csv'],
+                          },
+                        },
+                      ],
+                    });
+
+                    const writableStream = await fileHandle.createWritable();
+                    const csvData = [headers].concat(
+                      data.map((item) =>
+                        `${item.equipment_service_partner_id},${item.equipment_service_partner_text},${item.country_region},${item.func_location_name},${item.equipment_material_number},${item.equipment_serial_number},${item.material_division_text},${item.material_ivk_name},${item.srs_connectivity},${item.ruh_readiness},${item.data_sent}`
+                      )
+                    );
+
+                    await writableStream.write(csvData.join('\n'));
+                    await writableStream.close();
+
+                    console.log('File saved successfully');
+                  } catch (error) {
+                    console.error('Error saving file:', error);
+                  }
+            }
+
             getMissingFlCstAjax();
-
-
-        
-
 
 
 

@@ -1,38 +1,151 @@
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #F8D69C #CCD5D7;
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+*::-webkit-scrollbar-track {
+    border-radius: 9px;
+    background-color: #CCD5D7;
+}
+
+*::-webkit-scrollbar-track:hover {
+    background-color: #B8C0C2;
+}
+
+*::-webkit-scrollbar-track:active {
+    background-color: #B8C0C2;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #838080;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #505050;
+}
+
+*::-webkit-scrollbar-thumb:active {
+    background-color: #505050;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0;
+    grid-row-gap: 10px;
+    height: 550px;
+}
+
+.upper-container {
+    width: 100%;
+    grid-area: 1 / 1 / 2 / 2;
+}
+.lower-container {
+    width: 100%;
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+
+.upper {
+    display: grid;
+    height: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0;
+}
+
+.item-container {
+    border: 1px solid #FF8C00;
+    position: relative;
+}
+
+.active-system-count-container {
+    grid-area: 1 / 1 / 2 / 2;
+}
+.srs-connectivity-container {
+    position: relative;
+    grid-area: 1 / 2 / 2 / 3;
+}
+.RUH-readline-container {
+    grid-area: 1 / 3 / 2 / 4;
+}
+.srs-data-sent-container {
+    grid-area: 1 / 4 / 2 / 5;
+}
+
+.lower {
+    display: grid;
+    height: 100%;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 10px;
+    grid-row-gap: 0;
+}
+
+.country-region-container {
+    grid-area: 1 / 1 / 2 / 2;
+}
+.active-system-connectivity-container {
+    grid-area: 1 / 2 / 2 / 3;
+}
+.equipments-table-container {
+    grid-area: 1 / 3 / 2 / 5;
+}
+
+.active-system-count-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.histogram{
+    position: relative;
+    height: 35vh;
+    width: 300px;
+}
+
+.item-title{
+    position: relative;
+    text-align: center;
+    top: -20px;
+    left: 0;
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Four columns with equal width */
   grid-gap: 10px; /* Gap between grid items */
-  grid-template-columns: 300px 300px 300px 300px auto;
   
 }
 
-.item {
-  background-color: white;
-  padding: 20px;
-  text-align: center;
-  border: 1px solid #FF8C00;
-}
 
-/* Positioning the 5th item under the 2nd item of the first row */
-.item:nth-child(5) {
-  grid-row: 2; /* Second row */
-  grid-column: 2; /* Second column */
-}
 
-/* Positioning the 6th item under the 3rd item of the first row */
-.item:nth-child(6) {
-  grid-row: 2; /* Second row */
-  grid-column: 3; /* Third column */
-  width: 570px; /* Custom width for the 6th item */
-  height: 220px; /* Custom height for the 6th item */
-}
-.table-card {
-  width: 590px; /* Set your desired fixed width */
-  overflow: hidden; /* Hide horizontal overflow */
-}
 
 .table-wrapper {
   width: 100%;
+  height: 100%;
   overflow-x: auto; /* Enable horizontal scrolling */
 }
 
@@ -56,3 +169,190 @@ h1 {
 }
 
 
+
+.missing-cst-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-and-import {
+    display: flex;
+    align-items: center;
+}
+
+.title-and-import p {
+    color: black;
+    font-weight: bold;
+    margin-left: 10px;
+    min-width: 120px;
+    margin-right: 10px; /* Add margin to separate from the button */
+}
+.fl-cst-pagination {
+    width: 150px;
+    max-width: 400px; /* Adjust the width */
+     /* Add a max-width if needed */
+    height: 40px; /* Adjust the height */
+    border: 2px solid cadetblue;
+    border-radius: 20px; /* Adjust the border radius */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjust alignment of buttons and info */
+    padding: 0 10px; /* Add padding for spacing */
+    box-sizing: border-box; /* Include padding in width/height calculation */
+}
+
+.pagination-btn-cst {
+    border: none;
+    background-color: #ff7308;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px; /* Adjust border radius */
+}
+
+.pagination-btn-cst:hover {
+    background-color: #ffab72;
+}
+
+.pagination-info-cst {
+    margin: 0;
+}
+
+.pagination-btn-cst.excel {
+    border: none;
+    background-color: #ff7308;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center; /* Center text and image vertically */
+    gap: 5px; /* Add space between text and image */
+}
+
+.pagination-btn-cst.excel:hover {
+    background-color: #ffab72;
+}
+
+.pagination-info-cst {
+    margin: 0;
+}
+
+.missing-names-table-container{
+    width: 100%;
+    max-height: 240px;
+    overflow: auto;
+}
+
+.missing-names {
+    overflow: hidden;
+    grid-area: 2 / 1 / 4 / 2;
+    border: 1px solid cadetblue;
+}
+
+
+
+.ms-names-table {
+    border-collapse: collapse;
+    width: inherit; /* Use 100% width */
+}
+
+.ms-names-table-body {
+    height: 120px; /* Limit the body's max height */
+    width: 200px; /* Use 100% width */
+    overflow-y: scroll; /* Enable vertical scroll */
+}
+
+.ms-names-table-header {
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    text-wrap: normal;
+    top: 0;
+    font-weight: normal;
+    color: #494949;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis;
+
+    z-index: 1; /* Ensure header is above the body */
+}
+
+.ms-names-tr{
+  max-height: 20px;
+}
+
+.ms-names-tr:nth-child(even) {
+    background-color: white;
+}
+
+.ms-names-tr:nth-child(odd) {
+    background-color: lightgray;
+}
+
+.ms-names-td {
+    font-size: 12px;
+    padding: 3px;
+    text-align: center; /* Center-align the content */
+    border: 1px solid #ccc; /* Add borders for cells */
+    box-sizing: border-box; /* Include border in cell dimensions */
+}
+
+
+
+#loading{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center; /* Center align content */
+    background-color: rgba(222, 220, 220, 0.9);
+    border: none;
+}
+
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin: 13% auto 30px;
+}
+
+.multi-spinner {
+  position: absolute;
+  width: calc(100% - 9.9px);
+  height: calc(100% - 9.9px);
+  border: 5px solid transparent;
+  border-top-color: #ff5722;
+  border-radius: 50%;
+  -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+  animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+}
+
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+         transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

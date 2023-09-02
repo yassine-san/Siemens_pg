@@ -142,10 +142,6 @@ canvas {
 
 
 
-.table-card {
-  width: 590px; /* Set your desired fixed width */
-  overflow: hidden; /* Hide horizontal overflow */
-}
 
 .table-wrapper {
   width: 100%;
@@ -181,6 +177,18 @@ h1 {
     justify-content: space-between;
 }
 
+.title-and-import {
+    display: flex;
+    align-items: center;
+}
+
+.title-and-import p {
+    color: black;
+    font-weight: bold;
+    margin-left: 10px;
+    min-width: 120px;
+    margin-right: 10px; /* Add margin to separate from the button */
+}
 .fl-cst-pagination {
     width: 150px;
     max-width: 400px; /* Adjust the width */
@@ -206,6 +214,27 @@ h1 {
 }
 
 .pagination-btn-cst:hover {
+    background-color: #ffab72;
+}
+
+.pagination-info-cst {
+    margin: 0;
+}
+
+.pagination-btn-cst.excel {
+    background-color: #dcd4d4;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center; /* Center text and image vertically */
+    gap: 5px; /* Add space between text and image */
+}
+
+.pagination-btn-cst.excel:hover {
     background-color: #ffab72;
 }
 
@@ -272,4 +301,58 @@ h1 {
     text-align: center; /* Center-align the content */
     border: 1px solid #ccc; /* Add borders for cells */
     box-sizing: border-box; /* Include border in cell dimensions */
+}
+
+
+
+#loading{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center; /* Center align content */
+    background-color: rgba(222, 220, 220, 0.9);
+    border: none;
+}
+
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin: 13% auto 30px;
+}
+
+.multi-spinner {
+  position: absolute;
+  width: calc(100% - 9.9px);
+  height: calc(100% - 9.9px);
+  border: 5px solid transparent;
+  border-top-color: #ff5722;
+  border-radius: 50%;
+  -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+  animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+}
+
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+         transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }

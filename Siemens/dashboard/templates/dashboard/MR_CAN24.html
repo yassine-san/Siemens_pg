@@ -1,113 +1,161 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'dashboard/css/styles.css' %}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <title>Africa Connectivity Dashboard</title>
-</head>
-<body>
-  <h1 >Africa Connectivity Dashboard</h1>
-  <div class="grid-container">
-  <div class="grid-container">
-    <div class="item">
-      <div class="card">
-        <p>16</p>
-        <h2>Systems with Active Connectivity</h2>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item" style="height: 300px;">
-        <h5>Active System Connectivity</h5>
-        <canvas id="histogram4"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item" style="height: 300px;">
-        <h5>SRS Connectivity</h5>
-        <canvas id="histogram1"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item" style="height: 300px;">
-        <h5>RUH Readiness</h5>
-        <canvas id="histogram2"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item" style="height: 300px;">
-        <h5>SRS Data sent</h5>
-        <canvas id="histogram3"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item">
-        <h5>CAN 24 Connectable Systems</h5>
-        <canvas id="histogram5"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item">
-        <h5>CAN 24 Data Sent</h5>
-        <canvas id="histogram6"></canvas>
-      </div>
-    </div>
-    <div class="item">
-      <div class="histogram grid-item">
-        <h5>Connected CAN 24 Modul</h5>
-        <canvas id="histogram7"></canvas>
-      </div>
-    </div>
-    <div class="item item-special">
-      <div class="table-card">
-        <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Equipment service partner ID</th>
-              <th>Equipment service partner text</th>
-              <th>Country Region</th>
-              <th>Func Location Name</th>
-              <th>Equipment material number</th>
-              <th>Equipment serial number</th>
-              <th>Material division text</th>
-              <th>Material IVK name</th>
-              <th>SRS Connectivity</th>
-              <th>RUH Readiness</th>
-              <th>Data Sent</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>12345</td>
-              <td>Service Partner ABC</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-              <td>test</td>
-             
-            </tr>
-           
-          </tbody>
-        </table>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="{% static 'dashboard/css/styles.css' %}">
+
+		<title>Africa Connectivity Dashboard</title>
+	</head>
+	<body>
+		<h1 style="margin-top: 0" >Africa Connectivity Dashboard</h1>
+		<div class="container">
+            <div class="upper-left-container">
+                <div class="item active-system-count-container" style="border: none">
+                    <div class="item-c">
+                        <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">16</p>
+                        <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>
+                    </div>
+                </div>
+
+                <div class="item active-system-chart-container">
+                    <div class="histogram grid-item">
+						<h5 class="item-title">Active System Connectivity</h5>
+						<canvas id="histogram4"></canvas>
+					</div>
+                </div>
+            </div>
+
+            <div class="upper-right-container">
+                <div class="item srs-connectivity-chart-container">
+                    <div class="histogram " style="height: 250px;">
+						<h5 class="item-title">SRS Connectivity</h5>
+						<canvas id="histogram1"></canvas>
+					</div>
+                </div>
+                <div class="item ruh-readlines-chart-container">
+                    <div class="histogram">
+						<h5 class="item-title">RUH Readiness</h5>
+						<canvas id="histogram2"></canvas>
+					</div>
+                </div>
+                <div class="item srs-data-sent-chart-container">
+                    <div class="histogram grid-item">
+						<h5 class="item-title">SRS Data sent</h5>
+						<canvas id="histogram3"></canvas>
+					</div>
+                </div>
+                <div class="item can24-connectable-chart-container">
+                    <div class="histogram grid-item">
+						<h5 class="item-title">CAN 24 Connectable Systems</h5>
+						<canvas id="histogram5"></canvas>
+					</div>
+                </div>
+                <div class="item can24-data-sent-chart-container">
+                    <div class="histogram grid-item">
+						<h5 class="item-title">CAN 24 Data Sent</h5>
+						<canvas id="histogram6"></canvas>
+					</div>
+                </div>
+                <div class="item connected-can24-chart-container">
+                    <div class="histogram grid-item">
+						<h5 class="item-title">Connected CAN 24 Modul</h5>
+						<canvas id="histogram7"></canvas>
+					</div>
+                </div>
+            </div>
+            <div class="bottom-left-container">
+                <div class="item" style="height: 250px;">
+
+{#                    map here#}
+
+                </div>
+            </div>
+            <div class="item bottom-right-container">
+                <div class="table-wrapper">
+                    <div class="missing-cst-header">
+                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                        <div class="fl-cst-pagination">
+                            <button class="pagination-btn-cst left">&lt;</button>
+                            <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
+                            <button class="pagination-btn-cst right">&gt;</button>
+                        </div>
+                    </div>
+                    <div class="missing-names-table-container">
+                        <table class="ms-names-table" style="display:block">
+                        <thead>
+                            <tr>
+                                <th class="ms-names-table-header">Equipment service partner ID</th>
+                                <th class="ms-names-table-header">Equipment service partner text</th>
+                                <th class="ms-names-table-header">Country Region</th>
+                                <th class="ms-names-table-header">Func Location Name</th>
+                                <th class="ms-names-table-header">Equipment material number</th>
+                                <th class="ms-names-table-header">Equipment serial number</th>
+                                <th class="ms-names-table-header">Material division text</th>
+                                <th class="ms-names-table-header">Material IVK name</th>
+                                <th class="ms-names-table-header">SRS Connectivity</th>
+                                <th class="ms-names-table-header">RUH Readiness</th>
+                                <th class="ms-names-table-header">Data Sent</th>
+                            </tr>
+                        </thead>
+                        <tbody class="ms-names-table-body">
+
+                        </tbody>
+                    </table>
+                    </div>
+
+                </div>
+
+{#                <div class="item">#}
+{#						<div class="table-wrapper">#}
+{#							<table>#}
+{#								<thead>#}
+{#									<tr>#}
+{#										<th>Equipment service partner ID</th>#}
+{#										<th>Equipment service partner text</th>#}
+{#										<th>Country Region</th>#}
+{#										<th>Func Location Name</th>#}
+{#										<th>Equipment material number</th>#}
+{#										<th>Equipment serial number</th>#}
+{#										<th>Material division text</th>#}
+{#										<th>Material IVK name</th>#}
+{#										<th>SRS Connectivity</th>#}
+{#										<th>RUH Readiness</th>#}
+{#										<th>Data Sent</th>#}
+{#									</tr>#}
+{#								</thead>#}
+{#								<tbody>#}
+{#									<tr>#}
+{#										<td>12345</td>#}
+{#										<td>Service Partner ABC</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#										<td>test</td>#}
+{#									</tr>#}
+{#								</tbody>#}
+{#							</table>#}
+{#						</div>#}
+{#					</div>#}
+            </div>
         </div>
-        </div>
-    </div>
-  </div>
-  
-  <script >
-    let script_url = "{% url 'dashboard:get_srs_connectivity_chart_data2' %}"
-    let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data2' %}"
-    let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data2' %}"
-    let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data2' %}"
-</script>
-    <script src="{% static 'dashboard/js/scripts2.js' %}"></script>
-</body>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>
+			let script_url = "{% url 'dashboard:get_srs_connectivity_chart_data2' %}"
+			let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data2' %}"
+			let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data2' %}"
+			let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data2' %}"
+
+            let missing_customerName_URL = "{% url 'dashboard:get_equipment_dataAjax' %}"
+		</script>
+		<script src="{% static 'dashboard/js/can24.js' %}"></script>
+	</body>
 </html>
