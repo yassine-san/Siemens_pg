@@ -9,6 +9,7 @@
 		<title>Africa Connectivity Dashboard</title>
 	</head>
 	<body>
+        
 		<h1 style="margin-top: 0" >Africa Connectivity Dashboard</h1>
 		<div class="container">
             <div class="upper-left-container">
@@ -76,6 +77,8 @@
                 <div class="table-wrapper">
                     <div class="missing-cst-header">
                         <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Liste equipment</p>
+                        <button class="pagination-btn-cst excel" onclick="to_excel()" style="margin-left: 10px"><img src="{% static 'dashboard/img/excel_ico.png' %}" alt="Excel Logo" style="width: 30px"></button>
+
                         <div class="fl-cst-pagination">
                             <button class="pagination-btn-cst left">&lt;</button>
                             <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
@@ -92,7 +95,6 @@
                                 <th class="ms-names-table-header">Func Location Name</th>
                                 <th class="ms-names-table-header">Equipment material number</th>
                                 <th class="ms-names-table-header">Equipment serial number</th>
-                                <th class="ms-names-table-header">Material division text</th>
                                 <th class="ms-names-table-header">Material IVK name</th>
                                 <th class="ms-names-table-header">SRS Connectivity</th>
                                 <th class="ms-names-table-header">RUH Readiness</th>
@@ -118,7 +120,6 @@
 {#										<th>Func Location Name</th>#}
 {#										<th>Equipment material number</th>#}
 {#										<th>Equipment serial number</th>#}
-{#										<th>Material division text</th>#}
 {#										<th>Material IVK name</th>#}
 {#										<th>SRS Connectivity</th>#}
 {#										<th>RUH Readiness</th>#}
@@ -145,6 +146,11 @@
 {#					</div>#}
             </div>
         </div>
+        <script>
+              
+        loading.showModal()
+    </script>
+        </script>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -153,9 +159,148 @@
 			let script_url1 = "{% url 'dashboard:get_ruh_readiness_chart_data2' %}"
 			let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data2' %}"
 			let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data2' %}"
+            let script_url4 = "{% url 'dashboard:get_Can24_Connectable_Systems_chart_data' %}"
+            let script_url5 = "{% url 'dashboard:get_CAN24_Data_Sent_chart_data' %}"
+            let script_url6 = "{% url 'dashboard:get_Connected_CAN24_Modul_chart_data' %}"
 
-            let missing_customerName_URL = "{% url 'dashboard:get_equipment_dataAjax' %}"
+
+            let missing_customerName_URL = "{% url 'dashboard:get_equipment_data_CAN24_Ajax' %}"
 		</script>
 		<script src="{% static 'dashboard/js/can24.js' %}"></script>
+        <script>
+ $(document).ready(function() {
+
+let flCstData = [];
+const $tableBodyCst = $('.ms-names-table-body');
+let rowsPerPageCst = 500;
+let pageCst = 1;
+
+function populateFlCst(start, end) {
+    let rowsHTML = '';
+
+    for (let i = start; i < end && i < flCstData.length; i++) {
+        let rowClass = i === end - 1 ? 'middle-row' : '';
+        rowsHTML += `
+            <tr class="ms-names-tr ${rowClass}">
+                <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>
+                <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>
+                <td class="ms-names-td">${flCstData[i].country_region}</td>
+                <td class="ms-names-td">${flCstData[i].func_location_name}</td>
+                <td class="ms-names-td">${flCstData[i].equipment_material_number}</td>
+                <td class="ms-names-td">${flCstData[i].equipment_serial_number}</td>
+                <td class="ms-names-td">${flCstData[i].material_ivk_name}</td>
+                <td class="ms-names-td">${flCstData[i].srs_connectivity}</td>
+                <td class="ms-names-td">${flCstData[i].ruh_readiness}</td>
+                <td class="ms-names-td">${flCstData[i].data_sent}</td>
+            </tr>`;
+    }
+
+    $tableBodyCst.html(rowsHTML);
+}
+
+function updatePaginationInfoCst() {
+    let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
+    $('.pagination-info-cst').text(`${pageCst}/${totalPages}`);
+}
+
+function updatePageContentCst() {
+    let start = (pageCst - 1) * rowsPerPageCst;
+    let end = start + rowsPerPageCst;
+
+    if (end > flCstData.length) {
+        end = flCstData.length;
+    }
+
+    populateFlCst(start, end);
+}
+
+$('.pagination-btn-cst.left').on('click', function() {
+    if (pageCst > 1) {
+        pageCst--;
+        updatePaginationInfoCst();
+        updatePageContentCst();
+    }
+});
+
+$('.pagination-btn-cst.right').on('click', function() {
+    let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
+    if (pageCst < totalPages) {
+        pageCst++;
+        updatePaginationInfoCst();
+        updatePageContentCst();
+    }
+});
+
+function getMissingFlCstAjax() {
+    //loading.showModal()
+    const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+    $.ajax({
+        type: "GET",
+        url: missing_customerName_URL,
+        dataType: 'json',
+        data: {
+            //filters: JSON.stringify(currentFilters),
+            //csrfmiddlewaretoken: csrfToken
+        },
+        success: function(fetchedData) {
+            flCstData = fetchedData;
+            updatePaginationInfoCst();
+            updatePageContentCst();
+            //loading.close()
+        },
+        error: function(error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+
+getMissingFlCstAjax();
+
+});
+window.to_excel = async function (){
+                data = flCstData
+                const headers = [
+                  'equipment_service_partner_id',
+                  'equipment_service_partner_text',
+                  'country_region',
+                  'func_location_name',
+                  'equipment_material_number',
+                  'equipment_serial_number',
+                  'material_ivk_name',
+                  'srs_connectivity',
+                  'ruh_readiness',
+                  'data_sent',
+                ];
+                try {
+                    const fileHandle = await window.showSaveFilePicker({
+                      suggestedName: 'exported_data.csv',
+                      types: [
+                        {
+                          description: 'CSV Files',
+                          accept: {
+                            'text/csv': ['.csv'],
+                          },
+                        },
+                      ],
+                    });
+
+                    const writableStream = await fileHandle.createWritable();
+                    const csvData = [headers].concat(
+                      data.map((item) =>
+                        `${item.equipment_service_partner_id},${item.equipment_service_partner_text},${item.country_region},${item.func_location_name},${item.equipment_material_number},${item.equipment_serial_number},${item.material_ivk_name},${item.srs_connectivity},${item.ruh_readiness},${item.data_sent}`
+                      )
+                    );
+
+                    await writableStream.write(csvData.join('\n'));
+                    await writableStream.close();
+
+                    console.log('File saved successfully');
+                  } catch (error) {
+                    console.error('Error saving file:', error);
+                  }
+            }
+
+            getMissingFlCstAjax();
+        </script>
 	</body>
 </html>

@@ -567,6 +567,58 @@ def get_Connection_score_chart_data2(request):
         data['Connection_not_active_counts'].append(Connection_not_active_count)
 
     return JsonResponse(data)
+
+def get_Can24_Connectable_Systems_chart_data(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
+             date(2023, 8, 15)]
+
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'CAN24_connectable_counts': [],
+        'x_Not_CAN24_connectable_counts': [],
+    }
+
+    for d in dates:
+        CAN24_connectable_count = Can24.objects.filter(date=d, can24_connection_per_system_type='CAN24 connectable').count()
+        x_Not_CAN24_connectable_count = Can24.objects.filter(date=d, can24_connection_per_system_type='x_Not CAN24 connectable').count()
+        data['CAN24_connectable_counts'].append(CAN24_connectable_count)
+        data['x_Not_CAN24_connectable_counts'].append(x_Not_CAN24_connectable_count)
+
+    return JsonResponse(data)
+def get_CAN24_Data_Sent_chart_data(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
+             date(2023, 8, 15)]
+
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'Data_Sent_counts': [],
+        'X_Data_not_sent_counts': [],
+    }
+
+    for d in dates:
+        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
+        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
+        data['Data_Sent_counts'].append(Data_Sent_count)
+        data['X_Data_not_sent_counts'].append(X_Data_not_sent_count)
+
+    return JsonResponse(data)
+def get_Connected_CAN24_Modul_chart_data(request):
+    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
+             date(2023, 8, 15)]
+
+    data = {
+        'labels': [d.strftime('%b %d') for d in dates],
+        'Connected_CAN24_Modul_counts': [],
+        'x_Not_Connectable_counts': [],
+    }
+
+    for d in dates:
+        Connected_CAN24_Modul_count = Can24.objects.filter(date=d, connected_can24_modul='Connected CAN24 Modul').count()
+        x_Not_Connectable_count = Can24.objects.filter(date=d, connected_can24_modul='x_Not Connectable').count()
+        data['Connected_CAN24_Modul_counts'].append(Connected_CAN24_Modul_count)
+        data['x_Not_Connectable_counts'].append(x_Not_Connectable_count)
+
+    return JsonResponse(data)
 def get_equipment_data(request):
     equipment_data = Srs.objects.all().values(
         'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region', 
@@ -589,6 +641,32 @@ def get_equipment_dataAjax(request):
         'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
         'func_location_name', 'equipment_material_number', 'equipment_serial_number',
         'material_division_text', 'material_ivk_name', 'srs_connectivity',
+        'ruh_readiness', 'data_sent'
+    )
+
+    return JsonResponse(list(equipment_data), safe=False)
+
+def get_equipment_data_can24(request):
+    equipment_data = Can24.objects.all().values(
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region', 
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number', 
+        'material_ivk_name', 'srs_connectivity', 
+        'ruh_readiness', 'data_sent'
+    )
+    
+    itemsPerPage = 500  # Adjust this according to your needs
+    paginator = Paginator(equipment_data, itemsPerPage)
+        
+    page = request.GET.get('page')
+    equipment_page = paginator.get_page(page)
+        
+    return JsonResponse(list(equipment_page), safe=False)
+
+def get_equipment_data_CAN24_Ajax(request):
+    equipment_data = Can24.objects.all().values(
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+         'material_ivk_name', 'srs_connectivity',
         'ruh_readiness', 'data_sent'
     )
 

@@ -27,9 +27,14 @@ urlpatterns = [
     path('get_Data_Sent_chart_data2/', views.get_Data_Sent_chart_data2, name='get_Data_Sent_chart_data2'),
     path('get_Connection_score_chart_data2/', views.get_Connection_score_chart_data2, name='get_Connection_score_chart_data2'),
     path('get_equipment_data/', views.get_equipment_data, name='get_equipment_data'),
+    path('get_Can24_Connectable_Systems_chart_data/', views.get_Can24_Connectable_Systems_chart_data, name='get_Can24_Connectable_Systems_chart_data'),
+    path('get_CAN24_Data_Sent_chart_data/', views.get_CAN24_Data_Sent_chart_data, name='get_CAN24_Data_Sent_chart_data'),
+    path('get_Connected_CAN24_Modul_chart_data/', views.get_Connected_CAN24_Modul_chart_data, name='get_Connected_CAN24_Modul_chart_data'),
 
 
     path('get_equipements_dataAjax/', views.get_equipment_dataAjax, name='get_equipment_dataAjax'),
+    path('get_equipment_data_CAN24_Ajax/', views.get_equipment_data_CAN24_Ajax, name='get_equipment_data_CAN24_Ajax'),
+
 
 
 

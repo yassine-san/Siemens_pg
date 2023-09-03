@@ -23,6 +23,29 @@
 .bottom-right-container {
   grid-area: 2 / 2 / 3 / 3;
 }
+.pagination-btn-cst:hover {
+  background-color: #ffab72;
+}
+
+.pagination-info-cst {
+  margin: 0;
+}
+.pagination-btn-cst.excel {
+  background-color: #dcd4d4;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+  display: flex;
+  align-items: center; /* Center text and image vertically */
+  gap: 5px; /* Add space between text and image */
+}
+
+.pagination-btn-cst.excel:hover {
+  background-color: #ffab72;
+}
 
 
 
