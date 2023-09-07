@@ -36,7 +36,8 @@ class Can24(models.Model):
 
 
 class Quality(models.Model):
-    week = models.CharField(primary_key=True,max_length=255)
+    id = models.IntegerField(primary_key=True)
+    week = models.CharField(max_length=255)
     servicepartnername = models.CharField(max_length=255, blank=True, null=True)
     division = models.CharField(max_length=255, blank=True, null=True)
     modality = models.CharField(max_length=255, blank=True, null=True)

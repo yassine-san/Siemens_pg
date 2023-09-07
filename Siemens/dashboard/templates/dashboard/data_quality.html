@@ -9,7 +9,6 @@
 <body>
 
 <dialog id="loading">
-
     <div class="multi-spinner-container">
         <div class="multi-spinner">
             <div class="multi-spinner">
@@ -23,7 +22,12 @@
             </div>
         </div>
     </div>
+</dialog>
 
+<dialog id="confirmation_dialog">
+    <p>Are you sure ? </p>
+    <button id="yesGoAheadBtn">yes</button>
+    <button onclick="confirmation_dialog.close()">cancel</button>
 </dialog>
 
 <dialog id="filters_dialog">
@@ -63,7 +67,7 @@
         <div class="cards-container">
             <div class="title">
                 <p class="titlep">Quality</p>
-                <span class="filters" >Filters</span>
+                <center><span class="filters" style="position: relative;z-index:999;top:-10px;margin-left: 12px">Filters</span></center>
             </div>
             <div class="card card2">
                 <p class="card-status">Active/Active</p>
@@ -117,6 +121,7 @@
                     <table class="ms-countries-table" style="display:block">
                         <thead>
                         <tr>
+                            <th class="ms-countries-table-header" style="display: none" onclick="sortSerialTable()">Id</th>
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">Service Partner</th>
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">Material Number</th>
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">Serials Number</th>
@@ -124,7 +129,7 @@
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">IVK Name</th>
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">Status</th>
                             <th class="ms-countries-table-header" onclick="sortSerialTable()">SubStatus</th>
-                            <th class="ms-countries-table-header" onclick="sortSerialTable()">FL - Country</th>
+                            <th class="ms-countries-table-header" onclick="sortSerialTable()">&nbsp; &nbsp; FL - Country &nbsp; &nbsp;  </th>
                         </tr>
                         </thead>
                         <tbody id="gg"  class="ms-countries-table-body">
@@ -146,6 +151,7 @@
                     <table class="ms-names-table" style="display:block">
                         <thead>
                         <tr>
+                            <th class="ms-names-table-header" style="display: none" onclick="sortSerialTable()">Id</th>
                             <th class="ms-names-table-header" onclick="sortSerialTable()">Service Partner</th>
                             <th class="ms-names-table-header" onclick="sortSerialTable()">Material Number</th>
                             <th class="ms-names-table-header" onclick="sortSerialTable()">Serials Number</th>
@@ -178,6 +184,9 @@
     let missing_flCountry_URL = "{% url 'dashboard:missing_fl_countries' %}"
     let missing_customerName_URL = "{% url 'dashboard:missing_customer_name' %}"
     let getPercents = "{% url 'dashboard:get_percents' %}"
+    let fill_missing_countries = "{% url 'dashboard:fillMissCountry' %}"
+    let fill_missing_cst = "{% url 'dashboard:fillMissCst' %}"
+    let arrow_img_btn = '{% static "dashboard/img/arrow_left.png" %}'
 </script>
 
 
@@ -190,8 +199,6 @@
     const activeShippedCstNamePercentage = "{{ active_shipped_cstname_percentage|floatformat:2 }}";
     const inactiveOnStockFlCountryPercentage = "{{ inactive_on_stock_flcountry_percentage|floatformat:2 }}";
     const inactiveOnStockCstNamePercentage = "{{ inactive_on_stock_cstname_percentage|floatformat:2 }}";
-
-
 </script>
 
 

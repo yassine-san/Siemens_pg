@@ -102,8 +102,11 @@ $(document).ready(function() {
 
         for (let i = start; i < end && i < flCountryData.length; i++) {
             let rowClass = i === end - 1 ? 'middle-row' : '';
+            let img = arrow_img_btn
+
             rowsHTML += `
                 <tr class="ms-countries-tr ${rowClass}">
+                    <td class="ms-countries-td rmpl-dt" style="display: none">${flCountryData[i].id}</td>
                     <td class="ms-countries-td">${flCountryData[i].servicepartner}</td>
                     <td class="ms-countries-td">${flCountryData[i].materialnumber}</td>
                     <td class="ms-countries-td">${flCountryData[i].serialnumber}</td>
@@ -111,12 +114,72 @@ $(document).ready(function() {
                     <td class="ms-countries-td">${flCountryData[i].ivkname}</td>
                     <td class="ms-countries-td">${flCountryData[i].status}</td>
                     <td class="ms-countries-td">${flCountryData[i].substatus}</td>
-                    <td class="ms-countries-td">${flCountryData[i].flcountry}</td>
+                    <td class="ms-countries-td" style="width: 150px;" ondblclick="remplirCountry(this)">${flCountryData[i].flcountry}
+                        <section style="display: none">
+                            <input class="missing-input" type="text" style="width: 80px;">
+                            <button class="SubmitMissing" onclick="fillMissCountry()"><img src=`+ img +` alt="" width="25px" alt=""></button>
+                        </section>
+                    </td>
                 </tr>`;
         }
 
+
         $tableBody.html(rowsHTML);
         filters_dialog.close()
+    }
+
+    let lastMissingCountryAttempt = null;
+    let currentMissingCountryAttempt = null;
+    let confirmBtn = document.getElementById("yesGoAheadBtn")
+
+    window.remplirCountry = function(e){
+        if(lastMissingCountryAttempt !== null){
+            lastMissingCountryAttempt.style.display = "None"
+        }
+        lastMissingCountryAttempt = e.getElementsByTagName("section")[0]
+        currentMissingCountryAttempt = e.closest('tr')
+        e.getElementsByTagName("section")[0].style.display= "flex"
+    }
+
+    let idCountry,enteredValueCountry = null
+
+    window.fillMissCountry = function (){
+        idCountry = currentMissingCountryAttempt.getElementsByClassName('rmpl-dt')[0].innerHTML
+
+        enteredValueCountry = currentMissingCountryAttempt.getElementsByTagName("input")[0].value
+
+        if (enteredValueCountry === ''){
+            alert("country not specified")
+            return
+        }
+
+        confirmBtn.removeEventListener("click", isClicked);
+
+        confirmBtn.addEventListener("click", isClicked);
+
+        confirmation_dialog.showModal()
+    }
+
+    function isClicked() {
+        confirmation_dialog.close()
+        loading.showModal()
+        $.ajax({
+            type: "POST",
+            url: fill_missing_countries,
+            data: {
+                id: idCountry,
+                missingCountry: enteredValueCountry,
+                csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()
+            },
+            dataType: 'json',
+            success: function() {
+                getMissingFlCountryAjax()
+            },
+            error: function(error) {
+                console.error('Error submiting country:', error);
+            }
+        });
+
     }
 
     function updatePaginationInfo() {
@@ -188,8 +251,11 @@ $(document).ready(function() {
 
         for (let i = start; i < end && i < flCstData.length; i++) {
             let rowClass = i === end - 1 ? 'middle-row' : '';
+            let img = arrow_img_btn
+
             rowsHTML += `
                 <tr class="ms-names-tr ${rowClass}">
+                    <td class="ms-names-td rmpl-dt" style="display: none">${flCstData[i].id}</td>
                     <td class="ms-names-td">${flCstData[i].servicepartner}</td>
                     <td class="ms-names-td">${flCstData[i].materialnumber}</td>
                     <td class="ms-names-td">${flCstData[i].serialnumber}</td>
@@ -197,12 +263,71 @@ $(document).ready(function() {
                     <td class="ms-names-td">${flCstData[i].ivkname}</td>
                     <td class="ms-names-td">${flCstData[i].status}</td>
                     <td class="ms-names-td">${flCstData[i].substatus}</td>
-                    <td class="ms-names-td">${flCstData[i].customername}</td>
+                    <td class="" style="width: 250px;" ondblclick="remplirCst(this)">${flCstData[i].customername}
+                        <section style="display: none">
+                            <input class="missing-input" type="text" style="width: 80px;">
+                            <button class="SubmitMissing" onclick="fillMissCst()"><img src=`+ img +` alt="" width="25px" alt=""></button>
+                        </section>
+                    </td>
                 </tr>`;
         }
 
         $tableBodyCst.html(rowsHTML);
     }
+
+    let lastMissingCstAttempt = null;
+    let currentMissingCstAttempt = null;
+
+    window.remplirCst = function(e){
+        if(lastMissingCstAttempt !== null){
+            lastMissingCstAttempt.style.display = "None"
+        }
+        lastMissingCstAttempt = e.getElementsByTagName("section")[0]
+        currentMissingCstAttempt = e.closest('tr')
+        e.getElementsByTagName("section")[0].style.display= "flex"
+    }
+
+    let idCst,enteredValueCst = null
+
+    window.fillMissCst = function (){
+        idCst = currentMissingCstAttempt.getElementsByClassName('rmpl-dt')[0].innerHTML
+
+        enteredValueCst = currentMissingCstAttempt.getElementsByTagName("input")[0].value
+
+        if (enteredValueCst === ''){
+            alert("customer name not specified")
+            return
+        }
+
+        confirmBtn.removeEventListener("click", isClickedCst);
+
+        confirmBtn.addEventListener("click", isClickedCst);
+
+        confirmation_dialog.showModal()
+    }
+
+    function isClickedCst() {
+        confirmation_dialog.close()
+        loading.showModal()
+        $.ajax({
+            type: "POST",
+            url: fill_missing_cst,
+            data: {
+                id: idCst,
+                missingCst: enteredValueCst,
+                csrfmiddlewaretoken: $('[name=csrfmiddlewaretoken]').val()
+            },
+            dataType: 'json',
+            success: function() {
+                getMissingFlCstAjax()
+            },
+            error: function(error) {
+                console.error('Error submiting customer name:', error);
+            }
+        });
+
+    }
+
 
     function updatePaginationInfoCst() {
         let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);

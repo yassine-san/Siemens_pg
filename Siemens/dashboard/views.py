@@ -69,14 +69,14 @@ def get_missing_fl_countries(request):
 
     if partner == "all":
         missing_fl_countries = Quality.objects.filter(flcountry='').values(
-            'servicepartner', 'materialnumber', 'serialnumber',
+            'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'flcountry'
         )
     else:
         missing_fl_countries = Quality.objects.filter(
             flcountry='', servicepartnername=partner
         ).values(
-            'servicepartner', 'materialnumber', 'serialnumber',
+            'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'flcountry'
         )
 
@@ -90,12 +90,35 @@ def get_missing_fl_countries(request):
     return JsonResponse(list(missing_fl_countries), safe=False)
 
 
-# def get_missing_customer_name(request):
-#     missing_fl_countries = Quality.objects.filter(customername='').values(
-#         'servicepartner', 'materialnumber', 'serialnumber',
-#         'modality', 'ivkname', 'status', 'substatus', 'customername'
-#     )
-#     return JsonResponse(list(missing_fl_countries), safe=False)
+def fillin_missing_country(request):
+    if request.method == "POST":
+        idCountry = request.POST.get('id')
+        missingCountry = request.POST.get('missingCountry')
+        record = Quality.objects.filter(id=idCountry).first()
+
+        if record:
+            record.flcountry = missingCountry
+            record.save()
+
+        response_data = {'message': 'country not missing anymore'}
+
+        return JsonResponse(response_data)
+
+
+def fillin_missing_cst(request):
+    if request.method == "POST":
+        idCst = request.POST.get('id')
+        missingCst = request.POST.get('missingCst')
+        record = Quality.objects.filter(id=idCst).first()
+
+        if record:
+            record.customername = missingCst
+            record.save()
+
+        response_data = {'message': 'customer name not missing anymore'}
+
+        return JsonResponse(response_data)
+
 
 def get_missing_customer_name(request):
     user = request.user
@@ -110,14 +133,14 @@ def get_missing_customer_name(request):
 
     if partner == "all":
         missing_customer_names = Quality.objects.filter(customername='').values(
-            'servicepartner', 'materialnumber', 'serialnumber',
+            'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'customername'
         )
     else:
         missing_customer_names = Quality.objects.filter(
             customername='', servicepartnername=partner
         ).values(
-            'servicepartner', 'materialnumber', 'serialnumber',
+            'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'customername'
         )
 
@@ -321,14 +344,13 @@ def upload_excel(request):
 
             for row in rows:
                 batch.append(row)
-
                 if len(batch) >= BATCH_SIZE:
-                    insert_query = "INSERT INTO excelTable VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                    insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
                     cursor.executemany(insert_query, batch)
                     batch = []
 
             if batch:
-                insert_query = "INSERT INTO excelTable VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
                 cursor.executemany(insert_query, batch)
 
             connection.commit()
