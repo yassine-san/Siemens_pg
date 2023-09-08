@@ -125,11 +125,11 @@ h1 {
     width: 300px;
 }
 
-.item-c{
+.item-c div{
     border: 1px solid #c0bcbc;
     box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
--webkit-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
--moz-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
+    -webkit-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
+    -moz-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
 }
 
 .item-title{
@@ -161,6 +161,94 @@ canvas {
 .table-wrapper table {
   width: 100px;
   border-collapse: collapse;
+}
+
+#loading{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center; /* Center align content */
+    background-color: rgba(222, 220, 220, 0.9);
+    border: none;
+}
+
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin: 13% auto 30px;
+}
+
+.multi-spinner {
+  position: absolute;
+  width: calc(100% - 9.9px);
+  height: calc(100% - 9.9px);
+  border: 5px solid transparent;
+  border-top-color: #ff5722;
+  border-radius: 50%;
+  -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+  animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+}
+
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+         transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.filter-container {
+    display: none;
+    position: relative;
+    width: 300px;
+}
+
+.filter-imay {
+    background-color: cadetblue;
+    border-radius: .4em;
+    color: white;
+    padding: 5px;
+    white-space: nowrap;
+    overflow-x: auto;
+    margin-bottom: 10px; /* Add margin to separate from the button */
+}
+
+.removeFilter {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+    border-radius: 40%;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 5px;
+    right: -8px;
+    padding: 2px 6px;
+}
+
+.removeFilter:hover {
+    padding: 2px 7px;
+}
+
+.visible-f{
+    display: block;
 }
 
 /*!* Optional: Style table header and rows *!*/

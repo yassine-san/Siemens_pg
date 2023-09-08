@@ -15,7 +15,6 @@ from datetime import date
 from django.core.paginator import Paginator
 
 
-
 def home(request):
     user = request.user
     if not request.user.is_authenticated:
@@ -265,17 +264,16 @@ def update_dataAjax(request):
         if partner == "all":
             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
         else:
-            count = excel_data.filter(servicepartnername=partner, status=status, substatus=substatus, **filter_kwargs).count()
+            count = excel_data.filter(servicepartnername=partner, status=status, substatus=substatus,
+                                      **filter_kwargs).count()
 
         # count = excel_data.filter(**filter_kwargs).count()
         return (count / total_records) * 100
-
 
     if request.method == "POST":
         filters_data = request.POST.get('filters')
         filters_dict = json.loads(filters_data)
         week_filter = filters_dict['week']
-
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -345,12 +343,14 @@ def upload_excel(request):
             for row in rows:
                 batch.append(row)
                 if len(batch) >= BATCH_SIZE:
-                    insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                    insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (
+                                ", %s" * (len(row) - 1)) + ")"
                     cursor.executemany(insert_query, batch)
                     batch = []
 
             if batch:
-                insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                insert_query = "INSERT INTO exceltable (week, servicepartnername, division, modality, materialnumber, serialnumber, ivkname, status, customername, cinumber, customerid, ponumber, ordernumber, funclocationcode, eod, eos, citycustomer, cstcity, cstcountry, cstname, cststreet, customerenddate, customernumber, customerstartdate, deliverydate, ddate, flcity, flcomments, flcountry, flstreet, flzip, funclocationname1, funclocationname2, handoverdate, servicepartner, substatus, onstockdetails) VALUES (%s" + (
+                            ", %s" * (len(row) - 1)) + ")"
                 cursor.executemany(insert_query, batch)
 
             connection.commit()
@@ -515,146 +515,326 @@ def CAN24(request):
     return render(request, 'dashboard/MR_CAN24.html')
 
 
-def get_srs_connectivity_chart_data2(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
-
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'connected_counts': [],
-        'x_connectable_counts': [],
+def getFilterColumnName(condition):
+    column_mapping = {
+        'Connected': 'srs_connectivity',
+        'X_Connectable': 'srs_connectivity',
+        'RUH Ready': 'ruh_readiness',
+        'X_not RUH ready': 'ruh_readiness',
+        'Data Sent': 'data_sent',
+        'X_Data not sent': 'data_sent',
+        'Connection active': 'connection_score',
+        'Connection not active': 'connection_score',
+        'CAN24 connectable': 'can24_connection_per_system_type',
+        'x_Not CAN24 connectable': 'can24_connection_per_system_type',
+        'Data Sent2': 'can24_data_sent',
+        'X_Data not sent2': 'can24_data_sent',
+        'Connected CAN24 Modul': 'connected_can24_modul',
+        'x_Not Connectable': 'connected_can24_modul'
     }
+    column_name = column_mapping.get(condition, None)
+    if column_name:
+        # Create a filter condition using the field name and posted value
+        if condition == "Data Sent2" or condition == "X_Data not sent2":
+            condition = str(condition).replace("2", "")
+        filter_condition = {column_name: condition}
+        return filter_condition
+    else:
+        # Handle the case when posted_variable doesn't match any of the possibilities
+        return None
 
-    for d in dates:
-        connected_count = Can24.objects.filter(date=d, srs_connectivity='Connected').count()
-        x_connectable_count = Can24.objects.filter(date=d, srs_connectivity='X_Connectable').count()
-        data['connected_counts'].append(connected_count)
-        data['x_connectable_counts'].append(x_connectable_count)
+def get_srs_connectivity_chart_data2(request):
+    if request.method == "POST":
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    return JsonResponse(data)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
+
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Connected_counts': [],
+            'X_Connectable_counts': [],
+        }
+
+        for d in dates:
+            connected_count = 0
+            x_connectable_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "srs_connectivity":
+                        connected_count = Can24.objects.filter(date=d, srs_connectivity='Connected').count()
+                        x_connectable_count = Can24.objects.filter(date=d, srs_connectivity='X_Connectable').count()
+                    else:
+                        connected_count = Can24.objects.filter(date=d, srs_connectivity='Connected', **filter_condition).count()
+                        x_connectable_count = Can24.objects.filter(date=d, srs_connectivity='X_Connectable', **filter_condition).count()
+            else:
+                connected_count = Can24.objects.filter(date=d, srs_connectivity='Connected').count()
+                x_connectable_count = Can24.objects.filter(date=d, srs_connectivity='X_Connectable').count()
+            data['Connected_counts'].append(connected_count)
+            data['X_Connectable_counts'].append(x_connectable_count)
+
+        return JsonResponse(data)
 
 
 def get_ruh_readiness_chart_data2(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
+    if request.method == "POST":
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'RUH_Ready_counts': [],
-        'X_not_RUH_ready_counts': [],
-    }
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    for d in dates:
-        RUH_Ready_count = Can24.objects.filter(date=d, ruh_readiness='RUH Ready').count()
-        X_not_RUH_ready_count = Can24.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
-        data['RUH_Ready_counts'].append(RUH_Ready_count)
-        data['X_not_RUH_ready_counts'].append(X_not_RUH_ready_count)
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
 
-    return JsonResponse(data)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'RUH Ready_counts': [],
+            'X_not RUH ready_counts': [],
+        }
+
+        for d in dates:
+            RUH_Ready_count = 0
+            X_not_RUH_ready_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "ruh_readiness":
+                        RUH_Ready_count = Can24.objects.filter(date=d, ruh_readiness='RUH Ready').count()
+                        X_not_RUH_ready_count = Can24.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
+                    else:
+                        RUH_Ready_count = Can24.objects.filter(date=d, ruh_readiness='RUH Ready', **filter_condition).count()
+                        X_not_RUH_ready_count = Can24.objects.filter(date=d, ruh_readiness='X_not RUH ready', **filter_condition).count()
+            else:
+                RUH_Ready_count = Can24.objects.filter(date=d, ruh_readiness='RUH Ready').count()
+                X_not_RUH_ready_count = Can24.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
+            data['RUH Ready_counts'].append(RUH_Ready_count)
+            data['X_not RUH ready_counts'].append(X_not_RUH_ready_count)
+
+        return JsonResponse(data)
 
 
 def get_Data_Sent_chart_data2(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Data_Sent_counts': [],
-        'X_Data_not_sent_counts': [],
-    }
+    if request.method == "POST":
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    for d in dates:
-        Data_Sent_count = Can24.objects.filter(date=d, data_sent='Data Sent').count()
-        X_Data_not_sent_count = Can24.objects.filter(date=d, data_sent='X_Data not sent').count()
-        data['Data_Sent_counts'].append(Data_Sent_count)
-        data['X_Data_not_sent_counts'].append(X_Data_not_sent_count)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    return JsonResponse(data)
+
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Data Sent_counts': [],
+            'X_Data not sent_counts': [],
+        }
+
+        for d in dates:
+            Data_Sent_count = 0
+            X_Data_not_sent_count = 0
+
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "data_sent":
+                        Data_Sent_count = Can24.objects.filter(date=d, data_sent='Data Sent').count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, data_sent='X_Data not sent').count()
+                    else:
+                        Data_Sent_count = Can24.objects.filter(date=d, data_sent='Data Sent', **filter_condition).count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, data_sent='X_Data not sent', **filter_condition).count()
+            else:
+                Data_Sent_count = Can24.objects.filter(date=d, data_sent='Data Sent').count()
+                X_Data_not_sent_count = Can24.objects.filter(date=d, data_sent='X_Data not sent').count()
+            data['Data Sent_counts'].append(Data_Sent_count)
+            data['X_Data not sent_counts'].append(X_Data_not_sent_count)
+
+        return JsonResponse(data)
 
 
 def get_Connection_score_chart_data2(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Connection_active_counts': [],
-        'Connection_not_active_counts': [],
-    }
+    if request.method == "POST":
 
-    for d in dates:
-        Connection_active_count = Can24.objects.filter(date=d, connection_score='Connection active').count()
-        Connection_not_active_count = Can24.objects.filter(date=d, connection_score='Connection not active').count()
-        data['Connection_active_counts'].append(Connection_active_count)
-        data['Connection_not_active_counts'].append(Connection_not_active_count)
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    return JsonResponse(data)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
+
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Connection active_counts': [],
+            'Connection not active_counts': [],
+        }
+
+        for d in dates:
+            Connection_active_count = 0
+            Connection_not_active_count = 0
+
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "connection_score":
+                        Connection_active_count = Can24.objects.filter(date=d, connection_score='Connection active').count()
+                        Connection_not_active_count = Can24.objects.filter(date=d, connection_score='Connection not active').count()
+                    else:
+                        Connection_active_count = Can24.objects.filter(date=d,connection_score='Connection active', **filter_condition).count()
+                        Connection_not_active_count = Can24.objects.filter(date=d,connection_score='Connection not active', **filter_condition).count()
+            else:
+                Connection_active_count = Can24.objects.filter(date=d, connection_score='Connection active').count()
+                Connection_not_active_count = Can24.objects.filter(date=d, connection_score='Connection not active').count()
+            data['Connection active_counts'].append(Connection_active_count)
+            data['Connection not active_counts'].append(Connection_not_active_count)
+
+        return JsonResponse(data)
+
 
 def get_Can24_Connectable_Systems_chart_data(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
+    if request.method == "POST":
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'CAN24_connectable_counts': [],
-        'x_Not_CAN24_connectable_counts': [],
-    }
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    for d in dates:
-        CAN24_connectable_count = Can24.objects.filter(date=d, can24_connection_per_system_type='CAN24 connectable').count()
-        x_Not_CAN24_connectable_count = Can24.objects.filter(date=d, can24_connection_per_system_type='x_Not CAN24 connectable').count()
-        data['CAN24_connectable_counts'].append(CAN24_connectable_count)
-        data['x_Not_CAN24_connectable_counts'].append(x_Not_CAN24_connectable_count)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    return JsonResponse(data)
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+
+
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'CAN24 connectable_counts': [],
+            'x_Not CAN24 connectable_counts': [],
+        }
+
+        for d in dates:
+            CAN24_connectable_count = 0
+            x_Not_CAN24_connectable_count = 0
+
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "can24_connection_per_system_type":
+                        CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable').count()
+                        x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable').count()
+                    CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable', **filter_condition).count()
+                    x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable', **filter_condition).count()
+            else:
+                    CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable').count()
+                    x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable').count()
+
+            data['CAN24 connectable_counts'].append(CAN24_connectable_count)
+            data['x_Not CAN24 connectable_counts'].append(x_Not_CAN24_connectable_count)
+
+        return JsonResponse(data)
+
+
 def get_CAN24_Data_Sent_chart_data(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
+    if request.method == "POST":
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Data_Sent_counts': [],
-        'X_Data_not_sent_counts': [],
-    }
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    for d in dates:
-        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
-        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
-        data['Data_Sent_counts'].append(Data_Sent_count)
-        data['X_Data_not_sent_counts'].append(X_Data_not_sent_count)
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+        # dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
+        #          date(2023, 8, 15)]
 
-    return JsonResponse(data)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Data Sent_counts2': [],
+            'X_Data not sent_counts2': [],
+        }
+
+        for d in dates:
+            Data_Sent_count = 0
+            X_Data_not_sent_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "can24_data_sent":
+                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
+                    else:
+                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent', **filter_condition).count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent', **filter_condition).count()
+            else:
+                Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
+                X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
+            data['Data Sent_counts2'].append(Data_Sent_count)
+            data['X_Data not sent_counts2'].append(X_Data_not_sent_count)
+
+        return JsonResponse(data)
+
+
 def get_Connected_CAN24_Modul_chart_data(request):
-    dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
-             date(2023, 8, 15)]
+    if request.method == "POST":
+        postdata = json.loads(request.body.decode('utf-8'))
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Connected_CAN24_Modul_counts': [],
-        'x_Not_Connectable_counts': [],
-    }
+        dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
+        # dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
+        #          date(2023, 8, 15)]
 
-    for d in dates:
-        Connected_CAN24_Modul_count = Can24.objects.filter(date=d, connected_can24_modul='Connected CAN24 Modul').count()
-        x_Not_Connectable_count = Can24.objects.filter(date=d, connected_can24_modul='x_Not Connectable').count()
-        data['Connected_CAN24_Modul_counts'].append(Connected_CAN24_Modul_count)
-        data['x_Not_Connectable_counts'].append(x_Not_Connectable_count)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Connected CAN24 Modul_counts': [],
+            'x_Not Connectable_counts': [],
+        }
 
-    return JsonResponse(data)
+        for d in dates:
+            Connected_CAN24_Modul_count = 0
+            x_Not_Connectable_count = 0
+
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnName(filter_state)
+                    if list(filter_condition.keys())[0] == "connected_can24_modul":
+                        Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul').count()
+                        x_Not_Connectable_count = Can24.objects.filter(date=d,connected_can24_modul='x_Not Connectable').count()
+                    else:
+                        Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul', **filter_condition).count()
+                        x_Not_Connectable_count = Can24.objects.filter(date=d,connected_can24_modul='x_Not Connectable', **filter_condition).count()
+            else:
+                Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul').count()
+                x_Not_Connectable_count = Can24.objects.filter(date=d, connected_can24_modul='x_Not Connectable').count()
+            data['Connected CAN24 Modul_counts'].append(Connected_CAN24_Modul_count)
+            data['x_Not Connectable_counts'].append(x_Not_Connectable_count)
+
+        return JsonResponse(data)
+
+
 def get_equipment_data(request):
     equipment_data = Srs.objects.all().values(
-        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region', 
-        'func_location_name', 'equipment_material_number', 'equipment_serial_number', 
-        'material_division_text', 'material_ivk_name', 'srs_connectivity', 
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+        'material_division_text', 'material_ivk_name', 'srs_connectivity',
         'ruh_readiness', 'data_sent'
     )
-    
+
     itemsPerPage = 500  # Adjust this according to your needs
     paginator = Paginator(equipment_data, itemsPerPage)
-        
+
     page = request.GET.get('page')
     equipment_page = paginator.get_page(page)
-        
+
     return JsonResponse(list(equipment_page), safe=False)
 
 
@@ -668,27 +848,29 @@ def get_equipment_dataAjax(request):
 
     return JsonResponse(list(equipment_data), safe=False)
 
+
 def get_equipment_data_can24(request):
     equipment_data = Can24.objects.all().values(
-        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region', 
-        'func_location_name', 'equipment_material_number', 'equipment_serial_number', 
-        'material_ivk_name', 'srs_connectivity', 
+        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+        'material_ivk_name', 'srs_connectivity',
         'ruh_readiness', 'data_sent'
     )
-    
+
     itemsPerPage = 500  # Adjust this according to your needs
     paginator = Paginator(equipment_data, itemsPerPage)
-        
+
     page = request.GET.get('page')
     equipment_page = paginator.get_page(page)
-        
+
     return JsonResponse(list(equipment_page), safe=False)
+
 
 def get_equipment_data_CAN24_Ajax(request):
     equipment_data = Can24.objects.all().values(
         'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
         'func_location_name', 'equipment_material_number', 'equipment_serial_number',
-         'material_ivk_name', 'srs_connectivity',
+        'material_ivk_name', 'srs_connectivity',
         'ruh_readiness', 'data_sent'
     )
 
