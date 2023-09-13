@@ -74,6 +74,18 @@ class Quality(models.Model):
     servicepartner = models.CharField(max_length=255, blank=True, null=True)
     substatus = models.CharField(max_length=255, blank=True, null=True)
     onstockdetails = models.CharField(max_length=255, blank=True, null=True)
+    def to_dict(self):
+        return {
+            'serialnumber': self.serialnumber,
+            'materialnumber': self.materialnumber,
+            'servicepartnername': self.servicepartnername,
+            'servicepartner': self.servicepartner,
+            'cstcountry': self.cstcountry,
+            'status': self.status,
+            'substatus': self.substatus,
+            'onstockdetails': self.onstockdetails,
+            # Add other fields as needed
+        }
 
     class Meta:
         managed = False

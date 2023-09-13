@@ -13,6 +13,7 @@ from django.db.models import Count
 from datetime import datetime
 from datetime import date
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 
 def home(request):
@@ -890,3 +891,189 @@ def active_system_count(request):
 
     # Pass the count value to the template
     return render(request, 'dashboard/SRS.html', {'active_system_count': active_system_count})
+def get_equipment_dataAjax2(request):
+
+    equipment_data = Quality.objects.filter(week='Week 30').values(
+        'serialnumber', 'materialnumber', 'servicepartnername',
+        'servicepartner', 'flcountry', 'status',
+        'substatus', 'onstockdetails'
+    )
+
+    return JsonResponse(list(equipment_data), safe=False)
+
+def get_all_ivknames(request):
+    # Query the Srs table to get all ivknames
+    ivknames = Quality.objects.values_list('ivkname', flat=True).distinct().order_by('ivkname')
+
+    # Convert the queryset to a list
+    ivkname_list = list(ivknames)
+
+    # Return the ivkname list as JSON response
+    return JsonResponse(ivkname_list, safe=False)
+
+# def get_serialnumber_count(request):
+#     # Calculate the count of serial numbers
+#     serialnumber_count = Quality.objects.filter(week='Week 30').values('serialnumber').distinct().count()
+
+#     return JsonResponse({'serialnumber_count': serialnumber_count})
+# def count_on_stock_substatus(request):
+#     # Use the annotate function to count the 'on stock' substatus values
+#     count = Quality.objects.filter(week='Week 30', substatus='on stock').values('serialnumber').distinct().count()
+#     # Create a dictionary with the count result
+#     response_data = {'count': count}
+
+#     return JsonResponse(response_data)
+
+# def count_active_status(request):
+#     # Use the annotate function to count the 'on stock' substatus values
+#     count = Quality.objects.filter(week='Week 30', status='active').values('serialnumber').distinct().count()
+
+#     # Create a dictionary with the count result
+#     response_data = {'count': count}
+
+#     return JsonResponse(response_data)
+
+# def count_shipped_substatus(request):
+#     # Use the annotate function to count the 'on stock' substatus values
+#     count = Quality.objects.filter(week='Week 30', substatus='shipped').values('serialnumber').distinct().count()
+
+#     # Create a dictionary with the count result
+#     response_data = {'count': count}
+
+#     return JsonResponse(response_data)
+def get_serial_data_by_search(request):
+    # Get the search input value from the request
+    search_input = request.GET.get('search')
+
+    # Filter the Quality objects by week 30 and serial number containing the search input
+    serial_data = Quality.objects.filter(week='Week 30', serialnumber__icontains=search_input).values(
+        'serialnumber', 'materialnumber', 'servicepartnername',
+        'servicepartner', 'flcountry', 'status',
+        'substatus', 'onstockdetails'
+    )
+
+    return JsonResponse(list(serial_data), safe=False)
+def get_row_data(request):
+    # Get the unique identifier from the request
+    unique_identifier = request.GET.get('unique_identifier')
+
+    # Query the database to get the row data based on the unique identifier
+    try:
+        row_data = Quality.objects.get(serialnumber=unique_identifier)
+    except Quality.DoesNotExist:
+        return JsonResponse({
+            'equipments_value': '1',
+            'on_stock_value': 'blank',
+            'active_value': 'blank',
+            'shipped_value': 'blank',
+        })
+
+    # Process the row_data to determine card values
+    equipments_value = '1'  # Assuming serial number is unique
+    on_stock_value = row_data.substatus if row_data.substatus == 'on stock' else 'blank'
+    active_value = '1' if row_data.status == 'active' else 'blank'
+    shipped_value = row_data.substatus if row_data.substatus == 'shipped' else 'blank'
+
+    # Send the values as JSON response
+    return JsonResponse({
+        'equipments_value': equipments_value,
+        'on_stock_value': on_stock_value,
+        'active_value': active_value,
+        'shipped_value': shipped_value,
+    })
+
+def filter_data(request):
+    # Retrieve the selected filter parameters from the request
+    modality_filter = request.GET.getlist('modality_filter[]')
+    country_filter = request.GET.getlist('country_filter[]')
+    service_partner_filter = request.GET.getlist('service_partner_filter[]')
+    status_filter = request.GET.getlist('status_filter[]')
+    substatus_filter = request.GET.getlist('substatus_filter[]')
+    on_stock_details_filter = request.GET.getlist('on_stock_details_filter[]')
+    print('Modality Filter:', modality_filter)
+    print('Country Filter:', country_filter)
+    
+    # Initialize a queryset with all objects from your Quality model
+    filtered_data = Quality.objects.filter(week='Week 30')
+    
+
+    # Implement filtering logic based on the selected filters
+    if modality_filter:
+        filtered_data = filtered_data.filter(modality__in=modality_filter)
+        print('modality filter count :',filtered_data.count())
+    
+    if country_filter:
+        filtered_data = filtered_data.filter(cstcountry__in=country_filter)
+    
+    if service_partner_filter:
+        filtered_data = filtered_data.filter(servicepartnername__in=service_partner_filter)
+    
+    if status_filter:
+        filtered_data = filtered_data.filter(status__in=status_filter)
+    
+    if substatus_filter:
+        filtered_data = filtered_data.filter(substatus__in=substatus_filter)
+    
+    if on_stock_details_filter:
+        filtered_data = filtered_data.filter(onstockdetails__in=on_stock_details_filter)
+
+    # Serialize the filtered data to JSON
+    # You may need to convert the filtered_data queryset to a list or dictionary
+    # depending on how you want to structure the JSON response
+    filtered_data = {
+        'filtered_data': [item.to_dict() for item in filtered_data]  # Sample conversion to a list
+    }
+    #print('filtered data : ',filtered_data)
+    
+    return JsonResponse(filtered_data, safe=False)
+# views.py
+
+def get_filtered_counts(request):
+    # Retrieve the selected filter parameters from the request
+    modality_filter = request.GET.getlist('modality_filter[]')
+    print('modality filter count for the cards :',modality_filter)
+
+    country_filter = request.GET.getlist('country_filter[]')
+    print('country filter count for the cards :',country_filter)
+
+    service_partner_filter = request.GET.getlist('service_partner_filter[]')
+    print('service partnerfilter count for the cards :',service_partner_filter)
+
+    status_filter = request.GET.getlist('status_filter[]')
+    print('status filter count for the cards :',status_filter)
+
+    substatus_filter = request.GET.getlist('substatus_filter[]')
+    print('substatus filter count for the cards :',substatus_filter)
+
+    on_stock_details_filter = request.GET.getlist('on_stock_details_filter[]')
+    print('on stock filter count for the cards :',on_stock_details_filter)
+    
+    # Create a filter dictionary based on selected filters
+    filter_dict = {}
+
+    if modality_filter:
+        filter_dict['modality__in'] = modality_filter
+    if country_filter:
+        filter_dict['cstcountry__in'] = country_filter
+    if service_partner_filter:
+        filter_dict['servicepartner__in'] = service_partner_filter
+    if status_filter:
+        filter_dict['status__in'] = status_filter
+    if substatus_filter:
+        filter_dict['substatus__in'] = substatus_filter
+    if on_stock_details_filter:
+        filter_dict['onstockdetails__in'] = on_stock_details_filter
+    print('Filter Dictionary:', filter_dict)
+
+
+    # Calculate counts based on the selected filters
+    counts = {
+        'serialnumber_count': Quality.objects.filter(week='Week 30',**filter_dict).values('serialnumber').distinct().count(),
+        'on_stock_count': Quality.objects.filter(week='Week 30',**filter_dict, substatus='on stock').values('serialnumber').distinct().count(),
+        'active_count': Quality.objects.filter(week='Week 30',**filter_dict, status='active').values('serialnumber').distinct().count(),
+        'shipped_count': Quality.objects.filter(week='Week 30',**filter_dict, substatus='shipped').values('serialnumber').distinct().count(),
+    }
+
+    return JsonResponse(counts)
+
+

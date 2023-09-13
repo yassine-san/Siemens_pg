@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello there</title>
-    <link rel="stylesheet" href="{% static "dashboard/css/africa_IB.css" %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/africa_IB.css' %}">
 </head>
 <body>
 
@@ -81,19 +81,20 @@
                             <img src="Siemens_Healthineers_logo.svg_.png" width="200px" alt="">
                         </div>
                         <div class="card">
-                            <div class="equipments-table-container">
-                                    <table class="equipments-table" style="display:block">
-                                        <thead>
+                            <div class="equipments-table-container" >
+                                <table class="equipments-table" id="test1">
+                                    <thead>
                                         <tr>
-                                            <th class="equipments-table-header" onclick="sortTable()">Equipment name</th>
+                                            <th class="equipments-table-header" style="font-size: 16px; " onclick="sortTable()">Equipment name</th>
                                         </tr>
-                                        </thead>
-                                        <tbody class="equipments-table-body">
+                                    </thead>
+                                    <tbody class="equipments-table-body" style="border: 1px solid #ffab72;" >
                                         <!-- Populated dynamically using JavaScript -->
-                                        </tbody>
-                                    </table>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+                        
 
                     </div>
                     <div class="card modalities">
@@ -105,7 +106,7 @@
             </div>
             <div class="card serials-container">
                 <div class="serials-table-container">
-                    <table class="serials-table" style="display:block">
+                    <table class="serials-table" id="test" >
                         <thead>
                         <tr>
                             <th class="serials-table-header" onclick="sortSerialTable()">Serials Number</th>
@@ -128,7 +129,7 @@
                 <div class="cards-counters-parent">
                     <div class="card counter-card eq-card">
                         <p>Equipements</p>
-                        <p>0</p>
+                        <p></p>
                     </div>
                     <div class="card counter-card onStock-card">
                         <p>On-Stock</p>
@@ -152,12 +153,119 @@
             <div class="card serial-search">
                 <p style="font-size: 15px"> Serial Number</p>
                 <div class="search-input-container" style="margin-left: 0;margin-top: -22px;">
-                    <input type="text" class="search-input" placeholder="Search...">
+                    <input type="text" class="search-input" id="serialSearchInput" placeholder="Search...">
                     <span class="clear-icon">&#10006;</span>
                 </div>
             </div>
             <div class="card filters">
+                <form id="filterForm">
+                <!-- Modality Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('modality')">Modality</span>
+                    <div class="content modality_filter_cn">
+                        <input type="checkbox" name="modality_filter" value="AXA"> AXA
+                        <input type="checkbox" name="modality_filter" value="CT"> CT
+                        <input type="checkbox" name="modality_filter" value="D&A"> D&A
+                        <input type="checkbox" name="modality_filter" value="MI"> MI
+                        <input type="checkbox" name="modality_filter" value="MR"> MR
+                        <input type="checkbox" name="modality_filter" value="US"> US
+                        <!-- Add more modality options here -->
+                    </div>
+                </div>
+            
+                <!-- Country Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('country')">Country</span>
+                    <div class="content country_filter_cn">
+                        <input type="checkbox" name="country_filter" value="AO"> AO
+                        <input type="checkbox" name="country_filter" value="BF"> BF
+                        <input type="checkbox" name="country_filter" value="BI"> BI
+                        <input type="checkbox" name="country_filter" value="BJ"> BJ
+                        <input type="checkbox" name="country_filter" value="CD"> CD
+                        <input type="checkbox" name="country_filter" value="CF"> CF
+                        <input type="checkbox" name="country_filter" value="CG"> CG
+                        <input type="checkbox" name="country_filter" value="CI"> CI
+                        <input type="checkbox" name="country_filter" value="CM"> CM
+                        <input type="checkbox" name="country_filter" value="GA"> GA
+                        <input type="checkbox" name="country_filter" value="GM"> GM
+                        <input type="checkbox" name="country_filter" value="GN"> GN
+                        <input type="checkbox" name="country_filter" value="GQ"> GQ
+                        <input type="checkbox" name="country_filter" value="LR"> LR
+                        <input type="checkbox" name="country_filter" value="ML"> ML
+                        <input type="checkbox" name="country_filter" value="MR"> MR
+                        <input type="checkbox" name="country_filter" value="NE"> NE
+                        <input type="checkbox" name="country_filter" value="RW"> RW
+                        <input type="checkbox" name="country_filter" value="SL"> SL
+                        <input type="checkbox" name="country_filter" value="SN"> SN
+                        <input type="checkbox" name="country_filter" value="TD"> TD
+                        <input type="checkbox" name="country_filter" value="TG"> TG
+                        <input type="checkbox" name="country_filter" value="TN"> TN
+                        <!-- Add more country options here -->
+                    </div>
+                </div>
+            
+                <!-- Service Partner Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('service_partner')">Service Partner</span>
+                    <div class="content service_partner_filter_cn">
+                        <input type="checkbox" name="service_partner_filter" value="910163"> 910163
+                        <input type="checkbox" name="service_partner_filter" value="910165"> 910165
+                        <input type="checkbox" name="service_partner_filter" value="910167"> 910167
+                        <input type="checkbox" name="service_partner_filter" value="910183"> 910183
+                        <input type="checkbox" name="service_partner_filter" value="910187"> 910187
+                        <input type="checkbox" name="service_partner_filter" value="910191"> 910191
+                        <input type="checkbox" name="service_partner_filter" value="910192"> 910192
 
+
+
+
+
+                        <!-- Add more service partner options here -->
+                    </div>
+                </div>
+            
+                <!-- Status Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('status')">Status</span>
+                    <div class="content status_filter_cn">
+                        <input type="checkbox" name="status_filter" value="active"> Active
+                        <input type="checkbox" name="status_filter" value="inactive"> Inactive
+                    </div>
+                </div>
+            
+                <!-- Substatus Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('substatus')">Substatus</span>
+                    <div class="content substatus_filter_cn">
+                        <input type="checkbox" name="substatus_filter" value="active"> Active
+                        <input type="checkbox" name="substatus_filter" value="location unknown"> Location Unknown
+                        <input type="checkbox" name="substatus_filter" value="on stock"> on stock
+                        <input type="checkbox" name="substatus_filter" value="scrapped"> scrapped
+                        <input type="checkbox" name="substatus_filter" value="shipped"> shipped
+
+
+                        
+
+                        <!-- Add more substatus options here -->
+                    </div>
+                </div>
+            
+                <!-- On Stock Details Filter -->
+                <div class="filter-section">
+                    <span class="collapsible" onclick="toggleCheckboxes('on_stock_details')">On Stock Details</span>
+                    <div class="content on_stock_details_filter_cn">
+                        <input type="checkbox" name="on_stock_details_filter" value="Broken not scrapped"> Broken Not Scrapped
+                        <input type="checkbox" name="on_stock_details_filter" value="Not yet installed"> Not Yet Installed
+                        <!-- Add more on stock details options here -->
+                    </div>
+                </div>
+                <button id="applyFilters">Apply</button>
+            </form>
+
+            </div>
+            
+                 </div>
+                
             </div>
         </div>
     </div>
@@ -166,77 +274,42 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script>
+    // Function to populate the table with "ivkname" values
+function populateTableWithIvknames(ivknameData) {
+    const tableBody = document.querySelector('.equipments-table-body');
+    
+    // Clear the existing table rows
+    tableBody.innerHTML = '';
+
+    // Loop through the "ivkname" values and create rows
+    ivknameData.forEach(function(ivkname) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.textContent = ivkname;
+        row.appendChild(cell);
+        tableBody.appendChild(row);
+    });
+}
+
+// Trigger an AJAX request to fetch "ivkname" values
+$.ajax({
+    type: "GET",
+    url: "{% url 'dashboard:get_all_ivknames' %}",
+    success: function(response) {
+        // Call the function to populate the table with the received data
+        populateTableWithIvknames(response);
+    },
+    error: function(error) {
+        console.error('Error fetching ivknames:', error);
+    }
+});
+
+</script>
 
 <script>
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const getRandomElement = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-    const equipmentsNames = [];
-
-    for (let i = 0; i < 100; i++) {
-        const firstLetter = getRandomElement(alphabet);
-        const secondLetter = getRandomElement(alphabet);
-        const randomWord = `${firstLetter}${secondLetter}${firstLetter}${secondLetter} ${Math.floor(Math.random() * 10) + 1}`;
-        equipmentsNames.push(randomWord);
-    }
-
-    const tableBody = document.querySelector('.equipments-table tbody');
-
-    function populateTable() {
-        tableBody.innerHTML = '';
-        for (const name of equipmentsNames) {
-            const row = document.createElement('tr');
-            row.classList.add("equipments-tr")
-            const cell = document.createElement('td');
-            row.classList.add("equipments-td")
-            cell.textContent = name;
-            row.appendChild(cell);
-            tableBody.appendChild(row);
-        }
-    }
-
-    function populateSerialTable() {
-        tableBody.innerHTML = '';
-        for (const name of equipmentsNames) {
-            const row = document.createElement('tr');
-            row.classList.add("equipments-tr")
-            const cell = document.createElement('td');
-            row.classList.add("equipments-td")
-            cell.textContent = name;
-            row.appendChild(cell);
-            tableBody.appendChild(row);
-        }
-    }
-
-    populateTable();
-    populateSerialTable();
-
-    let ascending = true;
-
-    function sortTable() {
-        const sortedNames = [...equipmentsNames];
-        sortedNames.sort((a, b) => ascending ? a.localeCompare(b) : b.localeCompare(a));
-        ascending = !ascending;
-        equipmentsNames.length = 0;
-        equipmentsNames.push(...sortedNames);
-        populateTable();
-    }
-
-    $("path, circle").hover(function(e) {
-        var tooltipContent = $(this).data('info');
-        var tooltip = $('<div class="tooltip">' + tooltipContent + '</div>');
-
-        $('.map-container').append(tooltip);
-
-        $(document).on('mousemove', function(event) {
-            tooltip.css({
-                top: event.pageY + 10,  // Adjust the vertical position as needed
-                left: event.pageX + 10  // Adjust the horizontal position as needed
-            })
-        });
-    }, function() {
-        $('.tooltip').remove();
-    });
+    
+ 
 
 
     let ctx = document.getElementById('modalities-chart').getContext('2d');
@@ -284,69 +357,320 @@
 </script>
 
 <script>
-    const serialsData = [
-        ['080069HH1FR1', '4923231212', 'TN TUNISIA', '910161', 'TN', 'inactive', 'scrapped', ''],
-        ['080069HH1FCD1', '49264832764', 'SN SENEGAL', '910168', 'SN', 'active', 'active', ''],
-        ['080021219HH1FR1', '493123121', 'FR FRENCH', '910166', 'FR', 'inactive', 'active', ''],
-        ['0802112HH1FR1', '495456421', 'AO ANGOLA', '910162', 'AO', 'active', 'active', ''],
-        ['0800342HH1US1', '4900987654', 'US UNITED STATES', '910123', 'US', 'active', 'active', ''],
-        ['080089HH1JP1', '497654321', 'JP JAPAN', '910133', 'JP', 'inactive', 'scrapped', ''],
-        ['080054HH1MX1', '4998765432', 'MX MEXICO', '910154', 'MX', 'active', 'active', ''],
-        ['080043HH1DE1', '4967890123', 'DE GERMANY', '910143', 'DE', 'inactive', 'inactive', ''],
-        ['0800123HH1CN1', '4912345678', 'CN CHINA', '910111', 'CN', 'active', 'active', ''],
-        ['080098HH1BR1', '4987654321', 'BR BRAZIL', '910188', 'BR', 'inactive', 'scrapped', ''],
-        // Additional elements
-        ['080032HH1RU1', '4990011223', 'RU RUSSIA', '910149', 'RU', 'inactive', 'inactive', ''],
-        ['080077HH1AU1', '4955332112', 'AU AUSTRALIA', '910126', 'AU', 'active', 'active', ''],
-        ['080066HH1ZA1', '4977123456', 'ZA SOUTH AFRICA', '910177', 'ZA', 'inactive', 'inactive', ''],
-        ['080021HH1IN1', '4988776655', 'IN INDIA', '910110', 'IN', 'active', 'active', ''],
-        ['080099HH1KR1', '4944443333', 'KR SOUTH KOREA', '910195', 'KR', 'active', 'active', ''],
-        ['080045HH1IT1', '4933221122', 'IT ITALY', '910157', 'IT', 'inactive', 'scrapped', ''],
-        ['080088HH1ES1', '4966555444', 'ES SPAIN', '910182', 'ES', 'active', 'active', ''],
-        ['080078HH1CA1', '4922112233', 'CA CANADA', '910127', 'CA', 'inactive', 'inactive', ''],
-        ['080087HH1SG1', '4911999888', 'SG SINGAPORE', '910181', 'SG', 'active', 'active', ''],
-        ['080055HH1FR2', '4945666777', 'FR FRENCH', '910155', 'FR', 'inactive', 'active', ''],
-        // Add more elements here
-    ];
+// Function to populate the serials table with data
+const searchInput = document.getElementById('serialSearchInput');
+const tableBody = document.querySelector('.serials-table-body');
 
-    const serialTableBody = document.querySelector('.serials-table-body');
+// Store the original data
+let originalSerialData = [];
 
-    function populateSerialTable() {
-        serialTableBody.innerHTML = '';
-        for (const rowData of serialsData) {
-            const row = document.createElement('tr');
-            row.classList.add("serials-tr")
-            for (const value of rowData) {
-                const cell = document.createElement('td');
-                cell.classList.add("serials-td")
-                cell.textContent = value;
-                row.appendChild(cell);
+// Trigger an initial AJAX request to fetch serial data
+$.ajax({
+    type: "GET",
+    url: "{% url 'dashboard:get_equipment_dataAjax2' %}",
+    success: function(response) {
+        originalSerialData = response; // Store the original data
+        
+        // Call the function to populate the table with the received data
+        populateSerialsTable(originalSerialData);
+    },
+    error: function(error) {
+        console.error('Error fetching serial data:', error);
+    }
+});
+
+// Add an event listener to detect when a key is released in the search input
+searchInput.addEventListener('keyup', function(event) {
+    // Check if the Enter key is pressed (key code 13)
+    if (event.key === 'Enter') {
+        // Perform the search here
+        handleSearch();
+    }
+});
+
+// Function to handle the search
+function handleSearch() {
+    const searchTerm = searchInput.value.toLowerCase(); // Convert to lowercase for case-insensitive search
+    
+    // Filter the original data based on the search term
+    const filteredSerialData = originalSerialData.filter(serial => {
+        return serial.serialnumber.toLowerCase().includes(searchTerm);
+    });
+    
+    // Call the function to populate the table with the filtered data
+    populateSerialsTable(filteredSerialData);
+}
+
+// Function to populate the table with data
+function populateSerialsTable(serialData) {
+    // Clear the existing table rows
+    tableBody.innerHTML = '';
+
+    // Check if there are no search results
+    if (serialData.length === 0) {
+        const noResultsRow = document.createElement('tr');
+        const noResultsCell = document.createElement('td');
+        noResultsCell.textContent = 'No results found.';
+        noResultsCell.colSpan = 8; // Span all columns
+        noResultsRow.appendChild(noResultsCell);
+        tableBody.appendChild(noResultsRow);
+        return; // Exit the function
+    }
+
+    // Loop through the serialData and create rows
+    serialData.forEach(function(serial) {
+        const row = document.createElement('tr');
+
+        // Create and populate table cells
+        const serialNumberCell = document.createElement('td');
+        serialNumberCell.textContent = serial.serialnumber;
+        row.appendChild(serialNumberCell);
+
+        const materialNumberCell = document.createElement('td');
+        materialNumberCell.textContent = serial.materialnumber;
+        row.appendChild(materialNumberCell);
+
+        const servicePartnerNameCell = document.createElement('td');
+        servicePartnerNameCell.textContent = serial.servicepartnername;
+        row.appendChild(servicePartnerNameCell);
+
+        const servicePartnerCell = document.createElement('td');
+        servicePartnerCell.textContent = serial.servicepartner;
+        row.appendChild(servicePartnerCell);
+
+        const flCountryCell = document.createElement('td');
+        flCountryCell.textContent = serial.flcountry;
+        row.appendChild(flCountryCell);
+
+        const statusCell = document.createElement('td');
+        statusCell.textContent = serial.status;
+        row.appendChild(statusCell);
+
+        const subStatusCell = document.createElement('td');
+        subStatusCell.textContent = serial.substatus;
+        row.appendChild(subStatusCell);
+
+        const onStockDetailsCell = document.createElement('td');
+        onStockDetailsCell.textContent = serial.onstockdetails;
+        row.appendChild(onStockDetailsCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+    });
+}
+
+
+
+</script>
+<script>
+    // Function to update counts based on selected filters
+    function updateCounts() {
+        // Collect the selected filter values
+        var modalityFilter = getSelectedValues('modality_filter');
+        var countryFilter = getSelectedValues('country_filter');
+        var servicePartnerFilter = getSelectedValues('service_partner_filter');
+        var statusFilter = getSelectedValues('status_filter');
+        var substatusFilter = getSelectedValues('substatus_filter');
+        var onStockDetailsFilter = getSelectedValues('on_stock_details_filter');
+        console.log('Modality Filter:', modalityFilter);
+
+        
+        // Make an AJAX request to the Django view to get filtered counts
+        $.ajax({
+            url: "{% url 'dashboard:get_filtered_counts' %}", // Replace with your actual URL
+            method: 'GET',
+            data: {
+                'modality_filter': modalityFilter,
+                'country_filter': countryFilter,
+                'service_partner_filter': servicePartnerFilter,
+                'status_filter': statusFilter,
+                'substatus_filter': substatusFilter,
+                'on_stock_details_filter': onStockDetailsFilter
+            },
+            success: function (response) {
+                // Update the counts on the cards
+                updateCardCount('.counter-card.eq-card p:nth-child(2)', response.serialnumber_count);
+                updateCardCount('.onStock-card p:last-child', response.on_stock_count);
+                updateCardCount('.active-card p:last-child', response.active_count);
+                updateCardCount('.shipped-card p:last-child', response.shipped_count);
+            },
+            error: function (error) {
+                console.error('Error fetching counts:', error);
             }
-            serialTableBody.appendChild(row);
+        });
+    }
+
+    // Call the function to update counts when the page loads
+    $(document).ready(function() {
+        updateCounts();
+    });
+
+    // Helper function to update the count on a card
+    function updateCardCount(selector, count) {
+        var countElement = document.querySelector(selector);
+        if (countElement) {
+            countElement.textContent = count;
         }
     }
 
-    populateSerialTable();
-
-    let serialAscending = true;
-
-    function sortSerialTable(columnName) {
-        const columnIndex = serialsData[0].indexOf(columnName);
-        if (columnIndex === -1) return;
-
-        const sortedData = [...serialsData];
-        sortedData.sort((a, b) => {
-            const aValue = a[columnIndex];
-            const bValue = b[columnIndex];
-            return serialAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    // Helper function to get selected filter values
+    function getSelectedValues(filterName) {
+        var selectedValues = [];
+        $('input[name="' + filterName + '"]:checked').each(function () {
+            selectedValues.push($(this).val());
         });
+        return selectedValues;
+    }
 
-        serialAscending = !serialAscending;
-        serialsData.length = 0;
-        serialsData.push(...sortedData);
-        populateSerialTable();
+    // Add an event listener to the form submission
+    $('#filterForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        // Call the updateCounts function to apply the selected filters
+        updateCounts();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const tableBody = document.querySelector('.serials-table-body');
+
+    tableBody.addEventListener('click', function (event) {
+        if (event.target.tagName === 'tr') {
+            console.log('Row clicked:', event.target);
+            const serialNumber = event.target.cells[0].textContent;
+
+            // Make an AJAX request to get the row data
+            $.ajax({
+                type: "GET",
+                url: "{% url 'dashboard:get_row_data' %}",
+                data: { unique_identifier: serialNumber },
+                success: function (response) {
+                    // Update the card content based on the response
+                    document.getElementById('equipments-card').querySelectorAll('p')[1].textContent = response.equipments_value;
+                    document.getElementById('onStock-card').querySelectorAll('p')[1].textContent = response.on_stock_value;
+                    document.getElementById('active-card').querySelectorAll('p')[1].textContent = response.active_value;
+                    document.getElementById('shipped-card').querySelectorAll('p')[1].textContent = response.shipped_value;
+                },
+                error: function (error) {
+                    console.error('Error fetching row data:', error);
+                }
+            });
+        }
+    });
+});
+
+</script>
+<script>
+    function toggleCheckboxes(filterName) {
+        var checkboxes = document.querySelector('.' + filterName + '_filter_cn');
+        if (checkboxes.style.display === 'block' || checkboxes.style.display === '') {
+            checkboxes.style.display = 'none';
+        } else {
+            checkboxes.style.display = 'block';
+        }
     }
 </script>
+<script>
+    
+    var filterDataUrl = "{% url 'dashboard:filter_data' %}";
+
+
+</script>
+<script>
+    $(document).ready(function() {
+    // Your JavaScript code here
+
+    // JavaScript function to update the table with filtered data
+    // Function to update the table with filtered data
+    function updateTable() {
+     console.log('updateTable function called');
+
+    // Collect the selected filter values
+    var modalityFilter = getSelectedValues('modality_filter');
+    var countryFilter = getSelectedValues('country_filter');
+    var servicePartnerFilter = getSelectedValues('service_partner_filter');
+    var statusFilter = getSelectedValues('status_filter');
+    var substatusFilter = getSelectedValues('substatus_filter');
+    var onStockDetailsFilter = getSelectedValues('on_stock_details_filter');
+    console.log('Modality Filter:', modalityFilter);
+
+    // Make an AJAX request to the Django view to get filtered data
+    $.ajax({
+        url: filterDataUrl, // Replace with your Django URL
+        method: 'GET',
+        data: {
+            'modality_filter': modalityFilter, // Send as individual parameters
+            'country_filter': countryFilter,
+            'service_partner_filter': servicePartnerFilter,
+            'status_filter': statusFilter,
+            'substatus_filter': substatusFilter,
+            'on_stock_details_filter': onStockDetailsFilter
+        },
+        success: function (data) {
+            // Log the response data to the console
+            console.log('Response Data:', data);
+
+            // Update the table with the filtered data
+            updateTableContents(data);
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+}
+    
+    // Helper function to get selected filter values
+    function getSelectedValues(filterName) {
+        var selectedValues = [];
+        $('input[name="' + filterName + '"]:checked').each(function () {
+            selectedValues.push($(this).val());
+        });
+        return selectedValues;
+    }
+    
+    // Function to update the table contents with filtered data
+    function updateTableContents(data) {
+        console.log(data); // Log the received data
+    
+        // Get a reference to the table body
+        var tableBody = $('.serials-table tbody');
+    
+        // Clear existing table rows
+        tableBody.empty();
+    
+        // Loop through the filtered data and populate the table
+        if (data && data.filtered_data) {
+            data.filtered_data.forEach(function (item) {
+                // Create a new row
+                var row = $('<tr>');
+    
+                // Add table cells with data
+                row.append($('<td>').text(item.serialnumber));
+                row.append($('<td>').text(item.materialnumber));
+                row.append($('<td>').text(item.servicepartnername));
+                row.append($('<td>').text(item.servicepartner));
+                row.append($('<td>').text(item.cstcountry));
+                row.append($('<td>').text(item.status));
+                row.append($('<td>').text(item.substatus));
+                row.append($('<td>').text(item.onstockdetails));
+    
+                // Append the row to the table
+                tableBody.append(row);
+            });
+        }
+    }
+    
+    // Add an event listener to the form submission
+    $('#filterForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        // Call the updateTable function to apply the selected filters
+        updateTable();
+    });
+});
+    </script>
+    
 
 </body>
 </html>
