@@ -27,9 +27,17 @@ urlpatterns = [
     path('get_Data_Sent_chart_data2/', views.get_Data_Sent_chart_data2, name='get_Data_Sent_chart_data2'),
     path('get_Connection_score_chart_data2/', views.get_Connection_score_chart_data2, name='get_Connection_score_chart_data2'),
     path('get_equipment_data/', views.get_equipment_data, name='get_equipment_data'),
+    path('get_Can24_Connectable_Systems_chart_data/', views.get_Can24_Connectable_Systems_chart_data, name='get_Can24_Connectable_Systems_chart_data'),
+    path('get_CAN24_Data_Sent_chart_data/', views.get_CAN24_Data_Sent_chart_data, name='get_CAN24_Data_Sent_chart_data'),
+    path('get_Connected_CAN24_Modul_chart_data/', views.get_Connected_CAN24_Modul_chart_data, name='get_Connected_CAN24_Modul_chart_data'),
 
+
+    path('fill_missing_countries', views.fillin_missing_country, name='fillMissCountry'),
+    path('fill_missing_cst', views.fillin_missing_cst, name='fillMissCst'),
 
     path('get_equipements_dataAjax/', views.get_equipment_dataAjax, name='get_equipment_dataAjax'),
+    path('get_equipment_data_CAN24_Ajax/', views.get_equipment_data_CAN24_Ajax, name='get_equipment_data_CAN24_Ajax'),
+
 
 
 
@@ -53,5 +61,20 @@ urlpatterns = [
     path('missing_fl_countries/', views.get_missing_fl_countries, name='missing_fl_countries'),
     path('missing_customer_name/', views.get_missing_customer_name, name='missing_customer_name'),
     path('active_system_count/', views.active_system_count, name='active_system_count'),
+    path('get_all_ivknames/', views.get_all_ivknames, name='get_all_ivknames'),
+    path('get_equipment_dataAjax2/', views.get_equipment_dataAjax2, name='get_equipment_dataAjax2'),
+    # path('get_serialnumber_count/', views.get_serialnumber_count, name='get_serialnumber_count'),
+    # path('count_on_stock_substatus/', views.count_on_stock_substatus, name='count_on_stock_substatus'),
+    # path('count_active_status/', views.count_active_status, name='count_active_status'),
+    # path('count_shipped_substatus/', views.count_shipped_substatus, name='count_shipped_substatus'),
+
+    path('get_serial_data_by_search/', views.get_serial_data_by_search, name='get_serial_data_by_search'),
+    path('get_row_data/', views.get_row_data, name='get_row_data'),
+    path('filter_data/', views.filter_data, name='filter_data'),
+    path('get_filtered_counts/', views.get_filtered_counts, name='get_filtered_counts'),
+
+
+
+
 
 ]

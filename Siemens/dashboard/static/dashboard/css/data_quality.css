@@ -535,3 +535,56 @@
     }
 }
 
+.missing-input{
+    font-family: Georgia, Arial sans-serif;
+    font-size: 14px;
+    border: none;
+    border-bottom: 2px solid #333; /* Initial bottom border style */
+    outline: none;
+    background: none;
+    padding: 5px;
+    transition: border-color 0.3s ease; /* Animation transition */
+}
+
+/* Animation for the bottom border on hover */
+.missing-input:hover {
+    border-color: #007bff; /* Color to change to when hovered */
+}
+
+.SubmitMissing{
+    outline: none;
+    border: none;
+    color: white;
+    background-color: #ff7308;
+    border-radius: .5em;
+}
+
+#confirmation_dialog{
+    justify-content: center;
+    text-align: center;
+    width: 30%;
+    border-radius: .5em;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Verdana, sans-serif;
+    background-color: #fcceaa;
+    border: 1px solid #e1a677;
+}
+
+#confirmation_dialog button{
+    width: 90px;
+    padding: 5px;
+    font-size: 16px;
+    background-color: cadetblue;
+    border-radius: .5em;
+    border: none;
+    outline: none;
+}
+
+#confirmation_dialog::backdrop{
+    background-color: rgba(134, 134, 134, 0.7); /* Semi-transparent red */
+}
+
+#yesGoAheadBtn{
+    background-color: #9de59d;
+}

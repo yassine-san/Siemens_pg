@@ -36,7 +36,8 @@ class Can24(models.Model):
 
 
 class Quality(models.Model):
-    week = models.CharField(primary_key=True,max_length=255)
+    id = models.IntegerField(primary_key=True)
+    week = models.CharField(max_length=255)
     servicepartnername = models.CharField(max_length=255, blank=True, null=True)
     division = models.CharField(max_length=255, blank=True, null=True)
     modality = models.CharField(max_length=255, blank=True, null=True)
@@ -73,6 +74,18 @@ class Quality(models.Model):
     servicepartner = models.CharField(max_length=255, blank=True, null=True)
     substatus = models.CharField(max_length=255, blank=True, null=True)
     onstockdetails = models.CharField(max_length=255, blank=True, null=True)
+    def to_dict(self):
+        return {
+            'serialnumber': self.serialnumber,
+            'materialnumber': self.materialnumber,
+            'servicepartnername': self.servicepartnername,
+            'servicepartner': self.servicepartner,
+            'cstcountry': self.cstcountry,
+            'status': self.status,
+            'substatus': self.substatus,
+            'onstockdetails': self.onstockdetails,
+            # Add other fields as needed
+        }
 
     class Meta:
         managed = False

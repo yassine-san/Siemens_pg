@@ -1,8 +1,63 @@
+.container {
+    display: grid;
+    background-color: red;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr 2fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.upper-left-container {
+  background-color: red;
+
+  grid-area: 1 / 1 / 2 / 2;
+}
+.upper-right-container {
+  grid-area: 1 / 2 / 2 / 3;
+}
+.bottom-left-container {
+  grid-area: 2 / 1 / 3 / 2;
+}
+.bottom-right-container {
+  grid-area: 2 / 2 / 3 / 3;
+}
+.pagination-btn-cst:hover {
+  background-color: #ffab72;
+}
+
+.pagination-info-cst {
+  margin: 0;
+}
+.pagination-btn-cst.excel {
+  background-color: #dcd4d4;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 5px;
+  display: flex;
+  align-items: center; /* Center text and image vertically */
+  gap: 5px; /* Add space between text and image */
+}
+
+.pagination-btn-cst.excel:hover {
+  background-color: #ffab72;
+}
+
+
+
+
+
+
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Four columns with equal width */
   grid-gap: 10px; /* Gap between grid items */
-  
+
 }
 
 .item {
