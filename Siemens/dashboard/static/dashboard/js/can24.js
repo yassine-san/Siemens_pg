@@ -2,7 +2,7 @@ let loadingDoneCounter = 0
 let current_filters = {clickedLabel : "", DatasetLabel : ""}
 
 
-function createBarChart(url, connectedCountsKey, xConnectableCountsKey, chartElementId) {
+function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey, chartElementId) {
 
     const isFiltered = (current_filters.clickedLabel !== "" || current_filters.DatasetLabel !== "");
     const filter_date = isFiltered ? current_filters.clickedLabel : undefined;
@@ -42,6 +42,13 @@ function createBarChart(url, connectedCountsKey, xConnectableCountsKey, chartEle
                     },
                 ],
             };
+            if (thirdKey !== ''){
+                chartData.datasets.push({
+                    label: thirdKey.replace("_counts", ""),
+                    backgroundColor: '#98e898',
+                    data: data[thirdKey],
+                });
+            }
             Chart.register(ChartDataLabels);
             const chartOptions = {
                 scales: {
@@ -115,13 +122,13 @@ loading.addEventListener('cancel', (event) => {
 
 function updateCharts(){
     loading.showModal()
-    createBarChart(srs_connectivity_chart_url, 'Connected_counts', 'X_Connectable_counts', 'histogram1');
-    createBarChart(ruh_readiness_chart_url, 'RUH Ready_counts', 'X_not RUH ready_counts', 'histogram2');
-    createBarChart(data_sent_chart_url, 'Data Sent_counts', 'X_Data not sent_counts', 'histogram3');
-    createBarChart(connection_score_chart_url, 'Connection active_counts', 'Connection not active_counts', 'histogram4');
-    createBarChart(can24_connectable_systems_chart_url, 'CAN24 connectable_counts', 'x_Not CAN24 connectable_counts', 'histogram5');
-    createBarChart(can24_data_sent_chart_url, 'Data Sent_counts2', 'X_Data not sent_counts2', 'histogram6');
-    createBarChart(connected_can24_modul_chart_url, 'Connected CAN24 Modul_counts', 'x_Not Connectable_counts', 'histogram7');
+    createBarChart(srs_connectivity_chart_url, 'Connected_counts', 'X_Connectable_counts','', 'histogram1');
+    createBarChart(ruh_readiness_chart_url, 'RUH Ready_counts', 'X_not RUH ready_counts', '', 'histogram2');
+    createBarChart(data_sent_chart_url, 'Data Sent_counts', 'X_Data not sent_counts', '', 'histogram3');
+    createBarChart(connection_score_chart_url, 'Connection active_counts', 'Connection not active_counts', '', 'histogram4');
+    createBarChart(can24_connectable_systems_chart_url, 'CAN24 connectable_counts', 'x_Not CAN24 connectable_counts', '', 'histogram5');
+    createBarChart(can24_data_sent_chart_url, 'Data sent_counts2', 'x_Data not sent_counts2', 'x_Not connectable_counts2', 'histogram6');
+    createBarChart(connected_can24_modul_chart_url, 'Connected CAN24 Modul_counts', 'x_Not Connectable_counts','Not Connected CAN24 Modul_counts',  'histogram7');
 }
 
 function hideLoading(){

@@ -528,10 +528,12 @@ def getFilterColumnName(condition):
         'Connection not active': 'connection_score',
         'CAN24 connectable': 'can24_connection_per_system_type',
         'x_Not CAN24 connectable': 'can24_connection_per_system_type',
-        'Data Sent2': 'can24_data_sent',
-        'X_Data not sent2': 'can24_data_sent',
+        'Data sent2': 'can24_data_sent',
+        'x_Data not sent2': 'can24_data_sent',
+        'x_Not connectable_counts2': 'can24_data_sent',
         'Connected CAN24 Modul': 'connected_can24_modul',
-        'x_Not Connectable': 'connected_can24_modul'
+        'x_Not Connectable': 'connected_can24_modul',
+        'Not Connected CAN24 Modul': 'connected_can24_modul',
     }
     column_name = column_mapping.get(condition, None)
     if column_name:
@@ -730,8 +732,9 @@ def get_Can24_Connectable_Systems_chart_data(request):
                     if list(filter_condition.keys())[0] == "can24_connection_per_system_type":
                         CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable').count()
                         x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable').count()
-                    CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable', **filter_condition).count()
-                    x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable', **filter_condition).count()
+                    else :
+                        CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable', **filter_condition).count()
+                        x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable', **filter_condition).count()
             else:
                     CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='CAN24 connectable').count()
                     x_Not_CAN24_connectable_count = Can24.objects.filter(date=d,can24_connection_per_system_type='x_Not CAN24 connectable').count()
@@ -756,28 +759,34 @@ def get_CAN24_Data_Sent_chart_data(request):
 
         data = {
             'labels': [d.strftime('%b %d ,%y') for d in dates],
-            'Data Sent_counts2': [],
-            'X_Data not sent_counts2': [],
+            'Data sent_counts2': [],
+            'x_Data not sent_counts2': [],
+            'x_Not connectable_counts2': [],
         }
 
         for d in dates:
             Data_Sent_count = 0
             X_Data_not_sent_count = 0
+            X_Not_connectable = 0
             if isfilrable:
                 date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
                 if d == date_filter:
                     filter_condition = getFilterColumnName(filter_state)
                     if list(filter_condition.keys())[0] == "can24_data_sent":
-                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
-                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
+                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='Data sent').count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Data not sent').count()
+                        X_Not_connectable = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Not connectable').count()
                     else:
-                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent', **filter_condition).count()
-                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent', **filter_condition).count()
+                        Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='Data sent', **filter_condition).count()
+                        X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Data not sent', **filter_condition).count()
+                        X_Not_connectable = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Not connectable', **filter_condition).count()
             else:
-                Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent='Data Sent').count()
-                X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent='X_Data not sent').count()
-            data['Data Sent_counts2'].append(Data_Sent_count)
-            data['X_Data not sent_counts2'].append(X_Data_not_sent_count)
+                Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='Data sent').count()
+                X_Data_not_sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Data not sent').count()
+                X_Not_connectable = Can24.objects.filter(date=d, can24_data_sent_formatiert='x_Not connectable').count()
+            data['Data sent_counts2'].append(Data_Sent_count)
+            data['x_Data not sent_counts2'].append(X_Data_not_sent_count)
+            data['x_Not connectable_counts2'].append(X_Not_connectable)
 
         return JsonResponse(data)
 
@@ -797,11 +806,13 @@ def get_Connected_CAN24_Modul_chart_data(request):
             'labels': [d.strftime('%b %d ,%y') for d in dates],
             'Connected CAN24 Modul_counts': [],
             'x_Not Connectable_counts': [],
+            'Not Connected CAN24 Modul_counts': [],
         }
 
         for d in dates:
             Connected_CAN24_Modul_count = 0
             x_Not_Connectable_count = 0
+            Not_Connected_CAN14_Modul_count = 0
 
             if isfilrable:
                 date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
@@ -810,14 +821,18 @@ def get_Connected_CAN24_Modul_chart_data(request):
                     if list(filter_condition.keys())[0] == "connected_can24_modul":
                         Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul').count()
                         x_Not_Connectable_count = Can24.objects.filter(date=d,connected_can24_modul='x_Not Connectable').count()
+                        Not_Connected_CAN14_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Not Connected CAN24 Modul').count()
                     else:
                         Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul', **filter_condition).count()
                         x_Not_Connectable_count = Can24.objects.filter(date=d,connected_can24_modul='x_Not Connectable', **filter_condition).count()
+                        Not_Connected_CAN14_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Not Connected CAN24 Modul, **filter_condition').count()
             else:
                 Connected_CAN24_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Connected CAN24 Modul').count()
                 x_Not_Connectable_count = Can24.objects.filter(date=d, connected_can24_modul='x_Not Connectable').count()
+                Not_Connected_CAN14_Modul_count = Can24.objects.filter(date=d,connected_can24_modul='Not Connected CAN24 Modul').count()
             data['Connected CAN24 Modul_counts'].append(Connected_CAN24_Modul_count)
             data['x_Not Connectable_counts'].append(x_Not_Connectable_count)
+            data['Not Connected CAN24 Modul_counts'].append(Not_Connected_CAN14_Modul_count)
 
         return JsonResponse(data)
 
@@ -1070,8 +1085,8 @@ def get_filtered_counts(request):
     counts = {
         'serialnumber_count': Quality.objects.filter(week='Week 30',**filter_dict).values('serialnumber').distinct().count(),
         'on_stock_count': Quality.objects.filter(week='Week 30',**filter_dict, substatus='on stock').values('serialnumber').distinct().count(),
-        'active_count': Quality.objects.filter(week='Week 30',**filter_dict, status='active').values('serialnumber').distinct().count(),
-        'shipped_count': Quality.objects.filter(week='Week 30',**filter_dict, substatus='shipped').values('serialnumber').distinct().count(),
+        'active_count': Quality.objects.filter(week='Week 30',**filter_dict, status='active',substatus='active').values('serialnumber').distinct().count(),
+        'shipped_count': Quality.objects.filter(week='Week 30',**filter_dict, status='active',substatus='shipped').values('serialnumber').distinct().count(),
     }
 
     return JsonResponse(counts)
