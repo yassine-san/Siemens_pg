@@ -3,7 +3,8 @@ from django.db import models
 
 
 class Can24(models.Model):
-    date = models.DateField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    date = models.DateField()
     equipment_material_number = models.CharField(max_length=255, blank=True, null=True)
     serial_number = models.CharField(max_length=255, blank=True, null=True)
     equipment_serial_number = models.CharField(max_length=255, blank=True, null=True)
@@ -29,14 +30,15 @@ class Can24(models.Model):
     can24_data_sent_formatiert = models.CharField(max_length=255, blank=True, null=True)
     connected_can24_modul = models.CharField(max_length=255, blank=True, null=True)
     connection_score = models.CharField(max_length=255, blank=True, null=True)
-
+ 
     class Meta:
-        managed = False
         db_table = 'can24'
 
+    def __str__(self):
+        return self.serial_number
 
 class Quality(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     week = models.CharField(max_length=255)
     servicepartnername = models.CharField(max_length=255, blank=True, null=True)
     division = models.CharField(max_length=255, blank=True, null=True)
@@ -86,14 +88,16 @@ class Quality(models.Model):
             'onstockdetails': self.onstockdetails,
             # Add other fields as needed
         }
-
+    
     class Meta:
-        managed = False
         db_table = 'exceltable'
 
+    def __str__(self):
+        return self.serialnumber
 
 class Srs(models.Model):
-    date = models.DateField(primary_key=True)
+    id = models.AutoField(primary_key=True)
+    date = models.DateField()
     equipment_material_number = models.CharField(max_length=255, blank=True, null=True)
     equipment_serial_number = models.CharField(max_length=255, blank=True, null=True)
     equipment_type = models.CharField(max_length=255, blank=True, null=True)
@@ -110,7 +114,38 @@ class Srs(models.Model):
     ruh_readiness = models.CharField(max_length=255, blank=True, null=True)
     data_sent = models.CharField(max_length=255, blank=True, null=True)
     connection_score = models.CharField(max_length=255, blank=True, null=True)
-
+    
     class Meta:
-        managed = False
         db_table = 'srs_connectivity'
+
+    def __str__(self):
+        return self.equipment_serial_number
+    
+  
+
+
+class Ccr(models.Model):
+    id = models.AutoField(primary_key=True)
+    system_serial_number = models.CharField(max_length=255, null=True, blank=True)
+    system_material_number = models.CharField(max_length=255, null=True, blank=True)
+    product_name = models.CharField(max_length=255, null=True, blank=True)
+    delivery_date = models.CharField(max_length=255, null=True, blank=True)
+    handover_date = models.CharField(max_length=255, null=True, blank=True)
+    contract_start_date = models.CharField(max_length=255, null=True, blank=True)
+    contract_end_date = models.CharField(max_length=255, null=True, blank=True)
+    contract_number = models.CharField(max_length=255, null=True, blank=True)
+    eos = models.CharField(max_length=255, null=True, blank=True)
+    eod = models.CharField(max_length=255, null=True, blank=True)
+    end_customer = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=255, null=True, blank=True)
+    modality = models.CharField(max_length=255, null=True, blank=True)
+    service_partner = models.CharField(max_length=255, null=True, blank=True)
+    service_partner_id = models.CharField(max_length=255, null=True, blank=True)
+    
+    class Meta:
+        db_table = 'ccr'
+
+    def _str_(self):
+        return f"ccr {self.system_serial_number}"
+    

@@ -361,6 +361,7 @@ def upload_excel(request):
 
             response_data = {'status': 1, 'message': 'Base donnee est mise a jour', 'data': None}
         except Exception as e:
+            print(e)
             response_data = {'status': -1, 'message': 'Erreur lors l\'execution'}
 
     else:
@@ -410,9 +411,9 @@ def upload_another_excel(request):
 
                 if batch:
                     if sheet.title == 'SRS Connectivity':
-                        insert_query = "INSERT INTO SRS_Connectivity VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                        insert_query = "INSERT INTO SRS_Connectivity(Date,Equipment_material_number,	Equipment_serial_number	,Equipment_type,	Material_IVK_name,	Material_division_ID,	Material_division_text,	Func_Location_Name, 	Equipment_service_partner_ID, Equipment_service_partner_text, Country_Region, Connection_Status,	Capability,	SRS_Connectivity,	RUH_Readiness,	Data_Sent,	Connection_score) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
                     elif sheet.title == 'CAN24':
-                        insert_query = "INSERT INTO CAN24 VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
+                        insert_query = "INSERT INTO CAN24(date,equipment_material_number,serial_number,equipment_serial_number,equipment_type,material_ivk_name,material_division_id,material_division_text,func_location_name,equipment_service_partner_id,equipment_service_partner_text,srs_equipment_configurational_state_text,country_region,connection_status,capability,srs_connectivity,ruh_readiness,data_sent,can24,can24_connectable_per_system_type,can24_connection_per_system_type,can24_data_sent_1,can24_data_sent,can24_data_sent_formatiert,connected_can24_modul,connection_score) VALUES (%s" + (", %s" * (len(row) - 1)) + ")"
                     else:
                         # Handle other sheets if needed
                         continue
@@ -426,6 +427,7 @@ def upload_another_excel(request):
 
             response_data = {'status': 1, 'message': 'Another Excel data updated', 'data': None}
         except Exception as e:
+            print(e)
             response_data = {'status': -1, 'message': 'Erreur lors l\'execution'}
 
     else:

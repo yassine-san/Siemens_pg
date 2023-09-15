@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'dashboard'
+    'users.apps.UsersConfig',
+    'dashboard.apps.DashboardConfig',
 ]
 
 MIDDLEWARE = [
@@ -83,11 +83,9 @@ WSGI_APPLICATION = 'Siemens.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Siemensdb',
-        'USER': 'postgres',
-        'PASSWORD': 'toor',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': 'siemensdb',
+        'USER': 'siemens_pg',
+        'PASSWORD':'root',
     }
 }
 
