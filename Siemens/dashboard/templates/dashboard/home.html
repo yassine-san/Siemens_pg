@@ -15,11 +15,11 @@
     <ul class="nav-list">
       <li style="display: flex;cursor: pointer">
           <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
-          <a href="{% url 'dashboard:excel_import' file_index=1 %}" style="padding:6px;color : black">Import Excel 1</a>
+          <a href="{% url 'dashboard:excel_import' file_index=1 %}" style="padding:6px;color : black">Quality Excel</a>
       </li>
         <li style="display: flex;cursor: pointer">
           <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
-          <a href="{% url 'dashboard:excel_import' file_index=2 %}" style="padding:6px;color : black">Import Excel 2</a>
+          <a href="{% url 'dashboard:excel_import' file_index=2 %}" style="padding:6px;color : black">SRS/Can24 Excel</a>
       </li>
       <li class="dropdown">
         <button class="dropbtn">{{ username }}</button>

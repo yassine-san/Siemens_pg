@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import logout
+from django.core import serializers
 from django.shortcuts import render, redirect
 from django.db import connection
 from openpyxl import load_workbook
@@ -8,7 +9,7 @@ from django.http import JsonResponse
 from .models import Quality
 from .models import Srs
 from .models import Can24
-from .models import Ccr
+from .models import Partner,Ccr
 from users.models import Account, Account
 from django.db.models import Count
 from datetime import datetime
@@ -161,17 +162,18 @@ def registerPartenariat(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    partners_list = Quality.objects.values('servicepartnername').distinct().order_by('servicepartnername')
-
-    return render(request, "dashboard/register_user.html", {"partenariats": partners_list})
+    #serializers.serialize("json", Deliveries.objects.all())
+    partners = Partner.objects.distinct().order_by('partnername')
+    partners_list_se = serializers.serialize("json", Partner.objects.distinct().order_by('partnername'))
+    return render(request, "dashboard/register_user.html", {"partenariats": partners,"partenariats_se": partners_list_se})
 
 
 def registerNewUser(request):
     if request.method == 'POST':
-        email = request.POST["email"]
-        partenariat = request.POST["partner"]
-        username, domain = email.split('@')
+        username = request.POST["email"]
         password = username + "?"
+        partenariat = request.POST["partner"]
+        email = username + Partner.objects.filter(partnername=partenariat).values('email').first().get('email')
 
         Account.objects.create_user(email, password, partenariat, 3)
 
@@ -541,80 +543,200 @@ def upload_another_excel(request):
     return JsonResponse(response_data)
 
 
-def get_srs_connectivity_chart_data(request):
-    dates = [date(2023, 5, 15), date(2023, 5, 30), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15),
-             date(2023, 8, 1), date(2023, 8, 15)]
+# there, there bi
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'connected_counts': [],
-        'x_connectable_counts': [],
+def getFilterColumnNameSrs(condition):
+    column_mapping = {
+        'Connected': 'srs_connectivity',
+        'X_Connectable': 'srs_connectivity',
+        'RUH Ready': 'ruh_readiness',
+        'X_not RUH ready': 'ruh_readiness',
+        'Data Sent': 'data_sent',
+        'X_Data not sent': 'data_sent',
+        'Connection active': 'connection_score',
+        'Connection not active': 'connection_score',
     }
+    column_name = column_mapping.get(condition, None)
+    if column_name:
+        filter_condition = {column_name: condition}
+        return filter_condition
+    else:
+        # Handle the case when posted_variable doesn't match any of the possibilities
+        return None
 
-    for d in dates:
-        connected_count = Srs.objects.filter(date=d, srs_connectivity='Connected').count()
-        x_connectable_count = Srs.objects.filter(date=d, srs_connectivity='X_Connectable').count()
-        data['connected_counts'].append(connected_count)
-        data['x_connectable_counts'].append(x_connectable_count)
 
-    return JsonResponse(data)
+def get_srs_connectivity_chart_data(request):
+    if request.method == "POST":
+        dates = Srs.objects.values_list('date', flat=True).distinct().order_by('date')
+
+        postdata = json.loads(request.body.decode('utf-8'))
+
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
+
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Connected_counts': [],
+            'X_Connectable_counts': [],
+        }
+
+        for d in dates:
+            connected_count = 0
+            x_connectable_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnNameSrs(filter_state)
+                    if list(filter_condition.keys())[0] == "srs_connectivity":
+                        connected_count = Srs.objects.filter(date=d, srs_connectivity='Connected').count()
+                        x_connectable_count = Srs.objects.filter(date=d, srs_connectivity='X_Connectable').count()
+                    else:
+                        connected_count = Srs.objects.filter(date=d, srs_connectivity='Connected', **filter_condition).count()
+                        x_connectable_count = Srs.objects.filter(date=d, srs_connectivity='X_Connectable', **filter_condition).count()
+            else:
+                connected_count = Srs.objects.filter(date=d, srs_connectivity='Connected').count()
+                x_connectable_count = Srs.objects.filter(date=d, srs_connectivity='X_Connectable').count()
+            data['Connected_counts'].append(connected_count)
+            data['X_Connectable_counts'].append(x_connectable_count)
+
+        return JsonResponse(data)
 
 
 def get_ruh_readiness_chart_data(request):
-    dates = [date(2023, 5, 15), date(2023, 5, 30), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15),
-             date(2023, 8, 1), date(2023, 8, 15)]
+    if request.method == "POST":
+        dates = Srs.objects.values_list('date', flat=True).distinct().order_by('date')
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'RUH_Ready_counts': [],
-        'X_not_RUH_ready_counts': [],
-    }
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    for d in dates:
-        RUH_Ready_count = Srs.objects.filter(date=d, ruh_readiness='RUH Ready').count()
-        X_not_RUH_ready_count = Srs.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
-        data['RUH_Ready_counts'].append(RUH_Ready_count)
-        data['X_not_RUH_ready_counts'].append(X_not_RUH_ready_count)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    return JsonResponse(data)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'RUH Ready_counts': [],
+            'X_not RUH ready_counts': [],
+        }
+
+        for d in dates:
+            RUH_Ready_count = 0
+            X_not_RUH_ready_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnNameSrs(filter_state)
+                    if list(filter_condition.keys())[0] == 'ruh_readiness':
+                        RUH_Ready_count = Srs.objects.filter(date=d, ruh_readiness='RUH Ready').count()
+                        X_not_RUH_ready_count = Srs.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
+                    else:
+                        RUH_Ready_count = Srs.objects.filter(date=d, ruh_readiness='RUH Ready', **filter_condition).count()
+                        X_not_RUH_ready_count = Srs.objects.filter(date=d, ruh_readiness='X_not RUH ready', **filter_condition).count()
+            else:
+                RUH_Ready_count = Srs.objects.filter(date=d, ruh_readiness='RUH Ready').count()
+                X_not_RUH_ready_count = Srs.objects.filter(date=d, ruh_readiness='X_not RUH ready').count()
+            data['RUH Ready_counts'].append(RUH_Ready_count)
+            data['X_not RUH ready_counts'].append(X_not_RUH_ready_count)
+
+        return JsonResponse(data)
 
 
 def get_Data_Sent_chart_data(request):
-    dates = [date(2023, 5, 15), date(2023, 5, 30), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15),
-             date(2023, 8, 1), date(2023, 8, 15)]
+    if request.method == "POST":
+        dates = Srs.objects.values_list('date', flat=True).distinct().order_by('date')
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Data_Sent_counts': [],
-        'X_Data_not_sent_counts': [],
-    }
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    for d in dates:
-        Data_Sent_count = Srs.objects.filter(date=d, data_sent='Data Sent').count()
-        X_Data_not_sent_count = Srs.objects.filter(date=d, data_sent='X_Data not sent').count()
-        data['Data_Sent_counts'].append(Data_Sent_count)
-        data['X_Data_not_sent_counts'].append(X_Data_not_sent_count)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    return JsonResponse(data)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Data Sent_counts': [],
+            'X_Data not sent_counts': [],
+        }
+
+        for d in dates:
+            Data_Sent_count = 0
+            X_Data_not_sent_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnNameSrs(filter_state)
+                    if list(filter_condition.keys())[0] == "data_sent":
+                        Data_Sent_count = Srs.objects.filter(date=d, data_sent='Data Sent').count()
+                        X_Data_not_sent_count = Srs.objects.filter(date=d, data_sent='X_Data not sent').count()
+                    else:
+                        Data_Sent_count = Srs.objects.filter(date=d, data_sent='Data Sent', **filter_condition).count()
+                        X_Data_not_sent_count = Srs.objects.filter(date=d, data_sent='X_Data not sent', **filter_condition).count()
+            else:
+                Data_Sent_count = Srs.objects.filter(date=d, data_sent='Data Sent').count()
+                X_Data_not_sent_count = Srs.objects.filter(date=d, data_sent='X_Data not sent').count()
+            data['Data Sent_counts'].append(Data_Sent_count)
+            data['X_Data not sent_counts'].append(X_Data_not_sent_count)
+
+        return JsonResponse(data)
 
 
 def get_Connection_score_chart_data(request):
-    dates = [date(2023, 5, 15), date(2023, 5, 30), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15),
-             date(2023, 8, 1), date(2023, 8, 15)]
+    if request.method == "POST":
+        dates = Srs.objects.values_list('date', flat=True).distinct().order_by('date')
 
-    data = {
-        'labels': [d.strftime('%b %d') for d in dates],
-        'Connection_active_counts': [],
-        'Connection_not_active_counts': [],
-    }
+        postdata = json.loads(request.body.decode('utf-8'))
 
-    for d in dates:
-        Connection_active_count = Srs.objects.filter(date=d, connection_score='Connection active').count()
-        Connection_not_active_count = Srs.objects.filter(date=d, connection_score='Connection not active').count()
-        data['Connection_active_counts'].append(Connection_active_count)
-        data['Connection_not_active_counts'].append(Connection_not_active_count)
+        isfilrable = postdata.get('isFiltered')
+        filter_date = postdata.get('filter_date')
+        filter_state = postdata.get('filter_state')
 
-    return JsonResponse(data)
+        data = {
+            'labels': [d.strftime('%b %d ,%y') for d in dates],
+            'Connection active_counts': [],
+            'Connection not active_counts': [],
+        }
+
+        for d in dates:
+            Connection_active_count = 0
+            Connection_not_active_count = 0
+            if isfilrable:
+                date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+                if d == date_filter:
+                    filter_condition = getFilterColumnNameSrs(filter_state)
+                    if list(filter_condition.keys())[0] == "connection_score":
+                        Connection_active_count = Srs.objects.filter(date=d,connection_score='Connection active').count()
+                        Connection_not_active_count = Srs.objects.filter(date=d,connection_score='Connection not active').count()
+                    else:
+                        Connection_active_count = Srs.objects.filter(date=d,connection_score='Connection active', **filter_condition).count()
+                        Connection_not_active_count = Srs.objects.filter(date=d,connection_score='Connection not active', **filter_condition).count()
+            else:
+                Connection_active_count = Srs.objects.filter(date=d, connection_score='Connection active').count()
+                Connection_not_active_count = Srs.objects.filter(date=d, connection_score='Connection not active').count()
+            data['Connection active_counts'].append(Connection_active_count)
+            data['Connection not active_counts'].append(Connection_not_active_count)
+
+        return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def CAN24(request):

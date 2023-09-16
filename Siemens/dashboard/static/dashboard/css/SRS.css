@@ -130,6 +130,49 @@ canvas {
     left: 0;
 }
 
+.filter-container {
+    display: none;
+    position: relative;
+    width: 300px;
+}
+
+.filter-imay {
+    background-color: cadetblue;
+    border-radius: .4em;
+    color: white;
+    padding: 5px;
+    white-space: nowrap;
+    overflow-x: auto;
+    margin-bottom: 10px; /* Add margin to separate from the button */
+}
+
+.removeFilter {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+    border-radius: 40%;
+    border: none;
+    outline: none;
+    position: absolute;
+    top: 5px;
+    right: -8px;
+    padding: 2px 6px;
+}
+
+.removeFilter:hover {
+    padding: 2px 7px;
+}
+
+.visible-f{
+    display: block;
+}
+
+.item-c div{
+    border: 1px solid #c0bcbc;
+    box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
+    -webkit-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
+    -moz-box-shadow: 4px 7px 5px 0px rgba(201,147,79,0.75);
+}
 
 
 

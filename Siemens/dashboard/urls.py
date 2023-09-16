@@ -22,6 +22,7 @@ urlpatterns = [
     path('get_Data_Sent_chart_data/', views.get_Data_Sent_chart_data, name='get_Data_Sent_chart_data'),
     path('get_Connection_score_chart_data/', views.get_Connection_score_chart_data, name='get_Connection_score_chart_data'),
     path('CAN24/', views.CAN24, name='CAN24'),
+
     path('get_srs_connectivity_chart_data2/', views.get_srs_connectivity_chart_data2, name='get_srs_connectivity_chart_data2'),
     path('get_ruh_readiness_chart_data2/', views.get_ruh_readiness_chart_data2, name='get_ruh_readiness_chart_data2'),
     path('get_Data_Sent_chart_data2/', views.get_Data_Sent_chart_data2, name='get_Data_Sent_chart_data2'),

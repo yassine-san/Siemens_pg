@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Can24(models.Model):
     id = models.AutoField(primary_key=True)
     date = models.DateField()
@@ -30,12 +29,13 @@ class Can24(models.Model):
     can24_data_sent_formatiert = models.CharField(max_length=255, blank=True, null=True)
     connected_can24_modul = models.CharField(max_length=255, blank=True, null=True)
     connection_score = models.CharField(max_length=255, blank=True, null=True)
- 
+
     class Meta:
         db_table = 'can24'
 
     def __str__(self):
         return self.serial_number
+
 
 class Quality(models.Model):
     id = models.AutoField(primary_key=True)
@@ -76,6 +76,7 @@ class Quality(models.Model):
     servicepartner = models.CharField(max_length=255, blank=True, null=True)
     substatus = models.CharField(max_length=255, blank=True, null=True)
     onstockdetails = models.CharField(max_length=255, blank=True, null=True)
+
     def to_dict(self):
         return {
             'serialnumber': self.serialnumber,
@@ -88,12 +89,13 @@ class Quality(models.Model):
             'onstockdetails': self.onstockdetails,
             # Add other fields as needed
         }
-    
+
     class Meta:
         db_table = 'exceltable'
 
     def __str__(self):
         return self.serialnumber
+
 
 class Srs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -114,14 +116,12 @@ class Srs(models.Model):
     ruh_readiness = models.CharField(max_length=255, blank=True, null=True)
     data_sent = models.CharField(max_length=255, blank=True, null=True)
     connection_score = models.CharField(max_length=255, blank=True, null=True)
-    
+
     class Meta:
         db_table = 'srs_connectivity'
 
     def __str__(self):
         return self.equipment_serial_number
-    
-  
 
 
 class Ccr(models.Model):
@@ -142,10 +142,18 @@ class Ccr(models.Model):
     modality = models.CharField(max_length=255, null=True, blank=True)
     service_partner = models.CharField(max_length=255, null=True, blank=True)
     service_partner_id = models.CharField(max_length=255, null=True, blank=True)
-    
+
     class Meta:
         db_table = 'ccr'
 
     def _str_(self):
         return f"ccr {self.system_serial_number}"
-    
+
+
+class Partner(models.Model):
+    partnerid = models.IntegerField(primary_key=True)
+    partnername = models.CharField(blank=True, null=True)
+    email = models.CharField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'partner'
