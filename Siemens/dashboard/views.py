@@ -30,7 +30,10 @@ def home(request):
     else:
         username = {1: "manager", 2: "assistant"}.get(user_type, "unknown")
 
-    return render(request, "dashboard/home.html", {"username": username})
+    print(user.partenariat)
+    partenaria = get_user_partenariat(user)
+    return render(request, "dashboard/home.html", {"username": username,
+                                                   "partenariat":partenaria})
 
 
 def get_user_partenariat(user):
@@ -38,7 +41,8 @@ def get_user_partenariat(user):
     if user_type == 1 or user_type == 2:
         username = "all"
     elif user_type == 3:
-        username = user.partenariat
+        username = Partner.objects.filter(partnername=user.partenariat).first().partnerid
+        #username = user.partenariat
     else:
         username = "unknown"
     return username
@@ -185,6 +189,12 @@ def ccr_interface(request):
     return render(request, 'dashboard/ccr.html')
 
 def update_ccr_data(request):
+    user = request.user
+    partenariat = get_user_partenariat(user)
+    if partenariat == 'all':
+        print('manager')
+    else:
+        print(partenariat)
     if request.method == 'POST':
         partner_number = request.POST.get('partnerNumber')
         modality = request.POST.get('modality')
@@ -192,8 +202,8 @@ def update_ccr_data(request):
         search_query = request.POST.get('searchQuery')
         # apply filters
         queryset = Ccr.objects.all()
-        if partner_number :
-            queryset = queryset.filter(service_partner_id=partner_number)
+        if partenariat != 'all' or partner_number :
+            queryset = queryset.filter(service_partner_id=partner_number) if partenariat == 'all'  else queryset.filter(service_partner_id=partenariat)
         if modality :
             queryset = queryset.filter(modality=modality)
         if country :
@@ -201,6 +211,8 @@ def update_ccr_data(request):
         if search_query :
             queryset = queryset.filter(system_serial_number__contains=search_query)
 
+        # if partenariat != 'all':
+        #     queryset = queryset.filter(service_partner_id=partenariat)
         nb_contract = queryset.filter(system_serial_number__isnull=False, system_material_number__gt='').count()
         active_systems = queryset.extra(
             tables=['exceltable'],
