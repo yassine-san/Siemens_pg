@@ -9,6 +9,29 @@
     <link rel="stylesheet" href="{% static "users/css/login.css" %}">
 </head>
 <body>
+    <dialog id="loading">
+        <div class="multi-spinner-container">
+            <div class="multi-spinner">
+                <div class="multi-spinner">
+                    <div class="multi-spinner">
+                       <div class="multi-spinner">
+                            <div class="multi-spinner">
+                                <div class="multi-spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="password_setter">
+        <div style="display: flex">
+            <label for="password-set">password</label>
+            <input id="password-set" type="text">
+        </div>
+    </dialog>
+
     <div class="login-container">
         <div style="text-align: center">
             <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="scale: 1;width:200px" alt="Siemenes_logo">
@@ -21,7 +44,7 @@
                 <input id="email" class="email-input" type="text" placeholder="Email">
             </div>
             <div class="password-label cn">
-                <label for="password">Mot de passe </label>
+                <label for="password">Password </label>
             </div>
             <div class="password-input-container cn">
                 <input id="password" type="password" class="password-input" placeholder="Password">
@@ -33,13 +56,15 @@
         </div>
         
         <div class="submit-container">
-            <button id="loginBtn" class="login-button" onclick="login()">Se connecter</button>
+            <button id="loginBtn" class="login-button" onclick="login()">Login</button>
         </div>
     </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
 {% csrf_token %}
 <script>
+
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("password");
         const passwordToggle = document.querySelector(".password-toggle");
@@ -54,14 +79,17 @@
     }
 
     function login() {
+        loading.showModal()
         let email = document.getElementById("email").value
         let pwd = document.getElementById("password").value
         const csrfToken = $('[name=csrfmiddlewaretoken]').val();
 
         if (email === "" || pwd === ""){
+            loading.close()
             alert("fill out all inputs")
         }else {
             if (!validateEmail(email)){
+                loading.close()
                 alert("not valid email")
             }else {
                 $.ajax({
@@ -73,9 +101,14 @@
                         csrfmiddlewaretoken: csrfToken
                     },
                     success: function(response) {
+                        if (response.message === "-32"){
+                            password_setter.showModal()
+                            return
+                        }
                         window.location.href = "/home/";
                     },
                     error: function() {
+                        loading.close()
                         alert("Login failed.");
                     }
                 });

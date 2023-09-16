@@ -16,8 +16,12 @@ def logUser(request):
 
         user = authenticate(email=email, password=password)
         if user:
-            login(request, user)
-            return redirect('dashboard:home')
+            if user.is_active:
+                login(request, user)
+                return redirect('dashboard:home')
+            else:
+                response_data = {'message': "-32"}
+                return JsonResponse(response_data)
 
         message = "hello"
         response_data = {'message': message}

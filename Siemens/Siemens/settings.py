@@ -83,9 +83,9 @@ WSGI_APPLICATION = 'Siemens.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'siemensdb',
+        'NAME': 'Siemensdb',
         'USER': 'siemens_pg',
-        'PASSWORD':'root',
+        'PASSWORD': 'root',
     }
 }
 
