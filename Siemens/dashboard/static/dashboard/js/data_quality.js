@@ -4,7 +4,7 @@ $(document).ready(function() {
         substatus: ['all'],
         week: ['all'],
     };
-
+ 
     currentFilters.status = ['all']
     currentFilters.substatus = ['all']
     currentFilters.week = ['all']

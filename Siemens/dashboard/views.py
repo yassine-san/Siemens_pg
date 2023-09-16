@@ -8,12 +8,14 @@ from django.http import JsonResponse
 from .models import Quality
 from .models import Srs
 from .models import Can24
+from .models import Ccr
 from users.models import Account, Account
 from django.db.models import Count
 from datetime import datetime
 from datetime import date
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.db.models import F
 
 
 def home(request):
@@ -176,6 +178,108 @@ def registerNewUser(request):
         response_data = {'message': 'User registered successfully'}
 
         return JsonResponse(response_data)
+    
+def ccr_interface(request):
+    return render(request, 'dashboard/ccr.html')
+
+def update_ccr_data(request):
+    if request.method == 'POST':
+        partner_number = request.POST.get('partnerNumber')
+        modality = request.POST.get('modality')
+        country = request.POST.get('country')
+        search_query = request.POST.get('searchQuery')
+        # apply filters
+        queryset = Ccr.objects.all()
+        if partner_number :
+            queryset = queryset.filter(service_partner_id=partner_number)
+        if modality :
+            queryset = queryset.filter(modality=modality)
+        if country :
+            queryset = queryset.filter(country=country)
+        if search_query :
+            queryset = queryset.filter(system_serial_number__contains=search_query)
+
+        nb_contract = queryset.filter(system_serial_number__isnull=False, system_material_number__gt='').count()
+        active_systems = queryset.extra(
+            tables=['exceltable'],
+            where=[
+                'ccr.system_serial_number = exceltable.serialnumber',
+                'ccr.system_material_number = exceltable.materialnumber',
+                'ccr.service_partner_id = exceltable.servicepartner',
+                "exceltable.status = 'active'",
+                "exceltable.substatus = 'active'"
+            ]).filter(contract_end_date__isnull=False,
+                      contract_end_date__gt='').count()
+
+        ccr_percent = (nb_contract / active_systems) * 100 if nb_contract > 0 else 0;
+
+        # generate table data html 
+        table_data = ''
+        for item in queryset:
+            table_data += f"<tr class='ms-countries-tr'>\
+                                    <td class='ms-countries-td'>{item.service_partner}</td>\
+                                    <td class='ms-countries-td'>{item.service_partner_id}</td>\
+                                    <td class='ms-countries-td'>{item.system_material_number}</td>\
+                                    <td class='ms-countries-td'>{item.system_serial_number}</td>\
+                                    <td class='ms-countries-td'>{item.country}</td>\
+                                    <td class='ms-countries-td'>{item.modality}</td>\
+                                    <td class='ms-countries-td'>{item.product_name}</td>\
+                                    <td class='ms-countries-td'>{item.delivery_date}</td>\
+                                    <td class='ms-countries-td'>{item.contract_start_date}</td>\
+                                    <td class='ms-countries-td'>{item.contract_end_date}</td>\
+                                    <td class='ms-countries-td'>{item.end_customer}</td></tr>"
+        return JsonResponse({'table_data': table_data,
+                             'nb_contracts': nb_contract,
+                             'active_systems': active_systems,
+                             'ccr_percent': ccr_percent
+                             })
+
+def add_ccr_data(request):
+    if request.method == 'POST':
+        system_serial_number = request.POST.get('systemSerialNumber')
+        system_material_number = request.POST.get('systemMaterialNumber')
+        product_name = request.POST.get('productName')
+        delivery_date = request.POST.get('deliveryDate')
+        handover_date = request.POST.get('handoverDate')
+        contract_start_date = request.POST.get('contractStartDate')
+        contract_end_date = request.POST.get('contractEndDate')
+        contract_number = request.POST.get('contractNumber')
+        eos = request.POST.get('eos')
+        eod = request.POST.get('eod')
+        end_customer = request.POST.get('endCustomer')
+        city = request.POST.get('city')
+        country = request.POST.get('country')
+        modality = request.POST.get('modality')
+        service_partner = request.POST.get('servicePartner')
+        service_partner_id = request.POST.get('servicePartnerId')
+
+    # Save the form data to the database
+        form_data = Ccr.objects.create(
+        system_serial_number=system_serial_number,
+        system_material_number=system_material_number,
+        product_name=product_name,
+        delivery_date=delivery_date,
+        handover_date=handover_date,
+        contract_start_date=contract_start_date,
+        contract_end_date=contract_end_date,
+        contract_number=contract_number,
+        eos=eos,
+        eod=eod,
+        end_customer=end_customer,
+        city=city,
+        country=country,
+        modality=modality,
+        service_partner=service_partner,
+        service_partner_id=service_partner_id
+    )
+    form_data.save()
+    response_data = {
+        'status': 'success',
+        'message': 'Form data saved successfully.'
+    }
+
+    return JsonResponse(response_data)
+
 
 
 def data_quality(request):
@@ -368,6 +472,7 @@ def upload_excel(request):
         response_data = {'status': -1, 'message': 'Invalid request'}
 
     return JsonResponse(response_data)
+
 
 
 ########################################################
@@ -1092,5 +1197,6 @@ def get_filtered_counts(request):
     }
 
     return JsonResponse(counts)
+
 
 

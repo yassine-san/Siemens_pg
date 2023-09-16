@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CCR</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/ccr.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+
+</head>
+<body>
+    <dialog id="loading">
+        <div class="multi-spinner-container">
+            <div class="multi-spinner">
+                <div class="multi-spinner">
+                    <div class="multi-spinner">
+                       <div class="multi-spinner">
+                            <div class="multi-spinner">
+                                <div class="multi-spinner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="popupFormContainer">
+        <div id="popupFormContent">
+          <span class="close">&times;</span>
+          <form id="popupForm">
+            <label for="systemSerialNumber">System Serial Number:</label>
+            <input type="text" id="systemSerialNumber" name="systemSerialNumber" required>
+      
+            <label for="systemMaterialNumber">System Material Number:</label>
+            <input type="text" id="systemMaterialNumber" name="systemMaterialNumber" required>
+      
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" required>
+      
+            <label for="deliveryDate">Delivery Date:</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" required>
+      
+            <label for="handoverDate">Handover Date:</label>
+            <input type="date" id="handoverDate" name="handoverDate" required>
+      
+            <label for="contractStartDate">Contract Start Date:</label>
+            <input type="date" id="contractStartDate" name="contractStartDate" >
+      
+            <label for="contractEndDate">Contract End Date:</label>
+            <input type="date" id="contractEndDate" name="contractEndDate" required>
+      
+            <label for="contractNumber">Contract Number:</label>
+            <input type="text" id="contractNumber" name="contractNumber" required>
+      
+            <label for="eos">EOS:</label>
+            <input type="text" id="eos" name="eos" required>
+      
+            <label for="eod">EOD:</label>
+            <input type="text" id="eod" name="eod" required>
+      
+            <label for="endCustomer">End Customer:</label>
+            <input type="text" id="endCustomer" name="endCustomer" required>
+      
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+      
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+      
+            <label for="modality">Modality:</label>
+            <input type="text" id="modality" name="modality" required>
+      
+            <label for="servicePartner">Service Partner:</label>
+            <input type="text" id="servicePartner" name="servicePartner" required>
+      
+            <label for="servicePartnerId">Service Partner ID:</label>
+            <input type="text" id="servicePartnerId" name="servicePartnerId" required>
+      
+            <input id="submit-popupForm"  type="button" value="Submit">
+          </form>
+        </div>
+      </dialog>    
+
+	<div class="container">
+		<div class="left-container"> 
+			<div class="filters-container">
+				<div class="service-partner-cn"> 
+                    <div><h3 style="display:inline; color: #009999;">Service partner</h3><button class="erase-btn" name="service-partner" ><i class="fa-solid fa-eraser"></i></button></div>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="0"><span>910163</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="1"><span>910165</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="2"><span>910167</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="3"><span>910183</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="4"><span>910187</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="5"><span>910191</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="6"><span>910192</span></label>
+
+                </div>
+				<div class="modality-cn">
+                    <div><h3 style="display:inline;  color: #009999;">Modality</h3><button class="erase-btn" name="modality" ><i class="fa-solid fa-eraser"></i></button></div>
+                    <label><input type="radio" class="square-radio" name="modality" value="AXA"><span>AXA</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="CT"><span>CT</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="D&A"><span>D&A</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="MI"><span>MI</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="MR"><span>MR</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="US"><span>US</span></label>
+                    <label><input type="radio" class="square-radio" name="modality" value="XP"><span>XP</span></label>
+  
+                </div>
+				<div class="country-cn">
+                    <div><h3 style="display:inline;  color: #009999;">Country</h3><button class="erase-btn" name="country" ><i class="fa-solid fa-eraser"></i></button></div>
+                    <label><input type="radio" class="square-radio" name="country" value="AO"><span>AO</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="BF"><span>BF</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="BI"><span>BI</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="BJ"><span>BJ</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="CD"><span>CD</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="CF"><span>CF</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="CG"><span>CG</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="CI"><span>CI</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="CM"><span>CM</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="GA"><span>GA</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="GM"><span>GM</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="GN"><span>GN</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="AQ"><span>AQ</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="LR"><span>LR</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="ML"><span>ML</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="MR"><span>MR</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="NE"><span>NE</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="RW"><span>RW</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="SL"><span>SL</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="SN"><span>SN</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="TD"><span>TD</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="TG"><span>TG</span></label>
+                    <label><input type="radio" class="square-radio" name="country" value="TN"><span>TN</span></label>
+                   
+                </div>
+			</div>
+		</div>
+		<div class="right-container"> 
+			<div class="data-container">
+				<div class="title-cn"> 
+                    <h1>CCR</h1>
+                    <button id="openFormBtn">Open Form</button>
+
+                </div>
+				<div class="counts-cn">
+                    <div class="card card1">
+                        <p class="card-values" id="nb_contracts">397</p>
+                        <p class="card-title">Nb of Contrat</p>
+                    </div>
+                    <div class="card card2">
+                        <p class="card-values" id="active_systems">2043</p>
+                        <p class="card-title">Active Systems</p>
+                    </div>
+                    <div class="card card3">
+                        <p class="card-values" id="ccr_percent">17%</p>
+                        <p class="card-title">CCR</p>
+                    </div>
+                </div>
+				<div class="search-cn"> 
+                        <h3>Serial number</h3>
+                  <div>
+                    <input  type="text" class="search-input" placeholder="Search with serial number">
+                    <button  type="button" class="search-btn" >  <i class="fa fa-search"></i></button>
+                </div>
+                </div>
+				<div class="table-cn"> 
+                    <div class="missing-countries-table-container">
+                    <table class ="ms-countries-table" style="display:block">
+                        <thead>
+                            <tr>
+                                <th class="ms-countries-table-header">Service Partner</th>
+                                <th class="ms-countries-table-header">Service Partner Id </th>
+                                <th class="ms-countries-table-header">System Material Number</th>
+                                <th class="ms-countries-table-header">System Serial Number</th>
+                                <th class="ms-countries-table-header">Country</th>
+                                <th class="ms-countries-table-header">Modality</th>
+                                <th class="ms-countries-table-header">Product Name</th>
+                                <th class="ms-countries-table-header">Delivery Code</th>
+                                <th class="ms-countries-table-header">Contract Start Date</th>
+                                <th class="ms-countries-table-header">Contract End Date </th>
+                                <th class="ms-countries-table-header">End Customer</th>
+                            </tr>
+                            <tr>
+
+                            </tr>
+                        </thead>
+                        <tbody Id="table-tbody"   class="ms-countries-table-body">
+                            
+                        </tbody>
+
+                    </table>
+                </div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+ <script>
+    loading.showModal()
+</script> 
+
+     {% csrf_token %} 
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>
+        let update_ccr_data_url = "{% url 'dashboard:update_ccr_data' %}"
+        let add_ccr_data_url = "{% url 'dashboard:add_ccr_data' %}"
+    </script>
+    <script src="{% static 'dashboard/js/ccr.js' %}"></script>
+</html>
