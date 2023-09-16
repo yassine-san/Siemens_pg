@@ -26,9 +26,13 @@
     </dialog>
 
     <dialog id="password_setter">
+        <div class="pwd-info">In order to login to your account you need to change the current password</div>
         <div style="display: flex">
-            <label for="password-set">password</label>
-            <input id="password-set" type="text">
+            <label for="password-set">new password</label>
+            <input class="pwd_set" id="password-set" type="text" >
+        </div>
+        <div style="text-align: center;margin-top: 15px">
+            <button class="confirm-pwd-btn" onclick="setPassword()" disabled="disabled">Confirm</button>
         </div>
     </dialog>
 
@@ -64,7 +68,6 @@
 
 {% csrf_token %}
 <script>
-
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById("password");
         const passwordToggle = document.querySelector(".password-toggle");
@@ -76,6 +79,34 @@
             passwordInput.type = "password";
             passwordToggle.classList.remove("open");
         }
+    }
+    let password_set_inpt = document.getElementById("password-set")
+    let password_set_btn = document.getElementsByClassName("confirm-pwd-btn")[0]
+    password_set_inpt.addEventListener("input", function (){
+        password_set_btn.disabled = password_set_inpt.value === ''
+    });
+
+    function setPassword(){
+        loading.showModal()
+        let email = document.getElementById("email").value
+        let pwd = password_set_inpt.value
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'activating_user' %}",
+            data: {
+                email: email,
+                password: pwd,
+                csrfmiddlewaretoken: csrfToken
+            },
+            success: function(response) {
+                loading.close()
+                window.location.href = "/home/";
+            },
+            error: function() {
+                alert("failed");
+            }
+        });
     }
 
     function login() {
@@ -102,6 +133,7 @@
                     },
                     success: function(response) {
                         if (response.message === "-32"){
+                            loading.close()
                             password_setter.showModal()
                             return
                         }
@@ -115,6 +147,8 @@
             }
         }
     }
+
+
 
     function validateEmail(email) {
         const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

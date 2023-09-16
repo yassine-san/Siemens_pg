@@ -134,7 +134,7 @@ body, h1, h2, h3 {
 .content {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 20px; /* Adjust the gap to control spacing between items */
     column-gap: -150px;
     row-gap: 20px;
@@ -147,8 +147,8 @@ body, h1, h2, h3 {
     border: 2px solid #F8C39B;
     border-radius: .9em;
     background-color: rgba(255, 255, 255, 0.7);
-    width: 34vw;
-    height: 30vh;
+    width: 30vw;
+    height: 23vh;
     text-align: center;
     justify-content: center;
 }
@@ -163,7 +163,7 @@ body, h1, h2, h3 {
     font-family: Georgia sans-serif;
     font-size: 22px;
     font-weight: bold;
-    margin-top: 18%;
+    padding: 8%;
 }
 
 .card1 {
@@ -182,6 +182,10 @@ body, h1, h2, h3 {
     grid-area: 2 / 2 / 3 / 3;
 }
 
+.card5 {
+    margin-left: 75%;
+    grid-area: 3 / 1 / 4 / 3;
+}
 
 .redirection-links{
     text-decoration: none;

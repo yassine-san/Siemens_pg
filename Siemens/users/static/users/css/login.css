@@ -183,7 +183,7 @@ label{
 
 
 
-.login-button {
+.login-button ,.confirm-pwd-btn {
     background-color: #EC6602;
     color: white;
     border: none;
@@ -197,15 +197,21 @@ label{
 }
 
 /* Hover effect */
-.login-button:hover {
+.login-button:hover ,.confirm-pwd-btn:hover {
     background-color: #0056b3; /* Darker shade on hover */
     transform: scale(1.05); /* Slight scale-up effect on hover */
 }
 
 /* Active effect (when clicked) */
-.login-button:active {
+.login-button:active ,.confirm-pwd-btn:active {
     background-color: #004191; /* Darker shade when clicked */
     transform: scale(0.95); /* Slight scale-down effect when clicked */
+}
+
+.confirm-pwd-btn:disabled {
+    background-color: lightgray;
+    color: gray;
+    cursor: not-allowed;
 }
 
 
@@ -214,9 +220,41 @@ label{
     height: 26%;
     border: none;
     border-radius: .6em;
-    text-align: center;
+    padding: 1% 3%;
 }
 
 #password_setter::backdrop{
      background-color: rgba(134, 134, 134, 0.6);
+}
+
+#password_setter div{
+    justify-content: space-between;
+}
+
+.pwd_set{
+    margin-right: 10px;
+    width: 200px;
+    position: relative;top:-10px;
+    font-family: Georgia, Arial sans-serif;
+    font-size: 19px;
+    border: none;
+    border-bottom: 2px solid #333; /* Initial bottom border style */
+    outline: none;
+    background: none;
+    padding: 5px;
+    transition: border-color 0.3s ease; /* Animation transition */
+}
+
+/* Animation for the bottom border on hover */
+.pwd_set:hover {
+    border-color: #007bff; /* Color to change to when hovered */
+}
+
+.pwd-info{
+    width: 98%;
+    text-align: center;
+    background: #9de59d;
+    padding: 4px;
+    border-radius: .5em;
+    margin-bottom: 30px;
 }
