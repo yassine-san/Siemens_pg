@@ -35,10 +35,26 @@
     <div class="container">
         <div class="upper-container">
             <div class="upper">
-                <div class="item-container active-system-count-container">
-                    <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>
-                    <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>
+{#                <div class="item-container active-system-count-container">#}
+{#                    <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>#}
+{#                    <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>#}
+{#                </div>#}
+                <div class="item-container active-system-count-container" style="border: none">
+                    <div id="filter-id" class="filter-container">
+                        <h3 class="filter-imay">Filters: <span id="appliedFilter"></span></h3>
+                        <button class="removeFilter" onclick="removeFilters()">X</button>
+                    </div>
+{#                    <h3 id="filter-id" class="filter-imay">Applied Filter : <span id="appliedFilter">Country : Angola</span>#}
+
+                    <div class="item-c" style="margin-top:0;padding: 0 20px 20px;">
+                        <div>
+                            <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>
+                            <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>
+                        </div>
+                    </div>
                 </div>
+
+
                 <div class="item-container srs-connectivity-container">
                     <div class="histogram">
                         <h5 class="item-title">SRS Connectivity</h5>
@@ -133,12 +149,12 @@
         let script_url2 = "{% url 'dashboard:get_Data_Sent_chart_data' %}"
         let script_url3 = "{% url 'dashboard:get_Connection_score_chart_data' %}"
 
-
         let missing_customerName_URL = "{% url 'dashboard:get_equipment_dataAjax' %}"
 
     </script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+    {% csrf_token %}
     <script src="{% static 'dashboard/js/scripts.js' %}"></script>
     <!-- Add this script tag after jQuery -->
     <script>

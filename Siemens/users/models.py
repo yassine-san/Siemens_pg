@@ -11,7 +11,8 @@ class AccountManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             partenariat=partenariat,
-            user_type=user_type
+            user_type=user_type,
+            is_active=False
         )
         user.username = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(16))
         user.set_password(password)
@@ -64,4 +65,13 @@ class Account(AbstractBaseUser):
     def __is_type(self):
         return self.user_type
 
+
+class Partner(models.Model):
+    partnerid = models.IntegerField(primary_key=True)
+    partnername = models.CharField(blank=True, null=True)
+    email = models.CharField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'partner'
 
