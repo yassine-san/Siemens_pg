@@ -45,7 +45,7 @@
 
 .cn-left {
     width: 100%;
-    background-color: white;
+    background-color: transparent;
     height: 96vh;
     grid-area: 1 / 1 / 2 / 2;
 }
@@ -63,6 +63,8 @@
     grid-template-rows: repeat(4, 1fr);
     grid-column-gap: 22px;
     grid-row-gap: 22px;
+
+    /*background-color: rgba(243, 241, 241, .35);*/
 }
 
 .title { grid-area: 1 / 1 / 2 / 3; }
@@ -120,9 +122,11 @@
     width: 90%;
     height: 100%;
     border: 1px solid #ce5c13;
-    box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.2);
     overflow-x: hidden;
     overflow-y: hidden;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    border-radius: .4em;
 }
 
 .card-status{
@@ -326,6 +330,7 @@
 }
 
 .fl-country-pagination {
+    background-color: white;
     width: 150px;
     max-width: 400px; /* Adjust the width */
      /* Add a max-width if needed */
@@ -366,6 +371,7 @@
 }
 
 .fl-cst-pagination {
+    background-color: white;
     width: 150px;
     max-width: 400px; /* Adjust the width */
      /* Add a max-width if needed */
@@ -596,7 +602,7 @@
     font-size: 18px;
     font-weight: bold;
     font-family: Verdana, sans-serif;
-    background-color: #fcceaa;
+    background-color: #e0b899;
     border: 1px solid #e1a677;
 }
 
@@ -604,7 +610,7 @@
     width: 90px;
     padding: 5px;
     font-size: 16px;
-    background-color: cadetblue;
+    background-color: #a3e5a3;
     border-radius: .5em;
     border: none;
     outline: none;
@@ -612,8 +618,4 @@
 
 #confirmation_dialog::backdrop{
     background-color: rgba(134, 134, 134, 0.7); /* Semi-transparent red */
-}
-
-#yesGoAheadBtn{
-    background-color: #9de59d;
 }
