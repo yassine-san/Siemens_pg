@@ -1,6 +1,8 @@
 $(document).ready(function() {
  // ajax function to update table data  with id = 'table-tbody' based on selected filters
  update_ccr_data();
+
+
  function update_ccr_data(){
     const csrfToken = $('[name=csrfmiddlewaretoken]').val();
 
@@ -27,6 +29,7 @@ $(document).ready(function() {
                 $("#active_systems").html(response.active_systems);
                 $("#ccr_percent").html(Number(response.ccr_percent).toFixed(2) + "%");
                 loading.close();
+
             },
             error : function(error){
                 console.log(error.resonseText);
@@ -36,8 +39,16 @@ $(document).ready(function() {
 
             // event listner for filter radio buttons and search bar
             $("input[type='radio']").change(function(){
-                loading.show();
-                update_ccr_data();
+                if (!updateCCRDataCalled) {
+                    loading.show();
+                    console.log("daxa"); // You can keep this for debugging
+                    update_ccr_data();
+                    updateCCRDataCalled = true; // Set the flag to true
+                }
+                // loading.show();
+                // console.log("daxa")
+                // updateCCRDataCalled = true
+                // update_ccr_data();
             });
             $("#search_ccr").on("keyup", function() {
                 loading.show();

@@ -81,7 +81,7 @@ def get_missing_fl_countries(request):
         )
     else:
         missing_fl_countries = Quality.objects.filter(
-            flcountry='', servicepartnername=partner
+            flcountry='', servicepartner=partner
         ).values(
             'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'flcountry'
@@ -145,7 +145,7 @@ def get_missing_customer_name(request):
         )
     else:
         missing_customer_names = Quality.objects.filter(
-            customername='', servicepartnername=partner
+            customername='', servicepartner=partner
         ).values(
             'id', 'servicepartner', 'materialnumber', 'serialnumber',
             'modality', 'ivkname', 'status', 'substatus', 'customername'
@@ -383,7 +383,7 @@ def update_dataAjax(request):
         if partner == "all":
             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
         else:
-            count = excel_data.filter(servicepartnername=partner, status=status, substatus=substatus,
+            count = excel_data.filter(servicepartner=partner, status=status, substatus=substatus,
                                       **filter_kwargs).count()
 
         # count = excel_data.filter(**filter_kwargs).count()
@@ -1331,6 +1331,4 @@ def get_filtered_counts(request):
     }
 
     return JsonResponse(counts)
-
-
 

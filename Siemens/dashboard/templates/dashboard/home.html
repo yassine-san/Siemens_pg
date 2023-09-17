@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static "dashboard/css/home.css" %}">
+  <link rel="stylesheet" href="{% static "dashboard/css/home.css" %}?{% now "U" %}">
   <title>Home</title>
 </head>
 <body>
@@ -24,12 +24,14 @@
       <li class="dropdown">
         <button class="dropbtn">{{ username }}</button>
         <div class="dropdown-content">
+            {% if partenariat == "all" %}
         <a href="#option1">
             <img src="{% static "dashboard/img/profile_icon.png" %}" alt="Icon 1" width="30px">
         </a>
         <a href="register_pt/">
             <img src="{% static "dashboard/img/add_user_icon.png" %}" alt="Icon 2" width="30px">
         </a>
+            {% endif %}
         <a onclick="logout()">
             <img src="{% static "dashboard/img/logout icon.png" %}" alt="Icon 3" width="30px">
         </a>
@@ -43,10 +45,8 @@
         <a class="redirection-links" href="{% url "dashboard:quality_interface" %}"><div class="card card2"> <p>Data Quality</p></div></a>
         <a class="redirection-links" href="{% url "dashboard:SRS_Connectivity" %}"><div class="card card3"> <p>SRS Connectivity</p></div></a>
         <a class="redirection-links" href="{% url "dashboard:CAN24" %}"><div class="card card4"> <p>MR CAN24</p></div></a>
+        <a class="redirection-links" href="{% url "dashboard:ccr" %}"><div class="card card5"> <p>Contrat de service</p></div></a>
 
-      {% if partenariat == "all" %}
-      <a class="redirection-links" href="{% url "dashboard:ccr" %}"><div class="card card5"> <p>Contrat de service</p></div></a>
-        {% endif %}
   </div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
