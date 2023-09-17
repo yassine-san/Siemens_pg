@@ -3,6 +3,10 @@ body{
 	margin: 0;
 }
 
+*:focus {
+    outline: none;
+}
+
 * {
     scrollbar-width: thin;
     scrollbar-color: #F8D69C #CCD5D7;
@@ -127,8 +131,11 @@ body{
 	grid-area: 1 / 1 / 2 / 2; 
 	border: 1px solid black;
 	box-shadow: 0px 5px 6px rgba(255, 82, 2, 0.2);
-	text-align: center;
 	color: #FF8C00 ;
+	position: relative;
+}
+.title-cn h1{
+	text-align: center;
 }
 .counts-cn { 
 	display: grid;
@@ -187,18 +194,23 @@ body{
 .search-cn { 
 	margin-right: 5px;
 	grid-area: 3 / 1 / 4 / 2; 
-	padding: 0px 40px 0px 40px;
+	padding: 10px 40px 10px 40px;
 	border : 1px solid black;
 	position: relative;
 	display: flex;
 	flex-direction: column;
 }
-.search-cn > div{
-	display: flex;
-	flex-direction: row;
+.search-cn h3 {
 	
+	margin: 0px;
+	margin-bottom: 10px;
+	color: #009999;
 }
 
+.search-cn>div{
+	display: flex;
+	flex-direction:row;
+}
 
 .table-cn { 
 	margin-right: 5px;
@@ -368,11 +380,12 @@ input[type="radio"] {
 
 .search-input{
 	width: 100%;
-	border: 3px solid #00B4CC;
+	border: 3px solid orangered;
 	border-right: none;
 	padding: 5px;
 	height: 20px;
 	border-radius: 5px 0 0 5px;
+	box-shadow: 0px 5px 6px rgba(255, 82, 2, 0.2);;
 	outline: none;
 	color: #9DBFAF;
 }
@@ -383,8 +396,8 @@ input[type="radio"] {
 .search-btn{
 	width: 40px;
 	height: 36px;
-	border: 1px solid #00B4CC;
-	background: #00B4CC;
+	border: 1px solid orangered;
+	background: orangered;
 	text-align: center;
 	color: #fff;
 	border-radius: 0 5px 5px 0;
@@ -408,25 +421,86 @@ input[type="radio"] {
 /* pop up form  */
 
 #popupFormContainer {
+	border-radius: 0.8em;
 	display: none;
 	position: fixed;
+	border: 1px solid #ffffff;
+	box-shadow: 5px 8px 9px 9px rgba(55, 53, 51, 0.2);;
 	z-index: 9999;
 	left: 0;
-	top: 0;
+	top: 20%;
+	width: 800px;
+	height: 70%;
+	max-width: 800px;
+	overflow-y: scroll;
+	background-color: white;
+  }
+
+#popupFormContainer form{
+	padding: 30px 0 0 0;
+  } 
+
+#popupFormContainer form .form-row{
+	display: flex;
+	margin: 35px 0;
+  }
+
+  form .form-row .input-data{
+	width: 100%;
+	height: 30px;
+	margin: 0 25px;
+	position: relative;
+  }
+
+  .input-data input{
+	display: block;
 	width: 100%;
 	height: 100%;
-	overflow: auto;
-	background-color: rgba(0, 0, 0, 0.4);
+	border: none;
+	font-size: 14px;
+	border-bottom: 2px solid rgba(0,0,0, 0.12);
   }
-  
-  #popupFormContent {
-	background-color: #fefefe;
-	margin: 15% auto;
-	padding: 20px;
-	border: 1px solid #888;
-	width: 80%;
-	max-width: 600px;
+  .input-data input[type="date"]{
+	margin: 8px;
   }
+
+  .input-data input:focus ~ label, .input-data input:valid ~ label{
+	transform: translateY(-20px);
+	font-size: 14px;
+	color: #3498db;
+  }
+
+  .input-data label{
+	width : 100%;
+	position: absolute;
+	pointer-events: none;
+	bottom: 10px;
+	font-size: 14px;
+	transition: all 0.3s ease;
+  }
+
+
+  .input-data .underline{
+	position: absolute;
+	bottom: 0;
+	height: 2px;
+	width: 100%;
+  }
+  .input-data .underline:before{
+	position: absolute;
+	content: "";
+	height: 2px;
+	width: 100%;
+	background: #3498db;
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.3s ease;
+  }
+  .input-data input:focus ~ .underline:before,
+.input-data input:valid ~ .underline:before{
+	transform: scale(1);
+}
+
   
   .close {
 	color: #aaa;
@@ -443,37 +517,67 @@ input[type="radio"] {
 	cursor: pointer;
   }
   
-  #popupForm label {
-	display: block;
-	margin-top: 10px;
-  }
-  
-  #popupForm input[type="text"],
-  #popupForm input[type="date"],
-  #popupForm input[type="submit"] {
-	width: 100%;
-	padding: 10px;
-	margin-top: 5px;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-  }
-  
-  #popupForm input[type="submit"] {
-	background-color: #4CAF50;
-	color: white;
-	cursor: pointer;
-  }
   
   #openFormBtn {
-	padding: 10px 20px;
-	background-color: #4CAF50;
+	padding: 10px 10px;
+	height: 40px;
+	background-color: orangered;
 	border-radius: 0.8em;
 	color: white;
 	border: none;
 	cursor: pointer;
-	text-align: right;
+	position: absolute;
+	right: 10px;
+	top: 20px;
+  }
+
+  #submit-popupForm{
+	padding: 8px 20px;
+	height: 35px;
+	background-color: #0aa90a;
+	border-radius: 0.8em;
+	color: white;
+	border: none;
+	cursor: pointer;
+	position: absolute;
+	position:absolute;
+	text-align:center ;
+	right:30%;
+	top:20px;
+  }
+
+  #submit-popupForm:hover {
+	background-color: hsl(120, 73%, 31%);
   }
   
   #openFormBtn:hover {
-	background-color: #45a049;
+	background-color:indianred;
+  }
+
+  .selectboxCont{
+	margin: 0 25px;
+	text-align:center;
+	position:absolute;
+	top: 20%;  }
+  .selectboxCont label{
+	width: 100%;
+	text-align: left;
+  }
+  .selectboxCont select{	
+	width: 100%;
+	height: 30px;
+	border-radius: 0.8em;
+	text-align: center	;
+	margin-bottom: 20px;
+	}
+
+  .logo{
+	padding:4px;
+	border-radius:.6em;
+	background-color:white;
+	scale: 1;
+	width: 150px;
+	position: absolute;
+	top:20px;
+	left: 20px;
   }

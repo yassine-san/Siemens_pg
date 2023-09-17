@@ -1,10 +1,11 @@
 $(document).ready(function() {
  // ajax function to update table data  with id = 'table-tbody' based on selected filters
  update_ccr_data();
+ var updateCCRDataCalled = false;
  function update_ccr_data(){
     const csrfToken = $('[name=csrfmiddlewaretoken]').val();
 
-     var partner_number = $("input[name='partner_number']:checked").val();
+     var partner_number = $("input[name='service-partner']:checked").val();
      var modality = $("input[name='modality']:checked").val();
      var country = $("input[name='country']:checked").val();
      var searchQuery = $(".search-input").val();
@@ -27,6 +28,7 @@ $(document).ready(function() {
                 $("#active_systems").html(response.active_systems);
                 $("#ccr_percent").html(Number(response.ccr_percent).toFixed(2) + "%");
                 loading.close();
+                updateCCRDataCalled = false;
             },
             error : function(error){
                 console.log(error.resonseText);
@@ -36,9 +38,13 @@ $(document).ready(function() {
 
             // event listner for filter radio buttons and search bar
             $("input[type='radio']").change(function(){
-                loading.show();
-                update_ccr_data();
+                if (!updateCCRDataCalled) {
+                    loading.show();
+                    update_ccr_data();
+                    updateCCRDataCalled = true; // Set the flag to true
+                }
             });
+
             $("#search_ccr").on("keyup", function() {
                 loading.show();
                 update_ccr_data();
@@ -69,7 +75,25 @@ $("#openFormBtn").click(function(){
 
 $(".close").click(function(){
     document.getElementById("popupFormContainer").style.display = "none";
+    clearPopupform();
 });
+
+function clearPopupform(){
+    document.getElementById("systemSerialNumber").value = "";
+    document.getElementById("systemMaterialNumber").value = "";
+    document.getElementById("productName").value = "";
+    document.getElementById("deliveryDate").value = "";
+    document.getElementById("handoverDate").value = "";
+    document.getElementById("contractStartDate").value = "";
+    document.getElementById("contractEndDate").value = "";
+    document.getElementById("contractNumber").value = "";
+    document.getElementById("eos").value = "";
+    document.getElementById("eod").value = "";
+    document.getElementById("endCustomer").value = "";
+    document.getElementById("city").value = "";
+    document.getElementById("country").value = "";
+    document.getElementById("modality").value = "";
+}
 
 $("#submit-popupForm").click(function(){
     var systemSerialNumber = document.getElementById("systemSerialNumber").value;
@@ -86,8 +110,20 @@ $("#submit-popupForm").click(function(){
     var city = document.getElementById("city").value;
     var country = document.getElementById("country").value;
     var modality = document.getElementById("modality").value;
-    var servicePartner = document.getElementById("servicePartner").value;
-    var servicePartnerId = document.getElementById("servicePartnerId").value;
+
+    var selectedBox = document.getElementById("servicePartnerId");
+    var servicePartnerId = selectedBox.value;
+    if (servicePartnerId == "none"){
+        for( var i = 0; i < selectedBox.options.length; i++){
+            if(selectedBox.options[i].value == partenariat){
+                selectedBox.selectedIndex = i;
+                break;
+            }
+        }
+    }
+    servicePartnerId = selectedBox.value;
+    var servicePartner = selectedBox.options[selectedBox.selectedIndex].text;
+    
 
     const csrfToken = $('[name=csrfmiddlewaretoken]').val();
 
@@ -117,6 +153,7 @@ $("#submit-popupForm").click(function(){
             document.getElementById("popupFormContainer").style.display = "none";
             loading.show();
             update_ccr_data();
+            clearPopupform();
         },
         error : function(error){
             console.log(error.resonseText);
