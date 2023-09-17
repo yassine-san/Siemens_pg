@@ -12,7 +12,9 @@ body, h1, h2, h3 {
 }
 
 .navbar {
-    background-color: #F8C39B;
+    background-color: rgba(243, 241, 241, .15);
+    backdrop-filter: blur(8px);
+    /*background-color: #F8C39B;*/
     box-shadow: 0px 5px 5px -5px rgba(0, 0, 0, 0.75); /* Add this line for the raised effect */
     padding: 10px 20px;
     position: sticky;
@@ -22,6 +24,7 @@ body, h1, h2, h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 40px;
 }
 
 .nav-left img {
@@ -36,13 +39,13 @@ body, h1, h2, h3 {
 
 .nav-list li {
     margin: 0 10px;
-    background-color: white;
+    background-color: #fad7be;
     border-radius: .6em;
     padding: 4px;
 }
 
 .nav-list li a {
-    color: white;
+    color: #fad7be;
     text-decoration: none;
 }
 
@@ -122,14 +125,14 @@ body, h1, h2, h3 {
     display: block;
 }
 
-.content {
-    padding: 60px;
-    background-image: url("../img/home_background.jpg");
-    background-size: contain ;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: -1;
-}
+/*.content {*/
+/*    padding: 60px;*/
+/*    background-image: url("../img/home_background.jpg");*/
+/*    background-size: contain ;*/
+/*    background-repeat: no-repeat;*/
+/*    background-position: center;*/
+/*    z-index: -1;*/
+/*}*/
 
 .content {
     display: grid;
@@ -156,7 +159,7 @@ body, h1, h2, h3 {
 .card:hover{
     background-color: #F8C39B;
     cursor: pointer;
-    width: 35vw;
+    width: 32vw;
 }
 
 .card p {
