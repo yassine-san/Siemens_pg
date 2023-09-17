@@ -6,8 +6,16 @@
     <title>Data quality</title>
     <link rel="stylesheet" href="{% static "dashboard/css/data_quality.css" %}">
 </head>
-<body>
 
+<style>
+    body{
+        background-image: url("{% static 'dashboard/img/Background.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+<body>
 <dialog id="loading">
     <div class="multi-spinner-container">
         <div class="multi-spinner">
@@ -110,7 +118,10 @@
 {#            </div>#}
             <div class="missing-countries">
                 <div class="missing-countries-header">
-                    <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing FL country</p>
+                    <div class="title-and-import">
+                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing FL country</p>
+                        <button class="pagination-btn-cst excel" onclick="countries_to_excel()" style="margin-left: 10px"><img src="{% static 'dashboard/img/excel_ico.png' %}" alt="Excel Logo" style="width: 30px"></button>
+                    </div>
                     <div class="fl-country-pagination">
                         <button class="pagination-btn-country left">&lt;</button>
                         <span class="pagination-info-country">1/<span class="missing-countries-total-pages">?</span></span>
@@ -140,7 +151,10 @@
             </div>
             <div class="missing-names">
                 <div class="missing-cst-header">
-                    <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing Customer name</p>
+                    <div class="title-and-import">
+                        <p style="color: black;font-weight: bold;margin-left: 10px;min-width: 120px">Missing Customer name</p>
+                        <button class="pagination-btn-cst excel" onclick="names_to_excel()" style="margin-left: 10px"><img src="{% static 'dashboard/img/excel_ico.png' %}" alt="Excel Logo" style="width: 30px"></button>
+                    </div>
                     <div class="fl-cst-pagination">
                         <button class="pagination-btn-cst left">&lt;</button>
                         <span class="pagination-info-cst">1/<span class="missing-cst-total-pages">?</span></span>
@@ -180,6 +194,9 @@
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+
 <script>
     let missing_flCountry_URL = "{% url 'dashboard:missing_fl_countries' %}"
     let missing_customerName_URL = "{% url 'dashboard:missing_customer_name' %}"

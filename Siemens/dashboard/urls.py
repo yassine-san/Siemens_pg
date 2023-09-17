@@ -78,7 +78,4 @@ urlpatterns = [
     path('ccr/', views.ccr_interface, name='ccr'),
     path('update_ccr_data/',views.update_ccr_data, name='update_ccr_data'),
     path('add_ccr_data/',views.add_ccr_data, name='add_ccr_data'),
-
-
-
 ]

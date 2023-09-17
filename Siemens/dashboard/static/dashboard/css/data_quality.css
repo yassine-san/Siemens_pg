@@ -156,6 +156,35 @@
 }
 
 
+.title-and-import {
+    display: flex;
+    align-items: center;
+}
+
+.title-and-import p {
+    color: black;
+    font-weight: bold;
+    margin-left: 10px;
+    min-width: 120px;
+    margin-right: 10px; /* Add margin to separate from the button */
+}
+.pagination-btn-cst.excel {
+    background-color: #dcd4d4;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center; /* Center text and image vertically */
+    gap: 5px; /* Add space between text and image */
+}
+
+.pagination-btn-cst.excel:hover {
+    background-color: #ffab72;
+}
+
 .right-container {
     width: 100%;
     height: 100%;
@@ -173,28 +202,32 @@
 
 
 .missing-countries {
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
     grid-area: 1 / 1 / 4 / 2;
     border: 1px solid cadetblue;
+    height: 50%;
 }
 
 
 .missing-countries-table-container{
     width: 100%;
-    overflow: auto;
-    max-height: 40%;
+    overflow-y: auto;
+    height: 83%;
 }
 
 .missing-names-table-container{
     width: 100%;
-    max-height: 240px;
-    overflow: auto;
+    overflow-y: auto;
+    height: 83%;
 }
 
 .missing-names {
-    overflow: hidden;
+    overflow-x: scroll;
+    overflow-y: hidden;
     grid-area: 2 / 1 / 4 / 2;
     border: 1px solid cadetblue;
+    height: 100%;
 }
 
 

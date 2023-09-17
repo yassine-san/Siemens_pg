@@ -123,6 +123,14 @@ $(document).ready(function() {
                 </tr>`;
         }
 
+        if (flCountryData.length == 0){
+            $tableBody.parent().parent().css("background-color","#D3D3D3FF")
+             rowsHTML = `
+                <tr class="" style="background-color:transparent;">
+                    <td class="ms-countries-td" style="border: none" colspan="8">No data available</td>
+                </tr>`
+        }
+
 
         $tableBody.html(rowsHTML);
         filters_dialog.close()
@@ -215,6 +223,48 @@ $(document).ready(function() {
         }
     });
 
+    window.countries_to_excel = async function (){
+        data = flCountryData
+        const headers = [
+          'Service Partner',
+          'Material Number',
+          'Serials Number',
+          'Modality',
+          'IVK Name',
+          'Status',
+          'SubStatus',
+          'FL - Country',
+        ];
+        try {
+            const fileHandle = await window.showSaveFilePicker({
+              suggestedName: 'exported_missing_countries.csv',
+              types: [
+                {
+                  description: 'CSV Files',
+                  accept: {
+                    'text/csv': ['.csv'],
+                  },
+                },
+              ],
+            });
+
+            const writableStream = await fileHandle.createWritable();
+            const csvData = [headers].concat(
+              data.map((item) =>
+                `${item.servicepartner},${item.materialnumber},${item.serialnumber},${item.modality},${item.ivkname},${item.status},${item.substatus},${item.flcountry}`
+              )
+            );
+
+
+            await writableStream.write(csvData.join('\n'));
+            await writableStream.close();
+
+            console.log('File saved successfully');
+          } catch (error) {
+            console.error('Error saving file:', error);
+          }
+    }
+
     function getMissingFlCountryAjax() {
         loading.showModal()
         const csrfToken = $('[name=csrfmiddlewaretoken]').val();
@@ -270,6 +320,14 @@ $(document).ready(function() {
                         </section>
                     </td>
                 </tr>`;
+        }
+
+        if (flCstData.length == 0){
+            $tableBodyCst.parent().parent().css("background-color","#D3D3D3FF")
+             rowsHTML = `
+                <tr class="" style="background-color:transparent;">
+                    <td class="ms-names-td" style="border: none" colspan="8">No data available</td>
+                </tr>`
         }
 
         $tableBodyCst.html(rowsHTML);
@@ -361,6 +419,48 @@ $(document).ready(function() {
             updatePageContentCst();
         }
     });
+
+    window.names_to_excel = async function (){
+        data = flCstData
+
+        const headers = [
+          'Service Partner',
+          'Material Number',
+          'Serials Number',
+          'Modality',
+          'IVK Name',
+          'Status',
+          'SubStatus',
+          'Customer Name',
+        ];
+        try {
+            const fileHandle = await window.showSaveFilePicker({
+              suggestedName: 'exported_missing_names.csv',
+              types: [
+                {
+                  description: 'CSV Files',
+                  accept: {
+                    'text/csv': ['.csv'],
+                  },
+                },
+              ],
+            });
+
+            const writableStream = await fileHandle.createWritable();
+            const csvData = [headers].concat(
+              data.map((item) =>
+                `${item.servicepartner},${item.materialnumber},${item.serialnumber},${item.modality},${item.ivkname},${item.status},${item.substatus},${item.customername}`
+              )
+            );
+
+            await writableStream.write(csvData.join('\n'));
+            await writableStream.close();
+
+            console.log('File saved successfully');
+          } catch (error) {
+            console.error('Error saving file:', error);
+          }
+    }
 
     function getMissingFlCstAjax() {
         loading.showModal()
