@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "siemensdb",
+            "database": "siemensdb",
+            "username": "siemens_pg",
+            "password": "root"
+        }
+    ]
+}

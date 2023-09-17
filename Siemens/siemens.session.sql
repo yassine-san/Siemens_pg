@@ -45,7 +45,10 @@ id,system_serial_number,system_material_number,product_name,delivery_date,handov
 
 
 
-select count(*) from ccr join exceltable on ccr.system_serial_number = exceltable.serialnumber and ccr.system_material_number = exceltable.materialnumber and ccr.service_partner_id = exceltable.servicepartner and exceltable.status= 'active' and exceltable.substatus= 'active';
+select count(distinct system_serial_number) from ccr join exceltable on ccr.system_serial_number = exceltable.serialnumber and ccr.system_material_number = exceltable.materialnumber and ccr.service_partner_id = exceltable.servicepartner and exceltable.status= 'active' and exceltable.substatus= 'active';
+
+
+select count(distinct serialnumber) from exceltable where status = 'active' and substatus = 'active'
 
 select * from srs_connectivity;
 
@@ -124,3 +127,25 @@ insert into partner values (910191, 'Tecnimed', '@tecnimedangola.com');
 insert into partner values (910192, 'Elsmed', '@elsmed.com');
 insert into partner values (910183, 'naroge', '@naroge.com');
 insert into partner values (910187, 'EMS', '@emscongo.com');
+
+
+select * from users_account;
+
+
+select * from exceltable;
+
+select * from partner
+
+"partnerid","partnername",
+910163,"IGE-Tn",
+910167,"IGE-Int",
+910165,"medimage",
+910191,"Tecnimed",
+910192,"Elsmed",
+910183,"naroge",
+910187,"EMS",
+
+
+select * from ccr where country = 'LR'
+
+delete from ccr where end_customer = 'hopital chihaja'

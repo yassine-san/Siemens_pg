@@ -188,49 +188,47 @@ def registerNewUser(request):
 
 
 def ccr_interface(request):
-    return render(request, 'dashboard/ccr.html')
+    if not request.user.is_authenticated:
+        return redirect('login')
+    partenaria = get_user_partenariat(request.user);
+    return render(request, 'dashboard/ccr.html', {"partenariat":partenaria})
+
 
 
 def update_ccr_data(request):
     user = request.user
     partenariat = get_user_partenariat(user)
-    if partenariat == 'all':
-        print('manager')
-    else:
-        print(partenariat)
     if request.method == 'POST':
-        partner_number = request.POST.get('partnerNumber')
+        partner_number = request.POST.get('partner_number')
         modality = request.POST.get('modality')
         country = request.POST.get('country')
         search_query = request.POST.get('searchQuery')
         # apply filters
         queryset = Ccr.objects.all()
-        if partenariat != 'all' or partner_number:
-            queryset = queryset.filter(service_partner_id=partner_number) if partenariat == 'all' else queryset.filter(
-                service_partner_id=partenariat)
-        if modality:
+        queryset_quality = Quality.objects.all()
+
+        if partenariat != 'all' or partner_number :
+            queryset = queryset.filter(service_partner_id=partner_number) if partenariat == 'all'  else queryset.filter(service_partner_id=partenariat)
+
+            queryset_quality = queryset_quality.filter(servicepartner=partner_number) if partenariat == 'all'  else queryset_quality.filter(servicepartner=partenariat)    
+        if modality :
             queryset = queryset.filter(modality=modality)
-        if country:
+            queryset_quality = queryset_quality.filter(modality=modality)
+        if country :
             queryset = queryset.filter(country=country)
-        if search_query:
+            queryset_quality = queryset_quality.filter(flcountry=country)
+        if search_query :
             queryset = queryset.filter(system_serial_number__contains=search_query)
+            queryset_quality = queryset_quality.filter(serialnumber__contains=search_query)
 
-        # if partenariat != 'all':
-        #     queryset = queryset.filter(service_partner_id=partenariat)
-        nb_contract = queryset.filter(system_serial_number__isnull=False, system_material_number__gt='').count()
-        active_systems = queryset.extra(
-            tables=['exceltable'],
-            where=[
-                'ccr.system_serial_number = exceltable.serialnumber',
-                'ccr.system_material_number = exceltable.materialnumber',
-                'ccr.service_partner_id = exceltable.servicepartner',
-                "exceltable.status = 'active'",
-                "exceltable.substatus = 'active'"
-            ]).filter(contract_end_date__isnull=False,
-                      contract_end_date__gt='').count()
+        nb_contract = queryset.filter(system_serial_number__isnull=False,  system_material_number__gt='').count()
 
-        ccr_percent = (nb_contract / active_systems) * 100 if nb_contract > 0 else 0;
-
+        active_systems = queryset_quality.filter(status='active',substatus='active',week = 'Week 30').values('serialnumber').distinct().count()
+        
+        if active_systems > 0:
+            ccr_percent = (nb_contract / active_systems) * 100 if nb_contract > 0 else 0;
+        else:
+            ccr_percent = 0
         # generate table data html 
         table_data = ''
         for item in queryset:

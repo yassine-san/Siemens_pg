@@ -4,12 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>CCR</title>
-    <link rel="stylesheet" href="{% static 'dashboard/css/ccr.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/ccr.css' %}?{% now "U" %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 
 </head>
+<style>
+    body{
+        background-image: url("{% static 'dashboard/img/Background.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+
+
 <body>
     <dialog id="loading">
         <div class="multi-spinner-container">
@@ -28,76 +37,146 @@
     </dialog>
 
     <dialog id="popupFormContainer">
-        <div id="popupFormContent">
           <span class="close">&times;</span>
           <form id="popupForm">
-            <label for="systemSerialNumber">System Serial Number:</label>
-            <input type="text" id="systemSerialNumber" name="systemSerialNumber" required>
-      
-            <label for="systemMaterialNumber">System Material Number:</label>
-            <input type="text" id="systemMaterialNumber" name="systemMaterialNumber" required>
-      
-            <label for="productName">Product Name:</label>
+
+            <div class="form-row">
+
+                <div class="input-data">
+                <input type="text" id="systemSerialNumber" name="systemSerialNumber" required>
+                <div class="underline"></div>
+                <label for="systemSerialNumber">System Serial Number:</label>
+                </div>
+
+                <div class="input-data">
+                <input type="text" id="systemMaterialNumber" name="systemMaterialNumber" required>
+                <div class="underline"></div>
+                <label for="systemMaterialNumber">System Material Number:</label>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="input-data">
             <input type="text" id="productName" name="productName" required>
-      
-            <label for="deliveryDate">Delivery Date:</label>
-            <input type="date" id="deliveryDate" name="deliveryDate" required>
-      
-            <label for="handoverDate">Handover Date:</label>
-            <input type="date" id="handoverDate" name="handoverDate" required>
-      
+            <div class="underline"></div>
+            <label for="productName">Product Name:</label>
+                </div>
+
+                <div class="input-data">
+                    
+                    <input type="text" id="endCustomer" name="endCustomer" required>
+                      <div class="underline"></div>
+                          <label for="endCustomer">End Customer:</label>
+                                  </div>
+                
+            </div>
+
+            <div class="form-row">
+                <div class="input-data">
+                <input type="date" id="handoverDate" name="handoverDate" required>
+                <label for="handoverDate">Handover Date:</label> 
+                </div>
+
+                <div class="input-data">
+            <input type="date" id="contractStartDate" name="contractStartDate" required>
             <label for="contractStartDate">Contract Start Date:</label>
-            <input type="date" id="contractStartDate" name="contractStartDate" >
-      
-            <label for="contractEndDate">Contract End Date:</label>
-            <input type="date" id="contractEndDate" name="contractEndDate" required>
-      
-            <label for="contractNumber">Contract Number:</label>
-            <input type="text" id="contractNumber" name="contractNumber" required>
-      
+                </div>
+            </div>
+
+
+            <div class="form-row">
+            <div class="input-data">
+                <input type="date" id="contractEndDate" name="contractEndDate" required>
+                <label for="contractEndDate">Contract End Date:</label>
+                </div>
+                <div class="input-data">
+                    <input type="date" id="deliveryDate" name="deliveryDate" required>
+                <label for="deliveryDate">Delivery Date:</label>
+                    </div>
+
+            </div>
+                <div class="form-row">
+                    <div class="input-data">
+      <input type="text" id="eos" name="eos" required>
+        <div class="underline"></div>
             <label for="eos">EOS:</label>
-            <input type="text" id="eos" name="eos" required>
-      
+            </div>
+            
+            <div class="input-data">
+      <input type="text" id="eod" name="eod" required>
+      <div class="underline"></div>
             <label for="eod">EOD:</label>
-            <input type="text" id="eod" name="eod" required>
-      
-            <label for="endCustomer">End Customer:</label>
-            <input type="text" id="endCustomer" name="endCustomer" required>
-      
+                    </div>
+                </div>
+                    <div class="form-row">
+                        <div class="input-data">
+                            <input type="text" id="contractNumber" name="contractNumber" required>
+                            <div class="underline"></div>
+                    <label for="contractNumber">Contract Number:</label>
+                        </div>
+
+                    <div class="input-data">
+      <input type="text" id="city" name="city" required>
+      <div class="underline"></div>
             <label for="city">City:</label>
-            <input type="text" id="city" name="city" required>
-      
+                    </div>
+                </div>  
+
+            <div class="form-row">
+                <div class="input-data">    
+            
+       <input type="text" id="country" name="country" required>
+        <div class="underline"></div>
             <label for="country">Country:</label>
-            <input type="text" id="country" name="country" required>
-      
+                </div>
+
+                <div class="input-data">           
+      <input type="text" id="modality" name="modality" required>
+        <div class="underline"></div>
             <label for="modality">Modality:</label>
-            <input type="text" id="modality" name="modality" required>
-      
-            <label for="servicePartner">Service Partner:</label>
-            <input type="text" id="servicePartner" name="servicePartner" required>
-      
-            <label for="servicePartnerId">Service Partner ID:</label>
-            <input type="text" id="servicePartnerId" name="servicePartnerId" required>
-      
+                </div>
+            </div>
+            
+            <div class="form-row" style="position:relative;">
+            
+
+            <div class ="selectboxCont" {% if  partenariat != 'all' %}style="display:none;" {% endif %}>
+            <label for="servicePartnerId">Service Partner Name:</label>
+            <select id="servicePartnerId" >
+                <option value="910163">IGE-Tn</option>
+                <option value="910167">IGE-Int</option>
+                <option value="910165">medimage</option>
+                <option value="910191">Tecnimed</option>
+                <option value="910192">Elsmed</option>
+                <option value="910183">naroge</option>
+                <option value="910187">EMS</option>
+                <option value="none" style="display:none;" selected>chose partner</option>
+              </select>
+            </div>
+
             <input id="submit-popupForm"  type="button" value="Submit">
-          </form>
         </div>
+          </form>
       </dialog>    
 
 	<div class="container">
 		<div class="left-container"> 
 			<div class="filters-container">
-				<div class="service-partner-cn"> 
+				{% if  partenariat == 'all' %}
+                <div class="service-partner-cn"> 
                     <div><h3 style="display:inline; color: #009999;">Service partner</h3><button class="erase-btn" name="service-partner" ><i class="fa-solid fa-eraser"></i></button></div>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="0"><span>910163</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="1"><span>910165</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="2"><span>910167</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="3"><span>910183</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="4"><span>910187</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="5"><span>910191</span></label>
-                    <label><input type="radio" class="square-radio" name="service-partner" value="6"><span>910192</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910163"><span>910163</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910165"><span>910165</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910167"><span>910167</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910183"><span>910183</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910187"><span>910187</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910191"><span>910191</span></label>
+                    <label><input type="radio" class="square-radio" name="service-partner" value="910192"><span>910192</span></label>
 
                 </div>
+                {% endif %}
 				<div class="modality-cn">
                     <div><h3 style="display:inline;  color: #009999;">Modality</h3><button class="erase-btn" name="modality" ><i class="fa-solid fa-eraser"></i></button></div>
                     <label><input type="radio" class="square-radio" name="modality" value="AXA"><span>AXA</span></label>
@@ -141,9 +220,9 @@
 		<div class="right-container"> 
 			<div class="data-container">
 				<div class="title-cn"> 
+                    <img class="logo" src="{% static "users/img/Siemens_Healthineers_logo.png" %}"  alt="Logo">
                     <h1>CCR</h1>
-                    <button id="openFormBtn">Open Form</button>
-
+                    <button id="openFormBtn">Add contract</button>
                 </div>
 				<div class="counts-cn">
                     <div class="card card1">
@@ -209,6 +288,7 @@
     <script>
         let update_ccr_data_url = "{% url 'dashboard:update_ccr_data' %}"
         let add_ccr_data_url = "{% url 'dashboard:add_ccr_data' %}"
+        let partenariat = "{{ partenariat }}"
     </script>
     <script src="{% static 'dashboard/js/ccr.js' %}"></script>
 </html>
