@@ -231,19 +231,22 @@ def update_ccr_data(request):
             ccr_percent = 0
         # generate table data html 
         table_data = ''
-        for item in queryset:
-            table_data += f"<tr class='ms-countries-tr'>\
-                                    <td class='ms-countries-td'>{item.service_partner}</td>\
-                                    <td class='ms-countries-td'>{item.service_partner_id}</td>\
-                                    <td class='ms-countries-td'>{item.system_material_number}</td>\
-                                    <td class='ms-countries-td'>{item.system_serial_number}</td>\
-                                    <td class='ms-countries-td'>{item.country}</td>\
-                                    <td class='ms-countries-td'>{item.modality}</td>\
-                                    <td class='ms-countries-td'>{item.product_name}</td>\
-                                    <td class='ms-countries-td'>{item.delivery_date}</td>\
-                                    <td class='ms-countries-td'>{item.contract_start_date}</td>\
-                                    <td class='ms-countries-td'>{item.contract_end_date}</td>\
-                                    <td class='ms-countries-td'>{item.end_customer}</td></tr>"
+        if queryset.count() == 0:
+            table_data = f"<tr class='' style='background-color:transparent;'>                        <td class='ms-countries-td' style='border: none; font-size:18px;' colspan='11'>No data available</td></tr>"
+        else:
+            for item in queryset:
+                table_data += f"<tr class='ms-countries-tr'>\
+                                        <td class='ms-countries-td'>{item.service_partner}</td>\
+                                        <td class='ms-countries-td'>{item.service_partner_id}</td>\
+                                        <td class='ms-countries-td'>{item.system_material_number}</td>\
+                                        <td class='ms-countries-td'>{item.system_serial_number}</td>\
+                                        <td class='ms-countries-td'>{item.country}</td>\
+                                        <td class='ms-countries-td'>{item.modality}</td>\
+                                        <td class='ms-countries-td'>{item.product_name}</td>\
+                                        <td class='ms-countries-td'>{item.delivery_date}</td>\
+                                        <td class='ms-countries-td'>{item.contract_start_date}</td>\
+                                        <td class='ms-countries-td'>{item.contract_end_date}</td>\
+                                        <td class='ms-countries-td'>{item.end_customer}</td></tr>"
         return JsonResponse({'table_data': table_data,
                              'nb_contracts': nb_contract,
                              'active_systems': active_systems,
@@ -1476,3 +1479,34 @@ def get_filtered_counts(request):
     }
 
     return JsonResponse(counts)
+
+
+def manage_user_interface(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'dashboard/manage_users.html')
+
+
+def update_manage_users(request):
+    if request.method == 'POST':
+        users_list = Account.objects.all()
+        table_data = ''
+        for user in users_list:
+            partenariat = get_user_partenariat(user)
+            active_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:green;padding: 3px 20px; '>active</span>"
+            inactive_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:red; padding: 3px 20px;'>inactive</span>"
+            table_data += f"<tr>\
+                    <td>{user.email}</td>\
+                    <td>{user.partenariat}</td>\
+                    <td>{ active_status if user.is_active else inactive_status}</td>\
+                    <td><button class='btn btn-primary' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
+                        </tr>" if partenariat != 'all' else ""
+            
+        return JsonResponse({'table_data': table_data})
+    
+def delete_user(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = Account.objects.get(id=user_id)
+        user.delete()
+        return JsonResponse({'message': 'User deleted successfully!'})

@@ -4,9 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage users</title>
-    <link rel="stylesheet" href="{% static 'dashboard/css/manage_users.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/manage_users.css' %}?{% now "U" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
-    <h1>Hello world</h1>
+    <h1>User Management</h1>
+    <button id="add-user-btn">Add User</button>
+    <input type="text" id="search-input" placeholder="Search">
+    <div class="table-wrapper">
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Partner</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="table-tbody">
+
+            </tbody>
+        </table>
+    </div>
 </body>
+{% csrf_token %} 
+<script>
+    let update_manage_users_url = "{% url 'dashboard:update_manage_users' %}"
+    let delete_user_url = "{% url 'dashboard:delete_user' %}"
+    let add_user_url = "{% url 'dashboard:register_pt' %}"
+
+    
+</script>
+<script src="{% static 'dashboard/js/manage_users.js' %}"></script>
+
 </html>

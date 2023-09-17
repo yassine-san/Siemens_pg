@@ -1,12 +1,7 @@
 $(document).ready(function() {
  // ajax function to update table data  with id = 'table-tbody' based on selected filters
  update_ccr_data();
-<<<<<<< HEAD
  var updateCCRDataCalled = false;
-=======
-
-
->>>>>>> upstream/master
  function update_ccr_data(){
     const csrfToken = $('[name=csrfmiddlewaretoken]').val();
 
@@ -33,11 +28,7 @@ $(document).ready(function() {
                 $("#active_systems").html(response.active_systems);
                 $("#ccr_percent").html(Number(response.ccr_percent).toFixed(2) + "%");
                 loading.close();
-<<<<<<< HEAD
                 updateCCRDataCalled = false;
-=======
-
->>>>>>> upstream/master
             },
             error : function(error){
                 console.log(error.resonseText);
