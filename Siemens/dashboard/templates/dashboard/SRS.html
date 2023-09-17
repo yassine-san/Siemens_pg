@@ -8,8 +8,15 @@
     
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> -->
-
 </head>
+
+<style>
+    body{
+        background-image: url("{% static 'dashboard/img/Background.jpg' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
 <body>
     <dialog id="loading">
 
@@ -39,7 +46,7 @@
 {#                    <p class="active-system-count" style="color: #008B8B; font-size: 50px; margin-bottom: 0; ">{{ active_system_count }}</p>#}
 {#                    <h2 class="active-system-title" style="color: #FF8C00; margin-top: 0;">Systems with Active Connectivity</h2>#}
 {#                </div>#}
-                <div class="item-container active-system-count-container" style="border: none">
+                <div class="item-container active-system-count-container" style="background-color: transparent;border: none">
                     <div id="filter-id" class="filter-container">
                         <h3 class="filter-imay">Filters: <span id="appliedFilter"></span></h3>
                         <button class="removeFilter" onclick="removeFilters()">X</button>
@@ -159,191 +166,197 @@
     <script src="{% static 'dashboard/js/scripts.js' %}"></script>
     <!-- Add this script tag after jQuery -->
     <script>
-        $(document).ready(function() {
-
-            let flCstData = [];
-            const $tableBodyCst = $('.ms-names-table-body');
-            let rowsPerPageCst = 500;
-            let pageCst = 1;
-
-            function populateFlCst(start, end) {
-                let rowsHTML = '';
-
-                for (let i = start; i < end && i < flCstData.length; i++) {
-                    let rowClass = i === end - 1 ? 'middle-row' : '';
-                    rowsHTML += `
-                        <tr class="ms-names-tr ${rowClass}">
-                            <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>
-                            <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>
-                            <td class="ms-names-td">${flCstData[i].country_region}</td>
-                            <td class="ms-names-td">${flCstData[i].func_location_name}</td>
-                            <td class="ms-names-td">${flCstData[i].equipment_material_number}</td>
-                            <td class="ms-names-td">${flCstData[i].equipment_serial_number}</td>
-                            <td class="ms-names-td">${flCstData[i].material_division_text}</td>
-                            <td class="ms-names-td">${flCstData[i].material_ivk_name}</td>
-                            <td class="ms-names-td">${flCstData[i].srs_connectivity}</td>
-                            <td class="ms-names-td">${flCstData[i].ruh_readiness}</td>
-                            <td class="ms-names-td">${flCstData[i].data_sent}</td>
-                        </tr>`;
-                }
-
-                $tableBodyCst.html(rowsHTML);
-            }
-
-            function updatePaginationInfoCst() {
-                let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
-                $('.pagination-info-cst').text(`${pageCst}/${totalPages}`);
-            }
-
-            function updatePageContentCst() {
-                let start = (pageCst - 1) * rowsPerPageCst;
-                let end = start + rowsPerPageCst;
-
-                if (end > flCstData.length) {
-                    end = flCstData.length;
-                }
-
-                populateFlCst(start, end);
-            }
-
-            $('.pagination-btn-cst.left').on('click', function() {
-                if (pageCst > 1) {
-                    pageCst--;
-                    updatePaginationInfoCst();
-                    updatePageContentCst();
-                }
-            });
-
-            $('.pagination-btn-cst.right').on('click', function() {
-                let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
-                if (pageCst < totalPages) {
-                    pageCst++;
-                    updatePaginationInfoCst();
-                    updatePageContentCst();
-                }
-            });
-
-            function getMissingFlCstAjax() {
-                loading.showModal()
-                const csrfToken = $('[name=csrfmiddlewaretoken]').val();
-                $.ajax({
-                    type: "GET",
-                    url: missing_customerName_URL,
-                    dataType: 'json',
-                    data: {
-                        //filters: JSON.stringify(currentFilters),
-                        //csrfmiddlewaretoken: csrfToken
-                    },
-                    success: function(fetchedData) {
-                        flCstData = fetchedData;
-                        updatePaginationInfoCst();
-                        updatePageContentCst();
-                        loading.close()
-                    },
-                    error: function(error) {
-                        console.error('Error fetching data:', error);
-                    }
-                });
-            }
-
-            window.to_excel = async function (){
-                data = flCstData
-                const headers = [
-                  'equipment_service_partner_id',
-                  'equipment_service_partner_text',
-                  'country_region',
-                  'func_location_name',
-                  'equipment_material_number',
-                  'equipment_serial_number',
-                  'material_division_text',
-                  'material_ivk_name',
-                  'srs_connectivity',
-                  'ruh_readiness',
-                  'data_sent',
-                ];
-                try {
-                    const fileHandle = await window.showSaveFilePicker({
-                      suggestedName: 'exported_data.csv',
-                      types: [
-                        {
-                          description: 'CSV Files',
-                          accept: {
-                            'text/csv': ['.csv'],
-                          },
-                        },
-                      ],
-                    });
-
-                    const writableStream = await fileHandle.createWritable();
-                    const csvData = [headers].concat(
-                      data.map((item) =>
-                        `${item.equipment_service_partner_id},${item.equipment_service_partner_text},${item.country_region},${item.func_location_name},${item.equipment_material_number},${item.equipment_serial_number},${item.material_division_text},${item.material_ivk_name},${item.srs_connectivity},${item.ruh_readiness},${item.data_sent}`
-                      )
-                    );
-
-                    await writableStream.write(csvData.join('\n'));
-                    await writableStream.close();
-
-                    console.log('File saved successfully');
-                  } catch (error) {
-                    console.error('Error saving file:', error);
-                  }
-            }
-
-            getMissingFlCstAjax();
-
-
-
-     });
+     {#   $(document).ready(function() {#}
+     {##}
+     {#       let flCstData = [];#}
+     {#       const $tableBodyCst = $('.ms-names-table-body');#}
+     {#       let rowsPerPageCst = 500;#}
+     {#       let pageCst = 1;#}
+     {##}
+     {#       function populateFlCst(start, end) {#}
+     {#           let rowsHTML = '';#}
+     {##}
+     {#           //flCstData = []#}
+     {#           for (let i = start; i < end && i < flCstData.length; i++) {#}
+     {#               let rowClass = i === end - 1 ? 'middle-row' : '';#}
+     {#               rowsHTML += `#}
+     {#                   <tr class="ms-names-tr ${rowClass}">#}
+     {#                       <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].country_region}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].func_location_name}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].equipment_material_number}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].equipment_serial_number}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].material_division_text}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].material_ivk_name}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].srs_connectivity}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].ruh_readiness}</td>#}
+     {#                       <td class="ms-names-td">${flCstData[i].data_sent}</td>#}
+     {#                   </tr>`;#}
+     {#           }#}
+     {##}
+     {#           if (flCstData.length === 0){#}
+     {#               $tableBodyCst.parent().parent().css("background-color","#D3D3D3FF")#}
+     {#                rowsHTML = `#}
+     {#                   <tr class="" style="background-color:transparent;">#}
+     {#                       <td class="ms-names-td" style="border: none" colspan="4">No data available</td>#}
+     {#                   </tr>`#}
+     {#           }#}
+     {##}
+     {#           $tableBodyCst.html(rowsHTML);#}
+     {#       }#}
+     {##}
+     {#       function updatePaginationInfoCst() {#}
+     {#           let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);#}
+     {#           $('.pagination-info-cst').text(`${pageCst}/${totalPages}`);#}
+     {#       }#}
+     {##}
+     {#       function updatePageContentCst() {#}
+     {#           let start = (pageCst - 1) * rowsPerPageCst;#}
+     {#           let end = start + rowsPerPageCst;#}
+     {##}
+     {#           if (end > flCstData.length) {#}
+     {#               end = flCstData.length;#}
+     {#           }#}
+     {##}
+     {#           populateFlCst(start, end);#}
+     {#       }#}
+     {##}
+     {#       $('.pagination-btn-cst.left').on('click', function() {#}
+     {#           if (pageCst > 1) {#}
+     {#               pageCst--;#}
+     {#               updatePaginationInfoCst();#}
+     {#               updatePageContentCst();#}
+     {#           }#}
+     {#       });#}
+     {##}
+     {#       $('.pagination-btn-cst.right').on('click', function() {#}
+     {#           let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);#}
+     {#           if (pageCst < totalPages) {#}
+     {#               pageCst++;#}
+     {#               updatePaginationInfoCst();#}
+     {#               updatePageContentCst();#}
+     {#           }#}
+     {#       });#}
+     {##}
+     {#       function getMissingFlCstAjax() {#}
+     {#           loading.showModal()#}
+     {#           const csrfToken = $('[name=csrfmiddlewaretoken]').val();#}
+     {#           $.ajax({#}
+     {#               type: "GET",#}
+     {#               url: missing_customerName_URL,#}
+     {#               dataType: 'json',#}
+     {#               data: {#}
+     {#                   //filters: JSON.stringify(currentFilters),#}
+     {#                   //csrfmiddlewaretoken: csrfToken#}
+     {#               },#}
+     {#               success: function(fetchedData) {#}
+     {#                   flCstData = fetchedData;#}
+     {#                   updatePaginationInfoCst();#}
+     {#                   updatePageContentCst();#}
+     {#                   loading.close()#}
+     {#               },#}
+     {#               error: function(error) {#}
+     {#                   console.error('Error fetching data:', error);#}
+     {#               }#}
+     {#           });#}
+     {#       }#}
+     {##}
+     {#       window.to_excel = async function (){#}
+     {#           data = flCstData#}
+     {#           const headers = [#}
+     {#             'equipment_service_partner_id',#}
+     {#             'equipment_service_partner_text',#}
+     {#             'country_region',#}
+     {#             'func_location_name',#}
+     {#             'equipment_material_number',#}
+     {#             'equipment_serial_number',#}
+     {#             'material_division_text',#}
+     {#             'material_ivk_name',#}
+     {#             'srs_connectivity',#}
+     {#             'ruh_readiness',#}
+     {#             'data_sent',#}
+     {#           ];#}
+     {#           try {#}
+     {#               const fileHandle = await window.showSaveFilePicker({#}
+     {#                 suggestedName: 'exported_data.csv',#}
+     {#                 types: [#}
+     {#                   {#}
+     {#                     description: 'CSV Files',#}
+     {#                     accept: {#}
+     {#                       'text/csv': ['.csv'],#}
+     {#                     },#}
+     {#                   },#}
+     {#                 ],#}
+     {#               });#}
+     {##}
+     {#               const writableStream = await fileHandle.createWritable();#}
+     {#               const csvData = [headers].concat(#}
+     {#                 data.map((item) =>#}
+     {#                   `${item.equipment_service_partner_id},${item.equipment_service_partner_text},${item.country_region},${item.func_location_name},${item.equipment_material_number},${item.equipment_serial_number},${item.material_division_text},${item.material_ivk_name},${item.srs_connectivity},${item.ruh_readiness},${item.data_sent}`#}
+     {#                 )#}
+     {#               );#}
+     {##}
+     {#               await writableStream.write(csvData.join('\n'));#}
+     {#               await writableStream.close();#}
+     {##}
+     {#               console.log('File saved successfully');#}
+     {#             } catch (error) {#}
+     {#               console.error('Error saving file:', error);#}
+     {#             }#}
+     {#       }#}
+     {##}
+     {#       getMissingFlCstAjax();#}
+     {#});#}
      </script>
      
-     <script>
-        google.charts.load('current', {
-            'packages': ['geochart'],
-            'callback': drawGeoChart
-        });
-    
-        function drawGeoChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Country', 'Popularity'],
-                ['Liberia', 1],
-                ['Angola', 1],
-                ['Benin', 1],
-                ['Equatorial Guinea', 1],
-                ['Niger', 1],
-                ['Togo', 1],
-                ['Guinea', 1],
-                ['Congo, Republic', 1],
-                ['Mauritania', 1],
-                ['Burkina Faso', 1],
-                ['Rwanda', 1],
-                ['Tunisia', 1],
-                ['Mali', 1],
-                ['Cameroon', 1],
-                ['Chad', 1],
-                ['Gambia', 1],
-                ['Burundi', 1],
-                ['Gabon', 1],
-                ['Congo, the Democratic Republic of the', 1],
-                ['Senegal', 1],
-                ['Côte dIvoire', 1]
-            ]);
-    
-            var options = {
-                backgroundColor: { fill: 'transparent' }, // Show the ocean
-                colorAxis: { colors: ['#008B8B', '#FF8C00'], legend: 'none' }, // Hide the color axis key
-                defaultColor: '#008B8B', // Default color for countries not in the data
-                region: 'world',
-                displayMode: 'regions',
-                resolution: 'countries',
-                magnifyingGlass: { enable: true } // Enable zooming
-            };
-    
-            var chart = new google.visualization.GeoChart(document.getElementById('geoChartContainer'));
-    
-            chart.draw(data, options);
-        }
-    </script>
+{#     <script>#}
+{#        google.charts.load('current', {#}
+{#            'packages': ['geochart'],#}
+{#            'callback': drawGeoChart#}
+{#        });#}
+{#    #}
+{#        function drawGeoChart() {#}
+{#            var data = google.visualization.arrayToDataTable([#}
+{#                ['Country', 'Popularity'],#}
+{#                ['Liberia', 1],#}
+{#                ['Angola', 1],#}
+{#                ['Benin', 1],#}
+{#                ['Equatorial Guinea', 1],#}
+{#                ['Niger', 1],#}
+{#                ['Togo', 1],#}
+{#                ['Guinea', 1],#}
+{#                ['Congo, Republic', 1],#}
+{#                ['Mauritania', 1],#}
+{#                ['Burkina Faso', 1],#}
+{#                ['Rwanda', 1],#}
+{#                ['Tunisia', 1],#}
+{#                ['Mali', 1],#}
+{#                ['Cameroon', 1],#}
+{#                ['Chad', 1],#}
+{#                ['Gambia', 1],#}
+{#                ['Burundi', 1],#}
+{#                ['Gabon', 1],#}
+{#                ['Congo, the Democratic Republic of the', 1],#}
+{#                ['Senegal', 1],#}
+{#                ['Côte dIvoire', 1]#}
+{#            ]);#}
+{#    #}
+{#            var options = {#}
+{#                backgroundColor: { fill: 'transparent' }, // Show the ocean#}
+{#                colorAxis: { colors: ['#008B8B', '#FF8C00'], legend: 'none' }, // Hide the color axis key#}
+{#                defaultColor: '#008B8B', // Default color for countries not in the data#}
+{#                region: 'world',#}
+{#                displayMode: 'regions',#}
+{#                resolution: 'countries',#}
+{#                magnifyingGlass: { enable: true } // Enable zooming#}
+{#            };#}
+{#    #}
+{#            var chart = new google.visualization.GeoChart(document.getElementById('geoChartContainer'));#}
+{#    #}
+{#            chart.draw(data, options);#}
+{#        }#}
+{#    </script>#}
     
      <!-- <script>
         // Create a Leaflet map instance

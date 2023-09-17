@@ -35,6 +35,10 @@
     background-color: #505050;
 }
 
+body{
+    overflow: hidden;
+}
+
 .container {
     display: grid;
     grid-template-columns: 1fr;
@@ -66,7 +70,32 @@
 .item-container {
     border: 1px solid #FF8C00;
     position: relative;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    /*background-color: rgba(255, 255, 255, .15);*/
+    background-color: rgba(243, 241, 241, .15);
+    backdrop-filter: blur(8px);
 }
+.item-c{
+    /*background-color: rgba(255, 255, 255, .15);*/
+    background-color: rgba(243, 241, 241, .15);
+    backdrop-filter: blur(8px);
+}
+
+
+/*.item-container:before {*/
+/*      content: "";*/
+/*      position: absolute;*/
+/*      background: inherit;*/
+/*      z-index: -1;*/
+/*      top: 0;*/
+/*      left: 0;*/
+/*      right: 0;*/
+/*      bottom: 0;*/
+/*      !*box-shadow: inset 0 0 2000px rgba(208, 26, 26,, 0.5);*!*/
+/*      box-shadow: inset 0 0 2000px rgba(255, 255, 255,0.7);*/
+/*      filter: blur(50px);*/
+/*      margin: -20px;*/
+/*}*/
 
 .active-system-count-container {
     grid-area: 1 / 1 / 2 / 2;
@@ -183,9 +212,6 @@ canvas {
   
 }
 
-
-
-
 .table-wrapper {
   width: 100%;
   height: 100%;
@@ -301,11 +327,12 @@ h1 {
 
 .ms-names-table {
     border-collapse: collapse;
-    width: inherit; /* Use 100% width */
+    width: inherit;
 }
 
 .ms-names-table-body {
-    height: 120px; /* Limit the body's max height */
+    /* Limit the body's max height */
+    height: 190px;
     width: 200px; /* Use 100% width */
     overflow-y: scroll; /* Enable vertical scroll */
 }
