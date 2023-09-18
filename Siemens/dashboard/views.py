@@ -11,7 +11,7 @@ from .models import Srs
 from .models import Can24
 from .models import Partner, Ccr
 from users.models import Account, Account
-from django.db.models import Count, F, Func, Value, CharField
+from django.db.models import Count, F, Func, Value, CharField, Max
 from datetime import datetime
 from datetime import date
 from django.core.paginator import Paginator
@@ -302,20 +302,22 @@ def add_ccr_data(request):
 
 
 def data_quality(request):
-    excel_data = Quality.objects.all()
-    total_records = excel_data.count()
+    partner = get_user_partenariat(request.user)
 
     def calculate_percentage(status, substatus, column_name):
-        print("status:", status)
-        print("substatus:", substatus)
-
         filter_kwargs = {
             f"{column_name}__regex": r'.+',
         }
-        # cstname = Quality.cstname
-        count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
-        print("count: ", count)
-        return (count / total_records) * 100
+        if partner == "all":
+            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+        else:
+            count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
+        perc= (count / records) 
+        #erc = 1 - perc
+
+        return perc * 100
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -339,43 +341,7 @@ def data_quality(request):
     return render(request, 'dashboard/data_quality.html', context)
 
 
-# def update_dataAjax(request):
-#     excel_data = Quality.objects.all()
-#     total_records = excel_data.count()
-#
-#     partner = get_user_partenariat(request.user)
-#
-#     def calculate_percentage(status, substatus, column_name):
-#         filter_kwargs = {
-#             f"{column_name}__regex": r'.+',
-#         }
-#         if partner == "all":
-#             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
-#         else:
-#             count = excel_data.filter(servicepartnername=partner, status=status, substatus=substatus, **filter_kwargs).count()
-#         return (count / total_records) * 100
-#
-#     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
-#     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
-#     active_shipped_flcountry_percentage = calculate_percentage('active', 'shipped', 'flcountry')
-#     active_shipped_cstname_percentage = calculate_percentage('active', 'shipped', 'cstname')
-#     inactive_on_stock_flcountry_percentage = calculate_percentage('inactive', 'on stock', 'flcountry')
-#     inactive_on_stock_cstname_percentage = calculate_percentage('inactive', 'on stock', 'cstname')
-#
-#     updated_data = {
-#         'active_active_flcountry_percentage': active_active_flcountry_percentage,
-#         'active_active_cstname_percentage': active_active_cstname_percentage,
-#         'active_shipped_flcountry_percentage': active_shipped_flcountry_percentage,
-#         'active_shipped_cstname_percentage': active_shipped_cstname_percentage,
-#         'inactive_on_stock_flcountry_percentage': inactive_on_stock_flcountry_percentage,
-#         'inactive_on_stock_cstname_percentage': inactive_on_stock_cstname_percentage,
-#     }
-#
-#     return JsonResponse(updated_data)
-
 def update_dataAjax(request):
-    excel_data = Quality.objects.all()
-    total_records = excel_data.count()
     partner = get_user_partenariat(request.user)
 
     def calculate_percentage(status, substatus, column_name):
@@ -386,13 +352,21 @@ def update_dataAjax(request):
             filter_kwargs['week__in'] = week_filter
 
         if partner == "all":
-            count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
+            print(week_filter)
+            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            if week_filter != ['all']:
+                records = Quality.objects.all().filter(status=status, substatus=substatus,week=week_filter).count()
+            else:
+                records = Quality.objects.all().filter(status=status, substatus=substatus).count()
         else:
-            count = excel_data.filter(servicepartnerid=partner, status=status, substatus=substatus,
-                                      **filter_kwargs).count()
+            count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
+            if week_filter != ['all']:
+                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus,week=week_filter).count()
+            else:
+                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
+            perc= (count / records) 
 
-        # count = excel_data.filter(**filter_kwargs).count()
-        return (count / total_records) * 100
+        return perc * 100
 
     if request.method == "POST":
         filters_data = request.POST.get('filters')
@@ -1202,10 +1176,9 @@ def get_equipment_data(request):
 
 
 def get_equipment_dataAjax(request):
+    
     if request.method == "POST":
-
         data = json.loads(request.POST['data'])
-
         isfilrable = data["isFiltered"]
         filter_date = ''
         filter_state = ''
@@ -1214,7 +1187,8 @@ def get_equipment_dataAjax(request):
             filter_state = data["filter_state"]
 
         equipment_data = Srs.objects.all()
-
+        max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+        count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
         user = request.user
         partner = get_user_partenariat(user)
 
@@ -1227,11 +1201,12 @@ def get_equipment_dataAjax(request):
                     output_field=CharField()
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
-
+            max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            count_sys_active = equipment_data.filter(connection_score='Connection active',date=max_date).count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnNameSrs(filter_state)
-
+            count_sys_active = Srs.objects.all().filter(connection_score='Connection active',date=date_filter).count();
             equipment_data = equipment_data.filter(date=date_filter, **filter_condition)
 
         equipment_data = equipment_data.values('equipment_service_partner_id', 'equipment_service_partner_text',
@@ -1241,8 +1216,13 @@ def get_equipment_dataAjax(request):
                                                'material_division_text', 'material_ivk_name', 'srs_connectivity',
                                                'ruh_readiness', 'data_sent'
                                                )
+        
+        data = {
+            'count_sys_active': count_sys_active,
+            'data': list(equipment_data),
+        }
 
-        return JsonResponse(list(equipment_data), safe=False)
+        return JsonResponse(data, safe=False)
 
 
 def get_equipment_data_can24(request):
@@ -1263,14 +1243,53 @@ def get_equipment_data_can24(request):
 
 
 def get_equipment_data_CAN24_Ajax(request):
-    equipment_data = Can24.objects.all().values(
-        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
-        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
-        'material_ivk_name', 'srs_connectivity',
-        'ruh_readiness', 'data_sent'
-    )
+    if request.method == "POST":
+        data = json.loads(request.POST['data'])
+        isfilrable = data["isFiltered"]
+        filter_date = ''
+        filter_state = ''
+        if isfilrable:
+            filter_date = data["filter_dated"]
+            filter_state = data["filter_state"]
 
-    return JsonResponse(list(equipment_data), safe=False)
+        equipment_data = Can24.objects.all()
+        max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+        count_sys_active = equipment_data.filter(connection_score='Connection active', date = max_date).count()
+        user = request.user
+        partner = get_user_partenariat(user)
+        if partner != 'all':
+            equipment_data = equipment_data.annotate(
+                equipment_service_partner_id_no_zeros=Func(
+                    F('equipment_service_partner_id'),
+                    Value('0'),
+                    function='LTRIM',
+                    output_field=CharField()
+                )
+            ).filter(equipment_service_partner_id_no_zeros=partner)
+            max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
+        if isfilrable:
+            date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+            filter_condition = getFilterColumnName(filter_state)
+            count_sys_active = Can24.objects.all().filter(connection_score='Connection active',date=date_filter).count();
+
+            equipment_data = equipment_data.filter(date=date_filter, **filter_condition)
+
+        equipment_data = equipment_data.values(
+            'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+            'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+            'material_ivk_name', 'srs_connectivity',
+            'ruh_readiness', 'data_sent'
+        )
+
+        data = {
+            'count_sys_active': count_sys_active,
+            'data': list(equipment_data),
+        } 
+
+        return JsonResponse(data, safe=False)
+
+
 
 
 def active_system_count(request):
@@ -1491,17 +1510,21 @@ def manage_user_interface(request):
 def update_manage_users(request):
     if request.method == 'POST':
         users_list = Account.objects.all()
+        search_query = request.POST.get('search_query')
+        if search_query:
+            users_list = users_list.filter(email__icontains=search_query)
+
         table_data = ''
         for user in users_list:
             partenariat = get_user_partenariat(user)
-            active_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:green;padding: 3px 20px; '>active</span>"
+            active_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:#0ba75b;padding: 3px 20px; '>active</span>"
             inactive_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:red; padding: 3px 20px;'>inactive</span>"
-            table_data += f"<tr>\
+            table_data += f"<tr class='data-tr'>\
                     <td>{user.email}</td>\
                     <td>{user.partenariat}</td>\
                     <td>{ active_status if user.is_active else inactive_status}</td>\
-                    <td><button class='btn btn-primary' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
-                        </tr>" if partenariat != 'all' else ""
+                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
+                        </tr><tr class='spacer'><td colspan='100'></td></tr>" if partenariat != 'all' else ""
             
         return JsonResponse({'table_data': table_data})
     
@@ -1511,3 +1534,4 @@ def delete_user(request):
         user = Account.objects.get(id=user_id)
         user.delete()
         return JsonResponse({'message': 'User deleted successfully!'})
+     

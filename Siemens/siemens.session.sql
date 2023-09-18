@@ -149,3 +149,28 @@ select * from partner
 select * from ccr where country = 'LR'
 
 delete from ccr where end_customer = 'hopital chihaja'
+
+select * from users_account;
+
+
+select * from ccr ;
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION remove_expired_contracts()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.contract_end_date < current_date THEN
+        DELETE FROM ccr WHERE id = OLD.id;
+    END IF;
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER contract_expiry_trigger
+BEFORE DELETE ON ccr
+FOR EACH ROW
+EXECUTE FUNCTION remove_expired_contracts();

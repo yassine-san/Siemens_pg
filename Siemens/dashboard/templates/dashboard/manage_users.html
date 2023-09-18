@@ -10,9 +10,18 @@
 </head>
 <body>
     <h1>User Management</h1>
-    <button id="add-user-btn">Add User</button>
-    <input type="text" id="search-input" placeholder="Search">
+
+    <div class="search-cn">
+        <button id="add-user-btn">Add User</button>
+        <input type="text" id="search-input" placeholder="Search">
+    <button value="" id="search-btn"><i class="fa fa-search" aria-hidden="true"></i>
+    </button>
+    </div>
+
+
+    <div class="table-cn">
     <div class="table-wrapper">
+
         <table id="user-table">
             <thead>
                 <tr>
@@ -26,6 +35,7 @@
 
             </tbody>
         </table>
+    </div>
     </div>
 </body>
 {% csrf_token %} 

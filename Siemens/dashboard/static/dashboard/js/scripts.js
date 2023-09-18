@@ -4,11 +4,11 @@ $(document).ready(function() {
         const $tableBodyCst = $('.ms-names-table-body');
         let rowsPerPageCst = 500;
         let pageCst = 1;
+        const $counttab = $("#count-systems-active-tab");
 
         function populateFlCst(start, end) {
             let rowsHTML = '';
 
-            //flCstData = []
             for (let i = start; i < end && i < flCstData.length; i++) {
                 let rowClass = i === end - 1 ? 'middle-row' : '';
                 rowsHTML += `
@@ -26,7 +26,7 @@ $(document).ready(function() {
                         <td class="ms-names-td">${flCstData[i].data_sent}</td>
                     </tr>`;
             }
-
+ 
             if (flCstData.length === 0){
                 $tableBodyCst.parent().parent().css("background-color","#D3D3D3FF")
                  rowsHTML = `
@@ -97,7 +97,8 @@ $(document).ready(function() {
                     csrfmiddlewaretoken: csrfTokenValue
                 },
                 success: function(fetchedData) {
-                    flCstData = fetchedData;
+                    flCstData = fetchedData.data;
+                    $counttab.html(fetchedData.count_sys_active)
                     updatePaginationInfoCst();
                     updatePageContentCst();
                     loading.close()
@@ -152,7 +153,6 @@ $(document).ready(function() {
               }
         }
 
-        getMissingFlCstAjax();
 
 
         let loadingDoneCounter = 0
@@ -302,7 +302,8 @@ window.removeFilters = function (){
     updateCharts()
 }
 
-updateCharts()
+getMissingFlCstAjax();
+updateCharts();
 
  });
 

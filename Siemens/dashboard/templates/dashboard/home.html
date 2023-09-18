@@ -18,9 +18,10 @@
 <body>
   <nav class="navbar">
     <div class="nav-left">
-      <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="padding:4px;border-radius:.6em;background-color:white;scale: 1;width: 150px" alt="Logo">
+      <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="padding:4px;border-radius:.6em;background-color:white;scale: 1;width: 150px; background-color:transparent;" alt="Logo">
     </div>
     <ul class="nav-list">
+        {% if partenariat == "all" %}
       <li style="display: flex;cursor: pointer">
           <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
           <a href="{% url 'dashboard:excel_import' file_index=1 %}" style="padding:6px;color : black">Quality Excel</a>
@@ -29,15 +30,19 @@
           <img src="{% static "dashboard/img/upload-icon.png" %}" width="25px">
           <a href="{% url 'dashboard:excel_import' file_index=2 %}" style="padding:6px;color : black">SRS/Can24 Excel</a>
       </li>
+      {% endif %}
       <li class="dropdown">
-        <button class="dropbtn">{{ username }}</button>
+        <button class="dropbtn" style="background-color: transparent;  %}">{{ username }}</button>
         <div class="dropdown-content">
             {% if partenariat == "all" %}
-        <a href="#option1">
+        {% comment %} <a href="#option1">
             <img src="{% static "dashboard/img/profile_icon.png" %}" alt="Icon 1" width="30px">
-        </a>
+        </a> {% endcomment %}
         <a href="register_pt/">
             <img src="{% static "dashboard/img/add_user_icon.png" %}" alt="Icon 2" width="30px">
+        </a>
+        <a href="manage_users/">
+            <img src="{% static "dashboard/img/manage_users_icon.png" %}" alt="Icon 3" width="30px">
         </a>
             {% endif %}
         <a onclick="logout()">
