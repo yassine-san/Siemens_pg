@@ -49,6 +49,7 @@
             <div>
               <p
                 class="active-system-count"
+                id="count-systems-active-tab"
                 style="color: #008b8b; font-size: 50px; margin-bottom: 0"
               >
                 16
@@ -110,7 +111,7 @@
         </div>
       </div>
       <div class="bottom-left-container" style="background-color: transparent">
-        <div class="item" style="height: auto">{# map here#}</div>
+        <div class="item" style="height: auto"></div>
       </div>
       <div class="item bottom-right-container">
         <div class="table-wrapper">
@@ -168,7 +169,10 @@
                   <th class="ms-names-table-header">Data Sent</th>
                 </tr>
               </thead>
-              <tbody class="ms-names-table-body"></tbody>
+              <tbody class="ms-names-table-body">
+
+
+              </tbody>
             </table>
           </div>
         </div>
@@ -177,7 +181,7 @@
     <script>
       loading.showModal();
     </script>
-
+ 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
@@ -204,137 +208,7 @@
 
     {% csrf_token %}
     <script src="{% static 'dashboard/js/can24.js' %}"></script>
-    <script>
-      $(document).ready(function () {
-        let flCstData = [];
-        const $tableBodyCst = $(".ms-names-table-body");
-        let rowsPerPageCst = 500;
-        let pageCst = 1;
-
-        window.to_excel = async function () {
-          data = flCstData;
-          const headers = [
-            "equipment_service_partner_id",
-            "equipment_service_partner_text",
-            "country_region",
-            "func_location_name",
-            "equipment_material_number",
-            "equipment_serial_number",
-            "material_ivk_name",
-            "srs_connectivity",
-            "ruh_readiness",
-            "data_sent",
-          ];
-          try {
-            const fileHandle = await window.showSaveFilePicker({
-              suggestedName: "exported_data.csv",
-              types: [
-                {
-                  description: "CSV Files",
-                  accept: {
-                    "text/csv": [".csv"],
-                  },
-                },
-              ],
-            });
-
-            const writableStream = await fileHandle.createWritable();
-            const csvData = [headers].concat(
-              data.map(
-                (item) =>
-                  `${item.equipment_service_partner_id},${item.equipment_service_partner_text},${item.country_region},${item.func_location_name},${item.equipment_material_number},${item.equipment_serial_number},${item.material_ivk_name},${item.srs_connectivity},${item.ruh_readiness},${item.data_sent}`
-              )
-            );
-
-            await writableStream.write(csvData.join("\n"));
-            await writableStream.close();
-
-            console.log("File saved successfully");
-          } catch (error) {
-            console.error("Error saving file:", error);
-          }
-        };
-        function populateFlCst(start, end) {
-          let rowsHTML = "";
-
-          for (let i = start; i < end && i < flCstData.length; i++) {
-            let rowClass = i === end - 1 ? "middle-row" : "";
-            rowsHTML += `
-            <tr class="ms-names-tr ${rowClass}">
-                <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>
-                <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>
-                <td class="ms-names-td">${flCstData[i].country_region}</td>
-                <td class="ms-names-td">${flCstData[i].func_location_name}</td>
-                <td class="ms-names-td">${flCstData[i].equipment_material_number}</td>
-                <td class="ms-names-td">${flCstData[i].equipment_serial_number}</td>
-                <td class="ms-names-td">${flCstData[i].material_ivk_name}</td>
-                <td class="ms-names-td">${flCstData[i].srs_connectivity}</td>
-                <td class="ms-names-td">${flCstData[i].ruh_readiness}</td>
-                <td class="ms-names-td">${flCstData[i].data_sent}</td>
-            </tr>`;
-          }
-
-          $tableBodyCst.html(rowsHTML);
-        }
-
-        function updatePaginationInfoCst() {
-          let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
-          $(".pagination-info-cst").text(`${pageCst}/${totalPages}`);
-        }
-
-        function updatePageContentCst() {
-          let start = (pageCst - 1) * rowsPerPageCst;
-          let end = start + rowsPerPageCst;
-
-          if (end > flCstData.length) {
-            end = flCstData.length;
-          }
-
-          populateFlCst(start, end);
-        }
-
-        $(".pagination-btn-cst.left").on("click", function () {
-          if (pageCst > 1) {
-            pageCst--;
-            updatePaginationInfoCst();
-            updatePageContentCst();
-          }
-        });
-
-        $(".pagination-btn-cst.right").on("click", function () {
-          let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);
-          if (pageCst < totalPages) {
-            pageCst++;
-            updatePaginationInfoCst();
-            updatePageContentCst();
-          }
-        });
-
-        function getMissingFlCstAjax() {
-          //loading.showModal()
-          const csrfToken = $("[name=csrfmiddlewaretoken]").val();
-          $.ajax({
-            type: "GET",
-            url: missing_customerName_URL,
-            dataType: "json",
-            data: {
-              //filters: JSON.stringify(currentFilters),
-              //csrfmiddlewaretoken: csrfToken
-            },
-            success: function (fetchedData) {
-              flCstData = fetchedData;
-              updatePaginationInfoCst();
-              updatePageContentCst();
-              //loading.close()
-            },
-            error: function (error) {
-              console.error("Error fetching data:", error);
-            },
-          });
-        }
-
-        getMissingFlCstAjax();
-      });
-    </script>
+    
+  
   </body>
 </html>
