@@ -385,7 +385,7 @@ def update_dataAjax(request):
         if partner == "all":
             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
         else:
-            count = excel_data.filter(servicepartner=partner, status=status, substatus=substatus,
+            count = excel_data.filter(servicepartnerid=partner, status=status, substatus=substatus,
                                       **filter_kwargs).count()
 
         # count = excel_data.filter(**filter_kwargs).count()
@@ -451,6 +451,7 @@ def upload_excel(request):
             response_data = {'message': 'Invalid request'}
             JsonResponse(response_data)
 
+
         cursor = connection.cursor()
 
         try:
@@ -479,10 +480,10 @@ def upload_excel(request):
             connection.close()
             workbook.close()
 
-            response_data = {'status': 1, 'message': 'Base donnee est mise a jour', 'data': None}
+            response_data = {'status': 1, 'message': 'Database updated', 'data': None}
         except Exception as e:
             print(e)
-            response_data = {'status': -1, 'message': 'Erreur lors l\'execution'}
+            response_data = {'status': -1, 'message': 'Error while processing'}
 
     else:
         response_data = {'status': -1, 'message': 'Invalid request'}

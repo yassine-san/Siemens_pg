@@ -267,6 +267,7 @@ h1 {
     margin-right: 10px; /* Add margin to separate from the button */
 }
 .fl-cst-pagination {
+    background-color: white;
     width: 150px;
     max-width: 400px; /* Adjust the width */
      /* Add a max-width if needed */
@@ -433,4 +434,16 @@ h1 {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+
+div > #map-container{
+    padding: 20px;
+    border-radius: .5em;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+}
+
+#map-container {
+    width: 90%;
+    height: 90%;
 }

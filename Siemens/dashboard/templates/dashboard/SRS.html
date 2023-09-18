@@ -5,7 +5,7 @@
 <head>
     <title>SRS</title>
     <link rel="stylesheet" href="{% static 'dashboard/css/SRS.css' %}">
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script> -->
 </head>
@@ -86,9 +86,7 @@
             <div class="lower">
                 <div class="item-container country-region-container">
                     <!-- <div id="map" style="height: 300px;"></div> -->
-                    <div id="geoChartContainer"></div>
-
-                    
+                    <div id="map-container"></div>
 
 
                 </div>
@@ -165,6 +163,59 @@
     {% csrf_token %}
     <script src="{% static 'dashboard/js/scripts.js' %}"></script>
     <!-- Add this script tag after jQuery -->
+
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize the Leaflet map
+        const map = L.map('map-container').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        // Load GeoJSON data for world countries from the provided URL
+        fetch('https://www.unpkg.com/three-conic-polygon-geometry@1.2.1/example/geojson/ne_110m_admin_0_countries.geojson')
+            .then((response) => response.json())
+            .then((data) => {
+                // Create a GeoJSON layer and add it to the map
+                const geoJsonLayer = L.geoJSON(data, {
+                    onEachFeature: function (feature, layer) {
+                        const countryName = feature.properties.NAME;
+                        layer.bindPopup(countryName);
+
+                        // Add country name to the table and set a data-country attribute
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td data-country="${countryName}">${countryName}</td>`;
+                        document.querySelector('tbody').appendChild(tr);
+
+                        // Event listener to handle clicks on the table
+                        tr.addEventListener('click', function () {
+                            highlightCountry(countryName);
+                        });
+                    },
+                    style: {
+                        fillColor: '#ff7308',
+                        fillOpacity: 0.6,
+                        color: 'black',
+                        weight: 0.5,
+                    },
+                }).addTo(map);
+
+                // Fit the map to the bounds of the GeoJSON layer
+                map.fitBounds(geoJsonLayer.getBounds());
+            });
+
+        // Function to highlight the selected country on the map
+        function highlightCountry(countryName) {
+            geoJsonLayer.eachLayer(function (layer) {
+                if (layer.feature.properties.NAME === countryName) {
+                    layer.setStyle({ fillColor: 'red', fillOpacity: 0.6 });
+                } else {
+                    layer.setStyle({ fillColor: '#3388ff', fillOpacity: 0.2 });
+                }
+            });
+        }
+    </script>
+
+
     <script>
      {#   $(document).ready(function() {#}
      {##}

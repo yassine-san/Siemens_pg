@@ -14,7 +14,7 @@ let errorMessage = document.getElementsByClassName("message")[0]
 submitter.addEventListener("click", function() {
 
     if (importer.files.length === 0){
-        errorMessage.textContent = "importer un fichier"
+        errorMessage.textContent = "Import a file"
         message_dialog.showModal()
         errorMessage.style.backgroundColor = "red"
         return
