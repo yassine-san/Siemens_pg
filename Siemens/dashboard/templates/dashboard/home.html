@@ -18,7 +18,7 @@
 <body>
   <nav class="navbar">
     <div class="nav-left">
-      <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="padding:4px;border-radius:.6em;background-color:white;scale: 1;width: 150px" alt="Logo">
+      <img src="{% static "users/img/Siemens_Healthineers_logo.png" %}" style="padding:4px;border-radius:.6em;background-color:white;scale: 1;width: 150px; background-color:transparent;" alt="Logo">
     </div>
     <ul class="nav-list">
       <li style="display: flex;cursor: pointer">
@@ -38,6 +38,9 @@
         </a>
         <a href="register_pt/">
             <img src="{% static "dashboard/img/add_user_icon.png" %}" alt="Icon 2" width="30px">
+        </a>
+        <a href="manage_users/">
+            <img src="{% static "dashboard/img/manage_users_icon.png" %}" alt="Icon 3" width="30px">
         </a>
             {% endif %}
         <a onclick="logout()">

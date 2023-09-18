@@ -1,16 +1,98 @@
 /* users.css */
-table {
-    border-collapse: collapse;
-    width: 100%;
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    scrollbar-width: thin;
+    scrollbar-color: #F8D69C #CCD5D7;
+
 }
 
+.search-cn{
+    padding: 10px 40px 10px 40px;
+    position: relative;
+	display: flex;
+	flex-direction: row;
+    justify-content: center;
+}
+
+
+#search-input {
+	width: 70%;
+	border: 3px solid orangered;
+	border-right: none;
+	padding: 5px;
+	height: 36px;
+	border-radius: 5px 0 0 5px;
+	box-shadow: 0px 5px 6px rgba(255, 82, 2, 0.2);;
+	outline: none;
+	color: #9DBFAF;
+}
+#search-btn {
+	width: 40px;
+	height: 36px;
+	border: 1px solid orangered;
+	background: orangered;
+	text-align: center;
+	color: #fff;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.table-cn{
+    margin: 10px;
+    border-radius: 8px;
+}
+
+.table-wrapper {
+    overflow: auto;
+    overflow-x: hidden;
+    max-height:500px;
+    padding-right: 20px;
+
+}
+
+table {
+    margin :10px;
+    border-collapse: collapse;
+    width: 100%;
+    color: #212529;
+    padding: 10px;
+}
+
+table thead{
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    text-wrap: normal;
+    top: 0;
+    font-weight: normal;
+    color: #494949;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis;
+
+    z-index: 1; /* Ensure header is above the body */
+
+}
+
+table tbody{
+    height: 190px; /* Limit the body's max height */
+    overflow-y: scroll; /* Enable vertical scroll */
+}
+
+
+
 th, td {
-    padding: 8px;
+    padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-tr:hover {
+.data-tr:hover {
     background-color: #f5f5f5;
 }
 
@@ -18,17 +100,80 @@ h1 {
     text-align: center;
 }
 
-#search-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+
+.spacer td{
+    padding: 0 !important;
+    height: 10px;
+    border-radius: 0 !important;
+    background: transparent !important;
 }
 
-.table-wrapper {
-    max-height: 400px;
-    overflow-y: auto;
+tbody tr:not(.spacer) {
+    border-radius: 7px;
+    overflow: hidden;
+    -webkit-transition: .3s all ease;
+    -o-transition: .3s all ease;
+    transition: .3s all ease;
 }
-
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+th {
+    border-bottom: solid 2px #ddd;
+}
 #add-user-btn {
-    margin-bottom: 10px;
+    margin-right: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #0ba75b;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+}
+
+
+
+.delete-btn-user{
+    background-color:transparent;
+    outline: none;
+    border: none;
+}
+.delete-btn-user i{
+    color:red;
+    font-size: 25px;
+}
+
+
+*::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+*::-webkit-scrollbar-track {
+    border-radius: 9px;
+    background-color: #CCD5D7;
+}
+
+*::-webkit-scrollbar-track:hover {
+    background-color: #B8C0C2;
+}
+
+*::-webkit-scrollbar-track:active {
+    background-color: #B8C0C2;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #838080;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #505050;
+}
+
+*::-webkit-scrollbar-thumb:active {
+    background-color: #505050;
 }

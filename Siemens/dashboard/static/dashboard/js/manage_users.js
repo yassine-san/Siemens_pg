@@ -38,10 +38,22 @@ $(document).ready(function () {
         });
     }
 
-    $('#search-input').on('keyup', function () {
-        var searchText = $(this).val().toLowerCase();
-        $('table tbody tr').filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
+    $('#search-btn').click(function(){
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        const search = $('#search-input').val();
+        $.ajax({
+            url :  update_manage_users_url,
+            type : 'POST',
+            data : {
+                'csrfmiddlewaretoken' : csrfToken,
+                'search_query' : search,
+            },
+            success : function(response){
+                $("#table-tbody").html(response.table_data);
+            },
+            error : function(xhr, status, error){
+                console.log(error);
+            }
         });
     });
 

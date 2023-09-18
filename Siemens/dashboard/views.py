@@ -1490,17 +1490,21 @@ def manage_user_interface(request):
 def update_manage_users(request):
     if request.method == 'POST':
         users_list = Account.objects.all()
+        search_query = request.POST.get('search_query')
+        if search_query:
+            users_list = users_list.filter(email__icontains=search_query)
+
         table_data = ''
         for user in users_list:
             partenariat = get_user_partenariat(user)
-            active_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:green;padding: 3px 20px; '>active</span>"
+            active_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:#0ba75b;padding: 3px 20px; '>active</span>"
             inactive_status = "<span style='border-radius: 5px; font-size: 0.875em;font-weight: 600; background-color:red; padding: 3px 20px;'>inactive</span>"
-            table_data += f"<tr>\
+            table_data += f"<tr class='data-tr'>\
                     <td>{user.email}</td>\
                     <td>{user.partenariat}</td>\
                     <td>{ active_status if user.is_active else inactive_status}</td>\
-                    <td><button class='btn btn-primary' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
-                        </tr>" if partenariat != 'all' else ""
+                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
+                        </tr><tr class='spacer'><td colspan='100'></td></tr>" if partenariat != 'all' else ""
             
         return JsonResponse({'table_data': table_data})
     
