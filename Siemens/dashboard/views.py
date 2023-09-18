@@ -388,7 +388,7 @@ def update_dataAjax(request):
         if partner == "all":
             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
         else:
-            count = excel_data.filter(servicepartnerid=partner, status=status, substatus=substatus,
+            count = excel_data.filter(servicepartner=partner, status=status, substatus=substatus,
                                       **filter_kwargs).count()
 
         # count = excel_data.filter(**filter_kwargs).count()
