@@ -1202,10 +1202,9 @@ def get_equipment_data(request):
 
 
 def get_equipment_dataAjax(request):
+    
     if request.method == "POST":
-
         data = json.loads(request.POST['data'])
-
         isfilrable = data["isFiltered"]
         filter_date = ''
         filter_state = ''
@@ -1214,7 +1213,7 @@ def get_equipment_dataAjax(request):
             filter_state = data["filter_state"]
 
         equipment_data = Srs.objects.all()
-
+        count_sys_active = equipment_data.filter(connection_score='Connection active').count()
         user = request.user
         partner = get_user_partenariat(user)
 
@@ -1227,11 +1226,11 @@ def get_equipment_dataAjax(request):
                     output_field=CharField()
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
-
+            count_sys_active = equipment_data.filter(connection_score='Connection active').count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnNameSrs(filter_state)
-
+            count_sys_active = Srs.objects.all().filter(connection_score='Connection active',date=date_filter).count();
             equipment_data = equipment_data.filter(date=date_filter, **filter_condition)
 
         equipment_data = equipment_data.values('equipment_service_partner_id', 'equipment_service_partner_text',
@@ -1241,8 +1240,13 @@ def get_equipment_dataAjax(request):
                                                'material_division_text', 'material_ivk_name', 'srs_connectivity',
                                                'ruh_readiness', 'data_sent'
                                                )
+        
+        data = {
+            'count_sys_active': count_sys_active,
+            'data': list(equipment_data),
+        }
 
-        return JsonResponse(list(equipment_data), safe=False)
+        return JsonResponse(data, safe=False)
 
 
 def get_equipment_data_can24(request):
@@ -1263,14 +1267,51 @@ def get_equipment_data_can24(request):
 
 
 def get_equipment_data_CAN24_Ajax(request):
-    equipment_data = Can24.objects.all().values(
-        'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
-        'func_location_name', 'equipment_material_number', 'equipment_serial_number',
-        'material_ivk_name', 'srs_connectivity',
-        'ruh_readiness', 'data_sent'
-    )
+    if request.method == "POST":
+        data = json.loads(request.POST['data'])
+        isfilrable = data["isFiltered"]
+        filter_date = ''
+        filter_state = ''
+        if isfilrable:
+            filter_date = data["filter_dated"]
+            filter_state = data["filter_state"]
 
-    return JsonResponse(list(equipment_data), safe=False)
+        equipment_data = Can24.objects.all()
+        count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+        user = request.user
+        partner = get_user_partenariat(user)
+        if partner != 'all':
+            equipment_data = equipment_data.annotate(
+                equipment_service_partner_id_no_zeros=Func(
+                    F('equipment_service_partner_id'),
+                    Value('0'),
+                    function='LTRIM',
+                    output_field=CharField()
+                )
+            ).filter(equipment_service_partner_id_no_zeros=partner)
+            count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+        if isfilrable:
+            date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
+            filter_condition = getFilterColumnName(filter_state)
+            count_sys_active = Can24.objects.all().filter(connection_score='Connection active',date=date_filter).count();
+
+            equipment_data = equipment_data.filter(date=date_filter, **filter_condition)
+
+        equipment_data = equipment_data.values(
+            'equipment_service_partner_id', 'equipment_service_partner_text', 'country_region',
+            'func_location_name', 'equipment_material_number', 'equipment_serial_number',
+            'material_ivk_name', 'srs_connectivity',
+            'ruh_readiness', 'data_sent'
+        )
+
+        data = {
+            'count_sys_active': count_sys_active,
+            'data': list(equipment_data),
+        } 
+
+        return JsonResponse(data, safe=False)
+
+
 
 
 def active_system_count(request):
@@ -1515,3 +1556,4 @@ def delete_user(request):
         user = Account.objects.get(id=user_id)
         user.delete()
         return JsonResponse({'message': 'User deleted successfully!'})
+     
