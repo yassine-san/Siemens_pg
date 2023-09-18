@@ -53,7 +53,7 @@ urlpatterns = [
     path('africaIB', views.africaIb_interface, name="get_africaIB"),
 
     # user conf paths
-    path('register_pt/', views.registerPartenariat),
+    path('register_pt/', views.registerPartenariat,name ="register_pt"),
     path('registerNewUser/', views.registerNewUser, name="registerNewUser"),
     path('logout/', views.logout_user, name="logout_user"),
 
@@ -78,4 +78,10 @@ urlpatterns = [
     path('ccr/', views.ccr_interface, name='ccr'),
     path('update_ccr_data/',views.update_ccr_data, name='update_ccr_data'),
     path('add_ccr_data/',views.add_ccr_data, name='add_ccr_data'),
+    
+
+    # manage users
+    path('manage_users/', views.manage_user_interface, name='manage_users'),
+    path('update_manage_users/', views.update_manage_users, name='update_manage_users'),
+    path('delete_user/', views.delete_user, name='delete_user'),
 ]

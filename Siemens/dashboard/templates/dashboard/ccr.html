@@ -15,7 +15,9 @@
         background-image: url("{% static 'dashboard/img/Background.jpg' %}");
         background-repeat: no-repeat;
         background-size: cover;
+        
     }
+
 </style>
 
 
@@ -164,9 +166,9 @@
 	<div class="container">
 		<div class="left-container"> 
 			<div class="filters-container">
-				{% if  partenariat == 'all' %}
-                <div class="service-partner-cn"> 
-                    <div><h3 style="display:inline; color: #009999;">Service partner</h3><button class="erase-btn" name="service-partner" ><i class="fa-solid fa-eraser"></i></button></div>
+				
+                <div class="service-partner-cn" {% if  partenariat != 'all' %} style="display:none;" {% endif %}> 
+                    <div><h3 style="display:inline; color: #086d6d;">Service partner</h3><button class="erase-btn" name="service-partner" ><i class="fa-solid fa-eraser"></i></button></div>
                     <label><input type="radio" class="square-radio" name="service-partner" value="910163"><span>910163</span></label>
                     <label><input type="radio" class="square-radio" name="service-partner" value="910165"><span>910165</span></label>
                     <label><input type="radio" class="square-radio" name="service-partner" value="910167"><span>910167</span></label>
@@ -176,9 +178,9 @@
                     <label><input type="radio" class="square-radio" name="service-partner" value="910192"><span>910192</span></label>
 
                 </div>
-                {% endif %}
-				<div class="modality-cn">
-                    <div><h3 style="display:inline;  color: #009999;">Modality</h3><button class="erase-btn" name="modality" ><i class="fa-solid fa-eraser"></i></button></div>
+                
+				<div class="modality-cn" {% if partenariat != 'all' %} style="grid-area: 1/1/3/2; margin-top:10px;" {% else %} style="grid-area: 2 / 1 / 3 / 2;" {% endif %}>
+                    <div><h3 style="display:inline;  color: #086d6d;background-color:transparent;">Modality</h3><button class="erase-btn" name="modality" ><i class="fa-solid fa-eraser"></i></button></div>
                     <label><input type="radio" class="square-radio" name="modality" value="AXA"><span>AXA</span></label>
                     <label><input type="radio" class="square-radio" name="modality" value="CT"><span>CT</span></label>
                     <label><input type="radio" class="square-radio" name="modality" value="D&A"><span>D&A</span></label>
@@ -189,7 +191,8 @@
   
                 </div>
 				<div class="country-cn">
-                    <div><h3 style="display:inline;  color: #009999;">Country</h3><button class="erase-btn" name="country" ><i class="fa-solid fa-eraser"></i></button></div>
+                    <div style="background-color: transparent;">
+                        <h3  style="display:inline; color: #086d6d;">Country</h3><button class="erase-btn" name="country" ><i class="fa-solid fa-eraser"></i></button></div>
                     <label><input type="radio" class="square-radio" name="country" value="AO"><span>AO</span></label>
                     <label><input type="radio" class="square-radio" name="country" value="BF"><span>BF</span></label>
                     <label><input type="radio" class="square-radio" name="country" value="BI"><span>BI</span></label>
@@ -284,7 +287,6 @@
 </script> 
 
      {% csrf_token %} 
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script>
         let update_ccr_data_url = "{% url 'dashboard:update_ccr_data' %}"
         let add_ccr_data_url = "{% url 'dashboard:add_ccr_data' %}"
