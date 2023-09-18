@@ -11,7 +11,7 @@ from .models import Srs
 from .models import Can24
 from .models import Partner, Ccr
 from users.models import Account, Account
-from django.db.models import Count, F, Func, Value, CharField
+from django.db.models import Count, F, Func, Value, CharField, Max
 from datetime import datetime
 from datetime import date
 from django.core.paginator import Paginator
@@ -302,20 +302,22 @@ def add_ccr_data(request):
 
 
 def data_quality(request):
-    excel_data = Quality.objects.all()
-    total_records = excel_data.count()
+    partner = get_user_partenariat(request.user)
 
     def calculate_percentage(status, substatus, column_name):
-        print("status:", status)
-        print("substatus:", substatus)
-
         filter_kwargs = {
             f"{column_name}__regex": r'.+',
         }
-        # cstname = Quality.cstname
-        count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
-        print("count: ", count)
-        return (count / total_records) * 100
+        if partner == "all":
+            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+        else:
+            count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
+        perc= (count / records) 
+        #erc = 1 - perc
+
+        return perc * 100
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -339,43 +341,7 @@ def data_quality(request):
     return render(request, 'dashboard/data_quality.html', context)
 
 
-# def update_dataAjax(request):
-#     excel_data = Quality.objects.all()
-#     total_records = excel_data.count()
-#
-#     partner = get_user_partenariat(request.user)
-#
-#     def calculate_percentage(status, substatus, column_name):
-#         filter_kwargs = {
-#             f"{column_name}__regex": r'.+',
-#         }
-#         if partner == "all":
-#             count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
-#         else:
-#             count = excel_data.filter(servicepartnername=partner, status=status, substatus=substatus, **filter_kwargs).count()
-#         return (count / total_records) * 100
-#
-#     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
-#     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
-#     active_shipped_flcountry_percentage = calculate_percentage('active', 'shipped', 'flcountry')
-#     active_shipped_cstname_percentage = calculate_percentage('active', 'shipped', 'cstname')
-#     inactive_on_stock_flcountry_percentage = calculate_percentage('inactive', 'on stock', 'flcountry')
-#     inactive_on_stock_cstname_percentage = calculate_percentage('inactive', 'on stock', 'cstname')
-#
-#     updated_data = {
-#         'active_active_flcountry_percentage': active_active_flcountry_percentage,
-#         'active_active_cstname_percentage': active_active_cstname_percentage,
-#         'active_shipped_flcountry_percentage': active_shipped_flcountry_percentage,
-#         'active_shipped_cstname_percentage': active_shipped_cstname_percentage,
-#         'inactive_on_stock_flcountry_percentage': inactive_on_stock_flcountry_percentage,
-#         'inactive_on_stock_cstname_percentage': inactive_on_stock_cstname_percentage,
-#     }
-#
-#     return JsonResponse(updated_data)
-
 def update_dataAjax(request):
-    excel_data = Quality.objects.all()
-    total_records = excel_data.count()
     partner = get_user_partenariat(request.user)
 
     def calculate_percentage(status, substatus, column_name):
@@ -386,13 +352,21 @@ def update_dataAjax(request):
             filter_kwargs['week__in'] = week_filter
 
         if partner == "all":
-            count = excel_data.filter(status=status, substatus=substatus, **filter_kwargs).count()
+            print(week_filter)
+            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            if week_filter != ['all']:
+                records = Quality.objects.all().filter(status=status, substatus=substatus,week=week_filter).count()
+            else:
+                records = Quality.objects.all().filter(status=status, substatus=substatus).count()
         else:
-            count = excel_data.filter(servicepartnerid=partner, status=status, substatus=substatus,
-                                      **filter_kwargs).count()
+            count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
+            if week_filter != ['all']:
+                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus,week=week_filter).count()
+            else:
+                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
+            perc= (count / records) 
 
-        # count = excel_data.filter(**filter_kwargs).count()
-        return (count / total_records) * 100
+        return perc * 100
 
     if request.method == "POST":
         filters_data = request.POST.get('filters')
@@ -1213,7 +1187,8 @@ def get_equipment_dataAjax(request):
             filter_state = data["filter_state"]
 
         equipment_data = Srs.objects.all()
-        count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+        max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+        count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
         user = request.user
         partner = get_user_partenariat(user)
 
@@ -1226,7 +1201,8 @@ def get_equipment_dataAjax(request):
                     output_field=CharField()
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
-            count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+            max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            count_sys_active = equipment_data.filter(connection_score='Connection active',date=max_date).count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnNameSrs(filter_state)
@@ -1277,7 +1253,8 @@ def get_equipment_data_CAN24_Ajax(request):
             filter_state = data["filter_state"]
 
         equipment_data = Can24.objects.all()
-        count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+        max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+        count_sys_active = equipment_data.filter(connection_score='Connection active', date = max_date).count()
         user = request.user
         partner = get_user_partenariat(user)
         if partner != 'all':
@@ -1289,7 +1266,8 @@ def get_equipment_data_CAN24_Ajax(request):
                     output_field=CharField()
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
-            count_sys_active = equipment_data.filter(connection_score='Connection active').count()
+            max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnName(filter_state)
