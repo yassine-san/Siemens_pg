@@ -46,8 +46,8 @@ h1 {
     height: 550px;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 2fr 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
+    grid-column-gap: 10px;
+    grid-row-gap: 7px;
 }
 
 .upper-left-container {
@@ -83,6 +83,7 @@ h1 {
     grid-area: 1 / 1 / 2 / 2;
 }
 .active-system-chart-container {
+    margin-top: 7.2px;
     grid-area: 2 / 1 / 3 / 2;
 }
 
@@ -117,6 +118,8 @@ h1 {
 .item {
     border: 1px solid #FF8C00;
     position: relative;
+    background-color: rgba(243, 241, 241, .15);
+    backdrop-filter: blur(8px);
 }
 
 .histogram{
@@ -153,8 +156,9 @@ canvas {
 }
 
 .table-wrapper {
-  height: 100%;
-  overflow-x: auto; /* Enable horizontal scrolling */
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;  /* Enable horizontal scrolling */
 }
 
 /* Style your table as needed */
@@ -162,6 +166,12 @@ canvas {
   width: 100px;
   border-collapse: collapse;
 }
+
+.table-wrapper th, .table-wrapper td {
+    border: 1px solid gray;
+    padding: 8px;
+    text-align: left;
+  }
 
 #loading{
     width: 100%;
@@ -269,6 +279,18 @@ canvas {
     align-items: center;
     justify-content: space-between;
 }
+.title-and-import {
+    display: flex;
+    align-items: center;
+}
+
+.title-and-import p {
+    color: black;
+    font-weight: bold;
+    margin-left: 10px;
+    min-width: 120px;
+    margin-right: 10px; /* Add margin to separate from the button */
+}
 
 .fl-cst-pagination {
     width: 150px;
@@ -302,6 +324,19 @@ canvas {
     margin: 0;
 }
 
+.pagination-btn-cst.excel {
+    background-color: #dcd4d4;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center; /* Center text and image vertically */
+    gap: 5px; /* Add space between text and image */
+}
+
 .missing-names-table-container{
     width: 100%;
     max-height: 240px;
@@ -320,7 +355,7 @@ canvas {
 }
 
 .ms-names-table-body {
-    height: 120px; /* Limit the body's max height */
+    height: 190px; /* Limit the body's max height */
     width: 200px; /* Use 100% width */
     overflow-y: scroll; /* Enable vertical scroll */
 }
