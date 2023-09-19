@@ -157,3 +157,4 @@ class Partner(models.Model):
 
     class Meta:
         db_table = 'partner'
+        managed = False

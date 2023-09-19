@@ -38,6 +38,25 @@ $(document).ready(function () {
         });
     }
 
+    window.reset_user=function(id){
+        const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+        $.ajax({
+            url :  reset_user_url,
+            type : 'POST',
+            data : {
+                'csrfmiddlewaretoken' : csrfToken,
+                'user_id' : id,
+            },
+            success : function(response){
+                updatetableData();
+            },
+            error : function(xhr, status, error){
+                console.log(error);
+            }
+        });
+    }
+
+
     $('#search-btn').click(function(){
         const csrfToken = $('[name=csrfmiddlewaretoken]').val();
         const search = $('#search-input').val();

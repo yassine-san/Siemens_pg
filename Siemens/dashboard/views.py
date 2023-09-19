@@ -60,7 +60,11 @@ def SRS_Connectivity(request):
 
 
 def africaIb_interface(request):
-    return render(request, "dashboard/africa_IB.html")
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    partner = get_user_partenariat(request.user);
+    return render(request, "dashboard/africa_IB.html", {"partner": partner})
 
 
 def get_missing_fl_countries(request):
@@ -204,7 +208,7 @@ def update_ccr_data(request):
         country = request.POST.get('country')
         search_query = request.POST.get('searchQuery')
         # apply filters
-        queryset = Ccr.objects.all()
+        queryset = Ccr.objects.all().filter(contract_end_date__gt =date.today())
         queryset_quality = Quality.objects.all()
 
         if partenariat != 'all' or partner_number :
@@ -309,15 +313,16 @@ def data_quality(request):
             f"{column_name}__regex": r'.+',
         }
         if partner == "all":
-            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
-            records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+            count = Quality.objects.filter(status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.filter(status=status, substatus=substatus).count()
         else:
             count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
-            records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
-        perc= (count / records) 
-        #erc = 1 - perc
+            records = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus).count()
+        
+        records = records if records > 0 else 1
+        percentage = (count / records) * 100
 
-        return perc * 100
+        return percentage
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -344,6 +349,11 @@ def data_quality(request):
 def update_dataAjax(request):
     partner = get_user_partenariat(request.user)
 
+    if request.method == "POST":
+        filters_data = request.POST.get('filters')
+        filters_dict = json.loads(filters_data)
+        week_filter = filters_dict['week']
+
     def calculate_percentage(status, substatus, column_name):
         filter_kwargs = {
             f"{column_name}__regex": r'.+',
@@ -352,26 +362,23 @@ def update_dataAjax(request):
             filter_kwargs['week__in'] = week_filter
 
         if partner == "all":
-            print(week_filter)
-            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            count = Quality.objects.filter(status=status, substatus=substatus, **filter_kwargs).count()
             if week_filter != ['all']:
-                records = Quality.objects.all().filter(status=status, substatus=substatus,week=week_filter).count()
+                records = Quality.objects.filter(status=status, substatus=substatus, week__in=week_filter).count()
             else:
-                records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+                records = Quality.objects.filter(status=status, substatus=substatus).count()
         else:
             count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
-            if week_filter != ['all']:
-                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus,week=week_filter).count()
+            if week_filter == ['all']:
+                records = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus).count()
             else:
-                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
-            perc= (count / records)
+                records = Quality.objects.filter(servicepartner=partner, status=status, substatus=substatus, week__in=week_filter).count()
 
-        return perc * 100
+        records = records if records > 0 else 1
+        percentage = (count / records) * 100
 
-    if request.method == "POST":
-        filters_data = request.POST.get('filters')
-        filters_dict = json.loads(filters_data)
-        week_filter = filters_dict['week']
+        return percentage
+    
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -1193,6 +1200,7 @@ def get_equipment_dataAjax(request):
         partner = get_user_partenariat(user)
 
         if partner != 'all':
+            print('partner', partner )
             equipment_data = equipment_data.annotate(
                 equipment_service_partner_id_no_zeros=Func(
                     F('equipment_service_partner_id'),
@@ -1202,7 +1210,7 @@ def get_equipment_dataAjax(request):
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
             max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
-            count_sys_active = equipment_data.filter(connection_score='Connection active',date=max_date).count()
+            count_sys_active = Srs.objects.all().filter(connection_score='Connection active',date=max_date).count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnNameSrs(filter_state)
@@ -1258,17 +1266,23 @@ def get_equipment_data_CAN24_Ajax(request):
         user = request.user
         partner = get_user_partenariat(user)
         if partner != 'all':
-            equipment_data = equipment_data.annotate(
-                equipment_service_partner_id_no_zeros=Func(
-                    F('equipment_service_partner_id'),
-                    Value('0'),
-                    function='LTRIM',
-                    output_field=CharField()
-                )
-            ).filter(equipment_service_partner_id_no_zeros=partner)
+            print('partner here ', partner)
+            partner = "".join(['0000',str(partner)])
+            # equipment_data = equipment_data.annotate(
+            #     equipment_service_partner_id_no_zeros=Func(
+            #         F('equipment_service_partner_id'),
+            #         Value('0'),
+            #         function='LTRIM',
+            #         output_field=CharField()
+            #     )
+            # ).filter(equipment_service_partner_id_no_zeros=partner)
+            #equipment_data = equipment_data.filter(equipment_service_partner_id=partner)
             max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            print("max_date", max_date) 
             count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
+            print("count_sys_active", count_sys_active)
         if isfilrable:
+            print("firtlable")
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnName(filter_state)
             count_sys_active = Can24.objects.all().filter(connection_score='Connection active',date=date_filter).count();
@@ -1308,11 +1322,13 @@ def active_system_count(request):
 
 
 def get_equipment_dataAjax2(request):
+    partner = get_user_partenariat(request.user)
     equipment_data = Quality.objects.filter(week='Week 30').values(
         'serialnumber', 'materialnumber', 'servicepartnername',
         'servicepartner', 'flcountry', 'status',
-        'substatus', 'onstockdetails'
-    )
+        'substatus', 'onstockdetails')
+    if partner != 'all':
+        equipment_data = equipment_data.filter(servicepartner=partner)
 
     return JsonResponse(list(equipment_data), safe=False)
 
@@ -1471,6 +1487,9 @@ def get_filtered_counts(request):
 
     # Create a filter dictionary based on selected filters
     filter_dict = {}
+    partner = get_user_partenariat(request.user)
+    if partner != 'all':
+        filter_dict['servicepartner'] = partner
 
     if modality_filter:
         filter_dict['modality__in'] = modality_filter
@@ -1523,7 +1542,7 @@ def update_manage_users(request):
                     <td>{user.email}</td>\
                     <td>{user.partenariat}</td>\
                     <td>{ active_status if user.is_active else inactive_status}</td>\
-                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
+                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button><button class='reset-btn-user' onclick='reset_user({user.id})'><i class='fa fa-repeat' aria-hidden='true'></i></button> </td>\
                         </tr><tr class='spacer'><td colspan='100'></td></tr>" if partenariat != 'all' else ""
             
         return JsonResponse({'table_data': table_data})
@@ -1534,4 +1553,14 @@ def delete_user(request):
         user = Account.objects.get(id=user_id)
         user.delete()
         return JsonResponse({'message': 'User deleted successfully!'})
+    
+def reset_user(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = Account.objects.get(id=user_id)
+        user.set_password(user.email.split("@")[0]+"?")
+        user.is_active = False
+        user.save()
+
+        return JsonResponse({'message': 'User password reset successfully!'})
      
