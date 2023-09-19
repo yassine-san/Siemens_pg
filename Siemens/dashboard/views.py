@@ -310,15 +310,16 @@ def data_quality(request):
             f"{column_name}__regex": r'.+',
         }
         if partner == "all":
-            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
-            records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+            count = Quality.objects.filter(status=status, substatus=substatus, **filter_kwargs).count()
+            records = Quality.objects.filter(status=status, substatus=substatus).count()
         else:
             count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
-            records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
-        perc= (count / records) 
-        #erc = 1 - perc
+            records = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus).count()
+        
+        records = records if records > 0 else 1
+        percentage = (count / records) * 100
 
-        return perc * 100
+        return percentage
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
@@ -346,6 +347,11 @@ def update_dataAjax(request):
     print('data_quality')
     partner = get_user_partenariat(request.user)
 
+    if request.method == "POST":
+        filters_data = request.POST.get('filters')
+        filters_dict = json.loads(filters_data)
+        week_filter = filters_dict['week']
+
     def calculate_percentage(status, substatus, column_name):
         filter_kwargs = {
             f"{column_name}__regex": r'.+',
@@ -354,30 +360,23 @@ def update_dataAjax(request):
             filter_kwargs['week__in'] = week_filter
 
         if partner == "all":
-            print(week_filter)
-            count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
+            count = Quality.objects.filter(status=status, substatus=substatus, **filter_kwargs).count()
             if week_filter != ['all']:
-                records = Quality.objects.all().filter(status=status, substatus=substatus,week=week_filter).count()
-                records = records if records > 0 else 1
+                records = Quality.objects.filter(status=status, substatus=substatus, week__in=week_filter).count()
             else:
-                records = Quality.objects.all().filter(status=status, substatus=substatus).count()
-                records = records if records > 0 else 1
+                records = Quality.objects.filter(status=status, substatus=substatus).count()
         else:
             count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
-            if week_filter != ['all']:
-                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus,week=week_filter).count()
-                records = records if records > 0 else 1
+            if week_filter == ['all']:
+                records = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus).count()
             else:
-                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count() 
-                records = records if records > 0 else 1
-            perc= (count / records)
+                records = Quality.objects.filter(servicepartner=partner, status=status, substatus=substatus, week__in=week_filter).count()
 
-        return perc * 100
+        records = records if records > 0 else 1
+        percentage = (count / records) * 100
 
-    if request.method == "POST":
-        filters_data = request.POST.get('filters')
-        filters_dict = json.loads(filters_data)
-        week_filter = filters_dict['week']
+        return percentage
+    
 
     active_active_flcountry_percentage = calculate_percentage('active', 'active', 'flcountry')
     active_active_cstname_percentage = calculate_percentage('active', 'active', 'cstname')
