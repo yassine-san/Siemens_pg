@@ -236,6 +236,7 @@
                 </div>
             
                 <!-- Service Partner Filter -->
+                {% if partner == 'all' %}
                 <div class="filter-section">
                     <span class="collapsible" onclick="toggleCheckboxes('service_partner')">Service Partner</span>
                     <div class="content service_partner_filter_cn">
@@ -250,7 +251,7 @@
                         <!-- Add more service partner options here -->
                     </div>
                 </div>
-            
+            {% endif %}
                 <!-- Status Filter -->
                 <div class="filter-section">
                     <span class="collapsible" onclick="toggleCheckboxes('status')">Status</span>

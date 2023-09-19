@@ -60,7 +60,11 @@ def SRS_Connectivity(request):
 
 
 def africaIb_interface(request):
-    return render(request, "dashboard/africa_IB.html")
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    partner = get_user_partenariat(request.user);
+    return render(request, "dashboard/africa_IB.html", {"partner": partner})
 
 
 def get_missing_fl_countries(request):
@@ -303,7 +307,6 @@ def add_ccr_data(request):
 
 def data_quality(request):
     partner = get_user_partenariat(request.user)
-    print('data_quality')
 
     def calculate_percentage(status, substatus, column_name):
         filter_kwargs = {
@@ -344,7 +347,6 @@ def data_quality(request):
 
 
 def update_dataAjax(request):
-    print('data_quality')
     partner = get_user_partenariat(request.user)
 
     if request.method == "POST":
@@ -1320,11 +1322,13 @@ def active_system_count(request):
 
 
 def get_equipment_dataAjax2(request):
+    partner = get_user_partenariat(request.user)
     equipment_data = Quality.objects.filter(week='Week 30').values(
         'serialnumber', 'materialnumber', 'servicepartnername',
         'servicepartner', 'flcountry', 'status',
-        'substatus', 'onstockdetails'
-    )
+        'substatus', 'onstockdetails')
+    if partner != 'all':
+        equipment_data = equipment_data.filter(servicepartner=partner)
 
     return JsonResponse(list(equipment_data), safe=False)
 
@@ -1483,6 +1487,9 @@ def get_filtered_counts(request):
 
     # Create a filter dictionary based on selected filters
     filter_dict = {}
+    partner = get_user_partenariat(request.user)
+    if partner != 'all':
+        filter_dict['servicepartner'] = partner
 
     if modality_filter:
         filter_dict['modality__in'] = modality_filter
