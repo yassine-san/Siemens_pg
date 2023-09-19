@@ -78,6 +78,27 @@ $(".close").click(function(){
     clearPopupform();
 });
 
+$("#submit-popupForm").click(function() {
+    var formInputs = $("#popupForm input[required]");
+    var isFormValid = true;
+
+    formInputs.each(function() {
+      if ($(this).val().trim() === "") {
+        isFormValid = false;
+        $(this).addClass("invalid");
+      } else {
+        $(this).removeClass("invalid");
+      }
+    });
+
+    if (isFormValid) {
+        submit();
+    } else {
+      // Show alert if any required field is empty
+      alert("Please fill in all the required fields.");
+    }
+  });
+
 function clearPopupform(){
     document.getElementById("systemSerialNumber").value = "";
     document.getElementById("systemMaterialNumber").value = "";
@@ -95,7 +116,7 @@ function clearPopupform(){
     document.getElementById("modality").value = "";
 }
 
-$("#submit-popupForm").click(function(){
+function submit(){
     var systemSerialNumber = document.getElementById("systemSerialNumber").value;
     var systemMaterialNumber = document.getElementById("systemMaterialNumber").value;
     var productName = document.getElementById("productName").value;
@@ -164,6 +185,6 @@ $("#submit-popupForm").click(function(){
 
 
 
-});
+}
 
 });

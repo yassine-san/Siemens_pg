@@ -204,7 +204,7 @@ def update_ccr_data(request):
         country = request.POST.get('country')
         search_query = request.POST.get('searchQuery')
         # apply filters
-        queryset = Ccr.objects.all()
+        queryset = Ccr.objects.all().filter(contract_end_date__gt =date.today())
         queryset_quality = Quality.objects.all()
 
         if partenariat != 'all' or partner_number :
@@ -303,6 +303,7 @@ def add_ccr_data(request):
 
 def data_quality(request):
     partner = get_user_partenariat(request.user)
+    print('data_quality')
 
     def calculate_percentage(status, substatus, column_name):
         filter_kwargs = {
@@ -342,6 +343,7 @@ def data_quality(request):
 
 
 def update_dataAjax(request):
+    print('data_quality')
     partner = get_user_partenariat(request.user)
 
     def calculate_percentage(status, substatus, column_name):
@@ -356,15 +358,19 @@ def update_dataAjax(request):
             count = Quality.objects.all().filter(status=status, substatus=substatus, **filter_kwargs).count()
             if week_filter != ['all']:
                 records = Quality.objects.all().filter(status=status, substatus=substatus,week=week_filter).count()
+                records = records if records > 0 else 1
             else:
                 records = Quality.objects.all().filter(status=status, substatus=substatus).count()
+                records = records if records > 0 else 1
         else:
             count = Quality.objects.all().filter(servicepartner=partner, status=status, substatus=substatus, **filter_kwargs).count()
             if week_filter != ['all']:
                 records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus,week=week_filter).count()
+                records = records if records > 0 else 1
             else:
-                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count()
-            perc= (count / records) 
+                records = Quality.objects.all().filter(servicepartner=partner,status=status, substatus=substatus).count() 
+                records = records if records > 0 else 1
+            perc= (count / records)
 
         return perc * 100
 
@@ -1193,6 +1199,7 @@ def get_equipment_dataAjax(request):
         partner = get_user_partenariat(user)
 
         if partner != 'all':
+            print('partner', partner )
             equipment_data = equipment_data.annotate(
                 equipment_service_partner_id_no_zeros=Func(
                     F('equipment_service_partner_id'),
@@ -1202,7 +1209,7 @@ def get_equipment_dataAjax(request):
                 )
             ).filter(equipment_service_partner_id_no_zeros=partner)
             max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
-            count_sys_active = equipment_data.filter(connection_score='Connection active',date=max_date).count()
+            count_sys_active = Srs.objects.all().filter(connection_score='Connection active',date=max_date).count()
         if isfilrable:
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnNameSrs(filter_state)
@@ -1258,17 +1265,23 @@ def get_equipment_data_CAN24_Ajax(request):
         user = request.user
         partner = get_user_partenariat(user)
         if partner != 'all':
-            equipment_data = equipment_data.annotate(
-                equipment_service_partner_id_no_zeros=Func(
-                    F('equipment_service_partner_id'),
-                    Value('0'),
-                    function='LTRIM',
-                    output_field=CharField()
-                )
-            ).filter(equipment_service_partner_id_no_zeros=partner)
+            print('partner here ', partner)
+            partner = "".join(['0000',str(partner)])
+            # equipment_data = equipment_data.annotate(
+            #     equipment_service_partner_id_no_zeros=Func(
+            #         F('equipment_service_partner_id'),
+            #         Value('0'),
+            #         function='LTRIM',
+            #         output_field=CharField()
+            #     )
+            # ).filter(equipment_service_partner_id_no_zeros=partner)
+            #equipment_data = equipment_data.filter(equipment_service_partner_id=partner)
             max_date =  equipment_data.aggregate(max_date=Max('date'))['max_date']
+            print("max_date", max_date) 
             count_sys_active = equipment_data.filter(connection_score='Connection active', date=max_date).count()
+            print("count_sys_active", count_sys_active)
         if isfilrable:
+            print("firtlable")
             date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
             filter_condition = getFilterColumnName(filter_state)
             count_sys_active = Can24.objects.all().filter(connection_score='Connection active',date=date_filter).count();
@@ -1523,7 +1536,7 @@ def update_manage_users(request):
                     <td>{user.email}</td>\
                     <td>{user.partenariat}</td>\
                     <td>{ active_status if user.is_active else inactive_status}</td>\
-                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button></td>\
+                    <td><button class='delete-btn-user' onclick='delete_user({user.id})'><i class='fa fa-trash' aria-hidden='true'></i></button><button class='reset-btn-user' onclick='reset_user({user.id})'><i class='fa fa-repeat' aria-hidden='true'></i></button> </td>\
                         </tr><tr class='spacer'><td colspan='100'></td></tr>" if partenariat != 'all' else ""
             
         return JsonResponse({'table_data': table_data})
@@ -1534,4 +1547,14 @@ def delete_user(request):
         user = Account.objects.get(id=user_id)
         user.delete()
         return JsonResponse({'message': 'User deleted successfully!'})
+    
+def reset_user(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = Account.objects.get(id=user_id)
+        user.set_password(user.email.split("@")[0]+"?")
+        user.is_active = False
+        user.save()
+
+        return JsonResponse({'message': 'User password reset successfully!'})
      
