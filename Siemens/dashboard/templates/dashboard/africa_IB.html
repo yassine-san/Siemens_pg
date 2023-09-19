@@ -109,7 +109,7 @@
                 <div class="eq-md-container">
                     <div class="equipments">
                         <div class="siemens-logo" style="align-content: center">
-                            <img src="Siemens_Healthineers_logo.svg_.png" width="200px" alt="">
+                            <img src="{% static 'dashboard/img/Siemens_Healthineers_logo.png' %}" width="200px" alt="">
                         </div>
                         <div class="card">
                             <div class="equipments-table-container" >
@@ -191,8 +191,8 @@
             <div class="card filters">
                 <form id="filterForm">
                 <!-- Modality Filter -->
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('modality')">Modality</span>
+                <div class="filter-section" onclick="toggleCheckboxes('modality')">
+                    <span class="collapsible" >Modality</span>
                     <div class="content modality_filter_cn">
                         <input type="checkbox" name="modality_filter" value="AXA"> AXA
                         <input type="checkbox" name="modality_filter" value="CT"> CT
@@ -205,8 +205,8 @@
                 </div>
             
                 <!-- Country Filter -->
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('country')">Country</span>
+                <div class="filter-section" onclick="toggleCheckboxes('country')">
+                    <span class="collapsible" >Country</span>
                     <div class="content country_filter_cn">
                         <input type="checkbox" name="country_filter" value="AO"> AO
                         <input type="checkbox" name="country_filter" value="BF"> BF
@@ -237,8 +237,8 @@
             
                 <!-- Service Partner Filter -->
                 {% if partner == 'all' %}
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('service_partner')">Service Partner</span>
+                <div class="filter-section" onclick="toggleCheckboxes('service_partner')">
+                    <span class="collapsible" >Service Partner</span>
                     <div class="content service_partner_filter_cn">
                         <input type="checkbox" name="service_partner_filter" value="910163"> 910163
                         <input type="checkbox" name="service_partner_filter" value="910165"> 910165
@@ -253,8 +253,8 @@
                 </div>
             {% endif %}
                 <!-- Status Filter -->
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('status')">Status</span>
+                <div class="filter-section"  onclick="toggleCheckboxes('status')">
+                    <span class="collapsible">Status</span>
                     <div class="content status_filter_cn">
                         <input type="checkbox" name="status_filter" value="active"> Active
                         <input type="checkbox" name="status_filter" value="inactive"> Inactive
@@ -262,8 +262,8 @@
                 </div>
             
                 <!-- Substatus Filter -->
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('substatus')">Substatus</span>
+                <div class="filter-section" onclick="toggleCheckboxes('substatus')">
+                    <span class="collapsible">Substatus</span>
                     <div class="content substatus_filter_cn">
                         <input type="checkbox" name="substatus_filter" value="active"> Active
                         <input type="checkbox" name="substatus_filter" value="location unknown"> Location Unknown
@@ -279,8 +279,8 @@
                 </div>
             
                 <!-- On Stock Details Filter -->
-                <div class="filter-section">
-                    <span class="collapsible" onclick="toggleCheckboxes('on_stock_details')">On Stock Details</span>
+                <div class="filter-section" onclick="toggleCheckboxes('on_stock_details')")>
+                    <span class="collapsible" >On Stock Details</span>
                     <div class="content on_stock_details_filter_cn">
                         <input type="checkbox" name="on_stock_details_filter" value="Broken not scrapped"> Broken Not Scrapped
                         <input type="checkbox" name="on_stock_details_filter" value="Not yet installed"> Not Yet Installed
@@ -587,9 +587,18 @@ function populateSerialsTable(serialData) {
 
 </script>
 <script>
+
+
+    {#function hideasAfuck() {#}
+    {#    var checkboxes = document.getElementsByClassName('content');#}
+    {#    checkboxes.forEach((element) => element.style.display = 'none')#}
+    {#}#}
+    {##}
+    {#hideasAfuck()#}
+
     function toggleCheckboxes(filterName) {
         var checkboxes = document.querySelector('.' + filterName + '_filter_cn');
-        if (checkboxes.style.display === 'block' || checkboxes.style.display === '') {
+        if (checkboxes.style.display === 'block') {
             checkboxes.style.display = 'none';
         } else {
             checkboxes.style.display = 'block';

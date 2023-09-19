@@ -98,7 +98,7 @@ $(document).ready(function() {
                 },
                 success: function(fetchedData) {
                     flCstData = fetchedData.data;
-                    $counttab.html(fetchedData.count_sys_active)
+                    //$counttab.html(fetchedData.count_sys_active)
                     updatePaginationInfoCst();
                     updatePageContentCst();
                     loading.close()
@@ -158,7 +158,7 @@ $(document).ready(function() {
         let loadingDoneCounter = 0
 
 
-function theCharter(histogram , chart_url,label1, label2) {
+function theCharter(histogram , chart_url,label1, label2, nasb) {
 
     const isFiltered = (current_filters.clickedLabel !== "" || current_filters.DatasetLabel !== "");
     const filter_date = isFiltered ? current_filters.clickedLabel : undefined;
@@ -199,6 +199,14 @@ function theCharter(histogram , chart_url,label1, label2) {
                     },
                 ],
             };
+            if (nasb === -1 && data[label1] !== 0 ){
+                let filterIndex = data.labels.indexOf(current_filters.clickedLabel)
+                //alert(current_filters.clickedLabel)
+                if (filterIndex === -1){
+                    $counttab.html(data[label1][data[label1].length - 1])
+                }
+                $counttab.html(data[label1][filterIndex])
+            }
             Chart.register(ChartDataLabels);
             const ConnectionscoreOptions = {
                 scales: {
@@ -279,7 +287,7 @@ function updateCharts(){
     theCharter('histogram1', script_url, 'Connected_counts','X_Connectable_counts')
     theCharter('histogram2', script_url1,'RUH Ready_counts', 'X_not RUH ready_counts')
     theCharter('histogram3', script_url2, 'Data Sent_counts', 'X_Data not sent_counts')
-    theCharter('histogram4', script_url3,'Connection active_counts', 'Connection not active_counts')
+    theCharter('histogram4', script_url3,'Connection active_counts', 'Connection not active_counts',-1)
     getMissingFlCstAjax()
 }
 

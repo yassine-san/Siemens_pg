@@ -180,14 +180,13 @@
                     onEachFeature: function (feature, layer) {
                         const countryName = feature.properties.NAME;
                         layer.bindPopup(countryName);
-
                         // Add country name to the table and set a data-country attribute
                         const tr = document.createElement('tr');
                         tr.innerHTML = `<td data-country="${countryName}">${countryName}</td>`;
                         document.querySelector('tbody').appendChild(tr);
 
                         // Event listener to handle clicks on the table
-                        tr.addEventListener('click', function () {
+                        tr.addEventListener('click', function (){
                             highlightCountry(countryName);
                         });
                     },

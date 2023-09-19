@@ -821,9 +821,9 @@ def getFilterColumnName(condition):
         'Connection not active': 'connection_score',
         'CAN24 connectable': 'can24_connection_per_system_type',
         'x_Not CAN24 connectable': 'can24_connection_per_system_type',
-        'Data sent2': 'can24_data_sent',
-        'x_Data not sent2': 'can24_data_sent',
-        'x_Not connectable_counts2': 'can24_data_sent',
+        'Data sent2': 'can24_data_sent_formatiert',
+        'x_Data not sent2': 'can24_data_sent_formatiert',
+        'x_Not connectable2': 'can24_data_sent_formatiert',
         'Connected CAN24 Modul': 'connected_can24_modul',
         'x_Not Connectable': 'connected_can24_modul',
         'Not Connected CAN24 Modul': 'connected_can24_modul',
@@ -831,7 +831,7 @@ def getFilterColumnName(condition):
     column_name = column_mapping.get(condition, None)
     if column_name:
         # Create a filter condition using the field name and posted value
-        if condition == "Data Sent2" or condition == "X_Data not sent2":
+        if condition == "Data Sent2" or condition == "X_Data not sent2" or condition == 'x_Data not sent2':
             condition = str(condition).replace("2", "")
         filter_condition = {column_name: condition}
         return filter_condition
@@ -1015,6 +1015,8 @@ def get_Can24_Connectable_Systems_chart_data(request):
         filter_date = postdata.get('filter_date')
         filter_state = postdata.get('filter_state')
 
+
+
         dates = Can24.objects.values_list('date', flat=True).distinct().order_by('date')
 
         data = {
@@ -1031,6 +1033,7 @@ def get_Can24_Connectable_Systems_chart_data(request):
                 date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
                 if d == date_filter:
                     filter_condition = getFilterColumnName(filter_state)
+                    print(filter_condition)
                     if list(filter_condition.keys())[0] == "can24_connection_per_system_type":
                         CAN24_connectable_count = Can24.objects.filter(date=d,
                                                                        can24_connection_per_system_type='CAN24 connectable').count()
@@ -1067,6 +1070,10 @@ def get_CAN24_Data_Sent_chart_data(request):
         # dates = [date(2023, 6, 1), date(2023, 6, 15), date(2023, 7, 1), date(2023, 7, 15), date(2023, 8, 1),
         #          date(2023, 8, 15)]
 
+        print(isfilrable)
+        print(filter_date)
+        print(filter_state)
+
         data = {
             'labels': [d.strftime('%b %d ,%y') for d in dates],
             'Data sent_counts2': [],
@@ -1082,7 +1089,7 @@ def get_CAN24_Data_Sent_chart_data(request):
                 date_filter = datetime.strptime(filter_date, '%b %d ,%y').date()
                 if d == date_filter:
                     filter_condition = getFilterColumnName(filter_state)
-                    if list(filter_condition.keys())[0] == "can24_data_sent":
+                    if list(filter_condition.keys())[0] == "can24_data_sent_formatiert":
                         Data_Sent_count = Can24.objects.filter(date=d, can24_data_sent_formatiert='Data sent').count()
                         X_Data_not_sent_count = Can24.objects.filter(date=d,
                                                                      can24_data_sent_formatiert='x_Data not sent').count()

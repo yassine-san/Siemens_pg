@@ -173,7 +173,7 @@
 .serials-table-container {
     width: 400px;
     overflow-y: auto;
-    height: 200px;
+    height: 250px;
     border: 1px solid #ccc; /* Add a border for clarity */
     box-sizing: border-box; /* Include border in width calculations */
 }
@@ -419,6 +419,7 @@ path:hover, circle:hover {
     position: relative; /* Add relative positioning */
     padding-bottom: 20px; /* Add some padding to create space between filters and border */
 }
+
 .filter-section {
     cursor: pointer;
     font-size: 18px;
@@ -429,6 +430,9 @@ path:hover, circle:hover {
     padding: 5px;
     display: inline-block; /* Display filter sections inline */
     margin-right: 10px; /* Add some space between sections */
+}
+.filter-section>.content{
+    display:none;
 }
 
 .filter-section:hover {
