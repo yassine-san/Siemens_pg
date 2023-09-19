@@ -84,4 +84,5 @@ urlpatterns = [
     path('manage_users/', views.manage_user_interface, name='manage_users'),
     path('update_manage_users/', views.update_manage_users, name='update_manage_users'),
     path('delete_user/', views.delete_user, name='delete_user'),
+    path('reset_user/', views.reset_user, name='reset_user'),
 ]

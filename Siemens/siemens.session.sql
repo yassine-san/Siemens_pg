@@ -174,3 +174,22 @@ CREATE TRIGGER contract_expiry_trigger
 BEFORE DELETE ON ccr
 FOR EACH ROW
 EXECUTE FUNCTION remove_expired_contracts();
+
+
+select * from exceltable;
+
+
+SELECT FORMAT((1 - (COUNT(exceltable.flcountry) - COUNT(*)) / COUNT(*)), '0.00%') AS PourcentageF_L1
+FROM exceltable;
+
+SELECT FORMAT((1 - (COUNT(CASE WHEN "flcountry" IS NULL THEN 1 END) / COUNT(*)::numeric)), '0.00%') AS "PourcentageF-L1"
+FROM exceltable;
+
+
+select count(*) from exceltable where flcountry like '';
+
+select distinct flcountry from exceltable;
+
+
+
+select * from users_account

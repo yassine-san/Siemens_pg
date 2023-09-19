@@ -147,6 +147,18 @@ th {
     font-size: 25px;
 }
 
+.reset-btn-user{
+    background-color:transparent;
+    outline: none;
+    border: none;
+    margin-left: 10px;
+}
+
+.reset-btn-user i{
+    color:blue;
+    font-size: 25px;
+}
+
 
 *::-webkit-scrollbar {
     height: 6px;
