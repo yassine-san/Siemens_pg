@@ -6,13 +6,25 @@ $(document).ready(function() {
         let pageCst = 1;
         const $counttab = $("#count-systems-active-tab");
 
+        window.displayCountryRegion = function (country_Region){
+            if (country_Region === 'Congo, the Democratic Republic of the')
+                country_Region = 'Dem. Rep. Congo'
+            else if (country_Region === 'Côte dIvoire')
+                country_Region = 'Côte d\'Ivoire'
+            else if (country_Region === 'Equatorial Guinea')
+                country_Region = 'Eq. Guinea'
+            highlightCountry(country_Region)
+        }
+
+
+
         function populateFlCst(start, end) {
             let rowsHTML = '';
 
             for (let i = start; i < end && i < flCstData.length; i++) {
                 let rowClass = i === end - 1 ? 'middle-row' : '';
                 rowsHTML += `
-                    <tr class="ms-names-tr ${rowClass}">
+                    <tr class="ms-names-tr ${rowClass}"  onclick="displayCountryRegion('${flCstData[i].country_region}')">
                         <td class="ms-names-td">${flCstData[i].equipment_service_partner_id}</td>
                         <td class="ms-names-td">${flCstData[i].equipment_service_partner_text}</td>
                         <td class="ms-names-td">${flCstData[i].country_region}</td>
@@ -37,6 +49,8 @@ $(document).ready(function() {
 
             $tableBodyCst.html(rowsHTML);
         }
+
+
 
         function updatePaginationInfoCst() {
             let totalPages = Math.ceil(flCstData.length / rowsPerPageCst);

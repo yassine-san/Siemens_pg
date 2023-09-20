@@ -169,11 +169,67 @@
     box-sizing: border-box; /* Include border in cell dimensions */
 }
 
+#loading{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center; /* Center align content */
+    background-color: rgba(222, 220, 220, 0.9);
+    border: none;
+}
+
+.multi-spinner-container {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+    margin: 13% auto 30px;
+}
+
+.multi-spinner {
+  position: absolute;
+  width: calc(100% - 9.9px);
+  height: calc(100% - 9.9px);
+  border: 5px solid transparent;
+  border-top-color: #ff5722;
+  border-radius: 50%;
+  -webkit-animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+  animation: spin 5s cubic-bezier(0.17, 0.49, 0.96, 0.76) infinite;
+}
+
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+         transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+
+@keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+#modalities-chart{
+    z-index: 999;
+}
+
 
 .serials-table-container {
     width: 400px;
     overflow-y: auto;
-    height: 250px;
+    height: 270px;
     border: 1px solid #ccc; /* Add a border for clarity */
     box-sizing: border-box; /* Include border in width calculations */
 }

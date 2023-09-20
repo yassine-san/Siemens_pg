@@ -79,6 +79,9 @@
   width: 300px;
 }
 
+.
+
+
 .table-card {
   width: 650px; /* Set your desired fixed width */
   overflow: hidden; /* Hide horizontal overflow */
@@ -109,3 +112,15 @@ h1 {
   color: #FF8C00 ;
 }
 
+div > #map-container{
+    padding: 20px;
+    border-radius: .5em;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    background-color: red;
+    overflow-y: scroll;
+}
+
+#map-container {
+    width: 250px;
+    height: 250px;
+}

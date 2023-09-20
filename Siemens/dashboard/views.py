@@ -56,15 +56,39 @@ def quality_interface(request):
 
 
 def SRS_Connectivity(request):
-    return render(request, 'dashboard/SRS.html')
+    results = Srs.objects.values('country_region').annotate(
+        equipment_serial_number_count=Count('equipment_serial_number')).order_by('country_region')
+
+
+    return render(request, 'dashboard/SRS.html',{'countries': results})
 
 
 def africaIb_interface(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
-    partner = get_user_partenariat(request.user);
-    return render(request, "dashboard/africa_IB.html", {"partner": partner})
+    partner = get_user_partenariat(request.user)
+
+    max_week = Quality.objects.aggregate(max_week=Max('week'))['max_week']
+
+    user = request.user
+    partner = get_user_partenariat(user)
+
+    if(partner != 'all'):
+        # Query to count serial numbers for each cstcountry
+        results = Quality.objects.filter(
+            week=max_week,
+            cstcountry__isnull=False,
+            servicepartner=partner,
+        ).values('cstcountry').annotate(serialnumber_count=Count('serialnumber'))
+    else:
+        # Query to count serial numbers for each cstcountry
+        results = Quality.objects.filter(
+            week=max_week,
+            cstcountry__isnull=False,  # Ensures cstCountry is not empty
+        ).values('cstcountry').annotate(serialnumber_count=Count('serialnumber'))
+
+    return render(request, "dashboard/africa_IB.html", {"partner": partner,"countries": results})
 
 
 def get_missing_fl_countries(request):
@@ -100,6 +124,26 @@ def get_missing_fl_countries(request):
 
     return JsonResponse(list(missing_fl_countries), safe=False)
 
+
+def pieCharter(request):
+    partner = get_user_partenariat(request.user)
+    if(partner != 'all'):
+        modalities = Quality.objects.filter(servicepartner=partner, modality__isnull=False).values('modality').distinct().order_by('modality')
+        count_total = Quality.objects.filter(servicepartner=partner,serialnumber__isnull=False).values('serialnumber').distinct().count()
+        count_by = (Quality.objects.filter(servicepartner=partner,modality__isnull=False).order_by('modality').values('modality').
+                    annotate(serialnumber_count=Count('serialnumber', distinct=True)))
+    else:
+        modalities = Quality.objects.filter(modality__isnull=False).values('modality').distinct().order_by('modality')
+        count_total = Quality.objects.filter(serialnumber__isnull=False).values('serialnumber').distinct().count()
+        count_by = (Quality.objects.filter(modality__isnull=False).order_by('modality').values('modality').
+                    annotate(serialnumber_count=Count('serialnumber', distinct=True)))
+
+    data = {
+        'total': count_total,
+        'modalities': list(modalities),
+        'count': list(count_by),
+    }
+    return JsonResponse(data)
 
 def fillin_missing_country(request):
     if request.method == "POST":
@@ -806,7 +850,10 @@ def get_Connection_score_chart_data(request):
 def CAN24(request):
     # chart_data = get_srs_chart_data()
 
-    return render(request, 'dashboard/MR_CAN24.html')
+    results = Srs.objects.values('country_region').annotate(
+        equipment_serial_number_count=Count('equipment_serial_number')).order_by('country_region')
+
+    return render(request, 'dashboard/MR_CAN24.html', {'countries': results})
 
 
 def getFilterColumnName(condition):
@@ -1324,8 +1371,11 @@ def active_system_count(request):
         """)
         active_system_count = cursor.fetchone()[0]  # Get the count value
 
+    results = Srs.objects.values('country_region').annotate(
+        equipment_serial_number_count=Count('equipment_serial_number')).order_by('country_region')
+
     # Pass the count value to the template
-    return render(request, 'dashboard/SRS.html', {'active_system_count': active_system_count})
+    return render(request, 'dashboard/SRS.html', {'active_system_count': active_system_count,'countries': results})
 
 
 def get_equipment_dataAjax2(request):

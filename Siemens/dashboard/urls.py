@@ -32,9 +32,10 @@ urlpatterns = [
     path('get_CAN24_Data_Sent_chart_data/', views.get_CAN24_Data_Sent_chart_data, name='get_CAN24_Data_Sent_chart_data'),
     path('get_Connected_CAN24_Modul_chart_data/', views.get_Connected_CAN24_Modul_chart_data, name='get_Connected_CAN24_Modul_chart_data'),
 
-
     path('fill_missing_countries', views.fillin_missing_country, name='fillMissCountry'),
     path('fill_missing_cst', views.fillin_missing_cst, name='fillMissCst'),
+
+    path('pieCharter/',views.pieCharter,name='pieCharter_africaIB'),
 
     path('get_equipements_dataAjax/', views.get_equipment_dataAjax, name='get_equipment_dataAjax'),
     path('get_equipment_data_CAN24_Ajax/', views.get_equipment_data_CAN24_Ajax, name='get_equipment_data_CAN24_Ajax'),
