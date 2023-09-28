@@ -26,7 +26,7 @@ $(document).ready(function() {
                 $("#table-tbody").html(response.table_data);
                 $("#nb_contracts").html(response.nb_contracts);
                 $("#active_systems").html(response.active_systems);
-                $("#ccr_percent").html(Number(response.ccr_percent).toFixed(2) + "%");
+                $("#ccr_percent").html(Number(response.ccr_percent).toFixed(0) + "%");
                 loading.close();
                 updateCCRDataCalled = false;
             },

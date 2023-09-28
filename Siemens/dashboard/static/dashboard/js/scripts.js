@@ -203,12 +203,12 @@ function theCharter(histogram , chart_url,label1, label2, nasb) {
                 labels: data.labels,
                 datasets: [{
                         label: label1.replace("_counts",""),
-                        backgroundColor: '#FF5733',
+                        backgroundColor: '#008B8B',
                         data: data[label1],
                     },
                     {
                         label: label2.replace("_counts",""),
-                        backgroundColor: '#008B8B',
+                        backgroundColor: '#f1755c',
                         data: data[label2],
                     },
                 ],
@@ -233,7 +233,7 @@ function theCharter(histogram , chart_url,label1, label2, nasb) {
                         type: 'linear', // Use a linear scale for the y-axis
                         title: {
                             display: true,
-                            text: 'Nombre de Equipments',
+                            text: 'Number of Equipment',
                         },
                         stacked: true,
                         beginAtZero: true,

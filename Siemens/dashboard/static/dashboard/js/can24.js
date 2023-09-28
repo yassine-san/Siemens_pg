@@ -163,7 +163,7 @@ function getMissingFlCstAjax() {
 //----
 
 
-function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey, chartElementId,nasb) {
+function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey, chartElementId,nasb,reverseColor) {
 
     const isFiltered = (current_filters.clickedLabel !== "" || current_filters.DatasetLabel !== "");
     const filter_date = isFiltered ? current_filters.clickedLabel : undefined;
@@ -193,12 +193,12 @@ function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey,
                 datasets: [
                     {
                         label: connectedCountsKey.replace("_counts",""),
-                        backgroundColor: '#FF5733',
+                        backgroundColor: '#008B8B',
                         data: data[connectedCountsKey],
                     },
                     {
                         label: xConnectableCountsKey.replace("_counts",""),
-                        backgroundColor: '#008B8B',
+                        backgroundColor: '#f1755c',
                         data: data[xConnectableCountsKey],
                     },
                 ],
@@ -206,7 +206,7 @@ function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey,
             if (thirdKey !== ''){
                 chartData.datasets.push({
                     label: thirdKey.replace("_counts", ""),
-                    backgroundColor: '#98e898',
+                    backgroundColor: '#e70000',
                     data: data[thirdKey],
                 });
             }
@@ -236,7 +236,7 @@ function createBarChart(url, connectedCountsKey, xConnectableCountsKey,thirdKey,
                         type: 'linear', // Use a linear scale for the y-axis
                         title: {
                             display: true,
-                            text: 'Nombre de Equipments',
+                            text: 'Number of Equipment',
                         },
                         stacked: true,
                         beginAtZero: true,
@@ -293,13 +293,13 @@ loading.addEventListener('cancel', (event) => {
 
 function updateCharts(){
     loading.showModal()
-    createBarChart(srs_connectivity_chart_url, 'Connected_counts', 'X_Connectable_counts','', 'histogram1');
-    createBarChart(ruh_readiness_chart_url, 'RUH Ready_counts', 'X_not RUH ready_counts', '', 'histogram2');
-    createBarChart(data_sent_chart_url, 'Data Sent_counts', 'X_Data not sent_counts', '', 'histogram3');
-    createBarChart(connection_score_chart_url, 'Connection active_counts', 'Connection not active_counts', '', 'histogram4', -1);
-    createBarChart(can24_connectable_systems_chart_url, 'CAN24 connectable_counts', 'x_Not CAN24 connectable_counts', '', 'histogram5');
-    createBarChart(can24_data_sent_chart_url, 'Data sent_counts2', 'x_Data not sent_counts2', 'x_Not connectable_counts2', 'histogram6');
-    createBarChart(connected_can24_modul_chart_url, 'Connected CAN24 Modul_counts', 'x_Not Connectable_counts','Not Connected CAN24 Modul_counts',  'histogram7');
+    createBarChart(srs_connectivity_chart_url, 'Connected_counts', 'X_Connectable_counts','', 'histogram1',1,false);
+    createBarChart(ruh_readiness_chart_url, 'RUH Ready_counts', 'X_not RUH ready_counts', '', 'histogram2',1,false);
+    createBarChart(data_sent_chart_url, 'Data Sent_counts', 'X_Data not sent_counts', '', 'histogram3',1,false);
+    createBarChart(connection_score_chart_url, 'Connection active_counts', 'Connection not active_counts', '', 'histogram4', -1,false);
+    createBarChart(can24_connectable_systems_chart_url, 'CAN24 connectable_counts', 'x_Not CAN24 connectable_counts', '', 'histogram5',1,false);
+    createBarChart(can24_data_sent_chart_url, 'Data sent_counts2', 'x_Data not sent_counts2', 'x_Not connectable_counts2', 'histogram6',1,false);
+    createBarChart(connected_can24_modul_chart_url, 'Connected CAN24 Modul_counts', 'Not Connected CAN24 Modul_counts','x_Not Connectable_counts',  'histogram7',1,true);
     getMissingFlCstAjax();
 }
 
