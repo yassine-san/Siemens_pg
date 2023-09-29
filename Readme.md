@@ -6,6 +6,36 @@ This project is a data management system for a health company. It is a web appli
 
 We have used Django as a framework for the backend and Html, CSS and Javascript for the frontend. to handle charts we have used Chart.js and for maps we have used Leaflet.js and openstreetmap. for the database we have used PostgreSQL.
 
+## Table of contents
+
+- [Introduction](#introduction)
+- [Table of contents](#table-of-contents)
+- [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Steps](#steps)
+    - [1. Clone the repository](#1-clone-the-repository)
+    - [2. Create a virtual environment](#2-create-a-virtual-environment)
+    - [3. Install the requirements](#3-install-the-requirements)
+    - [4. Create a database](#4-create-a-database)
+    - [5. Create a .env file](#5-create-a-env-file)
+    - [6. Run the migrations](#6-run-the-migrations)
+    - [7. Create a superuser](#7-create-a-superuser)
+    - [8. Run the server](#8-run-the-server)
+- [Usage](#usage)
+  - [Login](#login)
+  - [Home](#home)
+  - [Data Quality](#data-quality)
+  - [SRS Connectivity](#srs-connectivity)
+  - [Africa_IB](#africa_ib)
+  - [MR CAN24](#mr-can24)
+  - [Service Contract](#service-contract)
+  - [Import file](#import-file)
+  - [Add partner](#add-partner)
+  - [Manage partners](#manage-partners)
+- [Contributors](#contributors)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+
 ## Installation
 
 ### Requirements
